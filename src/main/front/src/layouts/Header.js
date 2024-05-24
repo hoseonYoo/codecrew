@@ -9,7 +9,7 @@ export default function Header() {
         {/* 메인페이지 헤더 */}
         <div className="headerLogoContent">
           <Link to="/">
-            <img src="../assets/imgs/logo.png" alt="logo" />
+            <img src="../assets/imgs/logo.png" alt="logo" height="17px" />
           </Link>
         </div>
         <div className="headerNavContent">
@@ -17,7 +17,7 @@ export default function Header() {
             <img src="../assets/imgs/icon/ic_serch_bk.svg" alt="searchIcon" />
           </Link>
           <Link to="/">
-            <img src="../assets/imgs/icon/ic_li.svg" alt="listIcon" />
+            <img src="../assets/imgs/icon/ic_li_bk.svg" alt="listIcon" />
           </Link>
         </div>
       </div>
