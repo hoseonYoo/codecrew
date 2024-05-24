@@ -10,6 +10,7 @@ const MainPage = () => {
       </div>
       <div>
         <Link to={"/testMember"}>member</Link>
+        <span>test</span>
       </div>
     </div>
   );
