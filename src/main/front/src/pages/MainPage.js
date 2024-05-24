@@ -1,17 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import BasicLayout from "../layouts/BasicLayout";
 
 const MainPage = () => {
   return (
-    <div>
-      <h1>MainPage</h1>
-      <div>
-        <Link to={"/login"}>login</Link>
-      </div>
-      <div>
-        <Link to={"/testMember"}>member</Link>
-      </div>
-    </div>
+    <BasicLayout>
+      <h3>test</h3>
+    </BasicLayout>
   );
 };
 export default MainPage;

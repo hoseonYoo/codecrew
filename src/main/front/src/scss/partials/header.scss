@@ -1,0 +1,21 @@
+/* HEADER */ 
+header{
+  width:100%;
+  background-color: #fff;
+  height:52px;
+  position: sticky;
+  top: 0;
+  left:0;
+}
+div.headerWrap{
+  width: calc(100% - 40px);
+  margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+div.headerLogoContent{
+  width: calc(100% - 82px);
+}
+div.headerNavContent{
+  width: 82px;
+}
