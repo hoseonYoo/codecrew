@@ -8,13 +8,14 @@ header{
   left:0;
 }
 div.headerWrap{
-  width: 100%;
+  width: calc(100% - 40px);
+  margin-left: 20px;
   display: flex;
   justify-content: space-between;
 }
 div.headerLogoContent{
-  width: calc(100% - );
+  width: calc(100% - 82px);
 }
 div.headerNavContent{
-
+  width: 82px;
 }
