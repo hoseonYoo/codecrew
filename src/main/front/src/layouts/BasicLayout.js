@@ -1,7 +1,15 @@
 import React from "react";
+import Header from "./Header";
 
-const BasicLayout = () => {
-  return <div>BasicLayout</div>;
+const BasicLayout = ({ children }) => {
+  return (
+    <>
+      <div className="bodyWrap">
+        <Header />
+        <div>{children}</div>
+      </div>
+    </>
+  );
 };
 
 export default BasicLayout;
