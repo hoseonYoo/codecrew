@@ -19,8 +19,12 @@ logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security.web: trace
 
 server:
   servlet:
     session:
       tracking-modes: cookie
+
+# file upload path
+project2.upload.path: upload

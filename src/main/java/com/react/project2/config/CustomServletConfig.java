@@ -10,16 +10,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CustomServletConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
+        // LocalDateTime 타입을 변환할 포매터 추가
         // registry 통해 만든 포매터 추가
         registry.addFormatter(new LocalDateTimeFormatter());
     }
 
-    @Override
+    /*@Override
     public void addCorsMappings(CorsRegistry registry) {
+        // CORS 설정 추가
         registry.addMapping("/**") // 모든 요청에 대해
                 .allowedOrigins("*") // 허용할 오리진
                 .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 메소드
                 .maxAge((300)) // 캐싱시간
                 .allowedHeaders("Authorization", "Cache-Control", "Content-Type");
-    }
+    }*/
 }

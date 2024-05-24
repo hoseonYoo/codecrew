@@ -10,6 +10,7 @@ public class ModelMapperConfig {
 
     @Bean
     public ModelMapper getMapper() {
+        // ModelMapper 빈 등록
         ModelMapper modelMapper = new ModelMapper(); // 생성
         // 설정 추가
         modelMapper.getConfiguration()
