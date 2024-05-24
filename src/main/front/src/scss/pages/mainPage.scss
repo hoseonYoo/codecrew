@@ -1,1 +1,45 @@
 /* Main Page */
+
+/* bottom Btn*/
+div.bottomBtnWrap{
+  position: fixed;
+  width: 100%;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999;
+    div{
+      width:calc(100% - 52px);
+      margin: 0 auto;
+      max-width: 448px;
+      display: flex;
+      justify-content: space-between;
+        button:first-child{
+          width:calc(100% - 72px);
+          height: 52px;
+          background-color: #007BFF;
+          border-radius: 12px;
+          box-shadow: 
+          0 0px 6px rgba(0,0,0,0.1);
+        }
+        button:last-child{
+          width:52px;
+          height: 52px;
+          background-color: #000;
+          border-radius: 12px;
+          box-shadow: 
+          0 0px 6px rgba(0,0,0,0.1);
+        }
+    }
+}
+
+// 레이어 테스트용 map 부착시 삭제
+div.Map{
+  width: 100%;
+  height: calc(100vh - 50px);
+  transform: translateY(-2px);
+  background-image: url("../../../public/assets/imgs/Maskmap.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
