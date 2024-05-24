@@ -8,7 +8,10 @@ header{
   left:0;
   z-index: 999;
   box-shadow: 
-  0 0px 6px rgba(0,0,0,0.1);
+  0px 6px 8px -2px rgba(0,0,0,0.1);
+  border-bottom: 0.5px solid #dcdcdc;
+  box-sizing: border-box;
+  overflow-y: hidden;
 }
 div.headerWrap{
   width: calc(100% - 32px);
@@ -16,7 +19,6 @@ div.headerWrap{
   display: flex;
   justify-content: space-between;
   line-height: 52px;
-  border-bottom: 0.5px solid #dcdcdc;
 }
 div.headerLogoContent{
   width: calc(100% - 82px);

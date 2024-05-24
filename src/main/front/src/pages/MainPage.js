@@ -1,11 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import BasicLayout from "../layouts/BasicLayout";
+import "../scss/pages/mainPage.scss";
+import CategoryFilter from "../layouts/CategoryFilter";
 
 const MainPage = () => {
   return (
     <BasicLayout>
-      <h3>test</h3>
+      {/* <CategoryFilter /> */}
+      <div className="Map"></div>
+      <div className="bottomBtnWrap">
+        <div>
+          <button>스터디추가</button>
+          <button>MY</button>
+        </div>
+      </div>
     </BasicLayout>
   );
 };

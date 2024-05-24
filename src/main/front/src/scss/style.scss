@@ -1,7 +1,27 @@
-/* scss */ 
+/* SCSS */ 
+
+/* import */
+@import "./partials/button.scss";
+
+
+/* scss-start */
 div.bodyWrap{
   margin:0 auto;
   max-width: 500px;
   width:100%;
-  background-color: aqua;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+div.contentWrap{
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  position: relative;
+}
+
+/*초기화세팅*/
+ul, li{
+  list-style: none;
+  display: inline;
 }

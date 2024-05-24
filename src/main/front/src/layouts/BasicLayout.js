@@ -6,7 +6,7 @@ const BasicLayout = ({ children }) => {
     <>
       <div className="bodyWrap">
         <Header />
-        <div>{children}</div>
+        <div className="contentWrap">{children}</div>
       </div>
     </>
   );
