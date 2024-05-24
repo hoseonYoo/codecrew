@@ -6,16 +6,23 @@ header{
   position: sticky;
   top: 0;
   left:0;
+  z-index: 999;
+  box-shadow: 
+  0 0px 6px rgba(0,0,0,0.1);
 }
 div.headerWrap{
-  width: calc(100% - 40px);
-  margin-left: 20px;
+  width: calc(100% - 32px);
+  margin-left: 16px;
   display: flex;
   justify-content: space-between;
+  line-height: 52px;
+  border-bottom: 0.5px solid #dcdcdc;
 }
 div.headerLogoContent{
   width: calc(100% - 82px);
 }
 div.headerNavContent{
+  display: flex;
+  justify-content: flex-end;
   width: 82px;
 }
