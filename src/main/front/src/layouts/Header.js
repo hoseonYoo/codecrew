@@ -17,7 +17,7 @@ export default function Header() {
           <Link to="/search">
             <img src="../assets/imgs/icon/ic_serch_bk.svg" alt="searchIcon" />
           </Link>
-          <Link to="/">
+          <Link to="/list">
             <img src="../assets/imgs/icon/ic_li_bk.svg" alt="listIcon" />
           </Link>
         </div>

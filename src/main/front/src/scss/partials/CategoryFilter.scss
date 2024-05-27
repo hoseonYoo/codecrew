@@ -3,7 +3,7 @@
 div.filterWrap{
   width: 100%;
   position: absolute;
-  margin-top: 14px;
+  padding-top: 14px;
 
   div.filterContainer{
     width:100%;
@@ -56,6 +56,20 @@ div.filterWrap{
         color:#fff;
       }
       
+    }
+  }
+}
+div.filterWrapListBack{
+  padding-top: 6px;
+  padding-bottom: 14px;
+  background-color: #fff;
+  border-bottom: 0.5px solid #dcdcdc;
+  div.filterContainer{
+    ul.ListBackUl{
+      li{
+        box-shadow: 
+        0 0px 6px rgba(0,0,0,0.0);
+      }
     }
   }
 }

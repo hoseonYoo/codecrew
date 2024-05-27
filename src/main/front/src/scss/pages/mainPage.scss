@@ -4,36 +4,37 @@
 div.bottomBtnWrap{
   position: fixed;
   width: 100%;
-  bottom: 32px;
   left: 0;
   right: 0;
+  bottom: 0;
   text-align: center;
   z-index: 999;
-    div{
-      width: 100%;
-      margin: 0 auto;
-      max-width: 500px;
-      display: flex;
-      justify-content: space-between;
-        button:first-child{
-          width:calc(100% - 72px);
-          margin-left: 16px;
-          height: 52px;
-          background-color: #007BFF;
-          border-radius: 12px;
-          box-shadow: 
-          0 0px 6px rgba(0,0,0,0.1);
-        }
-        button:last-child{
-          width:52px;
-          height: 52px;
-          margin-left: 16px;
-          margin-right: 16px;
-          background-color: #000;
-          border-radius: 12px;
-          box-shadow: 
-          0 0px 6px rgba(0,0,0,0.1);
-        }
+}
+div.mainBtnWrap{
+  width: 100%;
+  margin: 0 auto;
+  max-width: 500px;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 32px;
+    button:first-child{
+      width:calc(100% - 72px);
+      margin-left: 16px;
+      height: 52px;
+      background-color: #007BFF;
+      border-radius: 12px;
+      box-shadow: 
+      0 0px 6px rgba(0,0,0,0.1);
+    }
+    button:last-child{
+      width:52px;
+      height: 52px;
+      margin-left: 16px;
+      margin-right: 16px;
+      background-color: #000;
+      border-radius: 12px;
+      box-shadow: 
+      0 0px 6px rgba(0,0,0,0.1);
     }
 }
 
@@ -50,11 +51,96 @@ div.Map{
 // 스터디 토스트 팝업
 div.stPopupWrap{
   position: absolute;
-  // background-color: rgba(255,255,255,0.5);
-  width: 100vw;
-  height: 120px;
+  background-color: rgba(255,255,255,1);
+  margin: 0 auto;
+  max-width: 500px;
+  // 클릭전 비활성 상태
+  display: none;
+
+  // 하단 버튼 영역 패딩
+  padding-bottom: 32px;
   bottom: 0;
   left: 0;
   right: 0;
   border-radius: 12px 12px 0px 0px;
+  box-shadow: 0px -6px 18px 0px  rgba(0,0,0,0.1);
+}
+img.stPopupClose{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+div.stPopupContentTop{
+  width: calc(100% - 32px);
+  margin-left: 16px;
+  margin-top: 52px;
+  height: 86px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.5px solid #dcdcdc;
+}
+div.stPopupImg{
+  width: 64px;
+  height: 64px;
+  background-color: #dcdcdc;
+  border-radius: 64px;
+  margin-right: 20px;
+  // 이미지 적용 시 위치값
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+div.stPopupTitle{
+  width: calc(100% - 138px);
+  text-align: left;
+  margin-top: 8px;
+  h3{
+    font-weight: 500;
+    font-size: 18px;
+  }
+  p{
+    font-size: 14px;
+    color:#828282;
+  }
+}
+div.stPopupBtn{
+  width:74px;
+  button:last-child{
+    margin-top: 8px;
+  }
+}
+div.stPopupContentBottom{
+  width: calc(100% - 32px);
+  margin-left: 32px;
+  margin-top: 22px;
+  text-align: left;
+  line-height: 14px;
+  div{
+    display: flex;
+    flex-wrap: wrap;
+    h4{
+      font-size: 14px;
+      width:60px;
+      margin-right: 20px;
+    }
+    p{
+      font-size: 14px;
+      width:calc(100% - 80px);
+    }
+  }
+}
+p.contentEmail{
+  transform: translateY(-6px);
+  font-size: 12px;
+}
+div.stPopupContentButton{
+  width: 100%;
+  button{
+    width: calc(100% - 32px);
+    margin-top: 32px;
+  }
+}
+// 팝업 활성화 처리
+div.popupActive{
+  display: block;
 }
