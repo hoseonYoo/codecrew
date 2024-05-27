@@ -6,7 +6,10 @@ import LoadingPage from "../components/common/LoadingPage";
 const Main = lazy(() => import("../pages/MainPage"));
 const Login = lazy(() => import("../pages/LoginPage"));
 const Search = lazy(() => import("../pages/search/SearchIndex"));
+// TODO: 테스트용 페이지 삭제예정
 const TestMember = lazy(() => import("../pages/TestMemberPage"));
+// TODO: 테스트용 로그아웃 페이지 삭제예정
+const TestLogoutPage = lazy(() => import("../pages/study/TestLogoutPage"));
 
 // 경로 매핑 하는곳 (root)
 const Router = () => {
@@ -36,11 +39,21 @@ const Router = () => {
         </Suspense>
       ),
     },
+    // TODO: 테스트용 페이지 삭제예정
     {
       path: "/testMember",
       element: (
         <Suspense fallback={<LoadingPage />}>
           <TestMember />
+        </Suspense>
+      ),
+    },
+    // TODO: 테스트용 로그아웃 페이지 삭제예정
+    {
+      path: "/testLogout",
+      element: (
+        <Suspense fallback={<LoadingPage />}>
+          <TestLogoutPage />
         </Suspense>
       ),
     },

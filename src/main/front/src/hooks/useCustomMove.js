@@ -11,5 +11,12 @@ const useCustomMove = () => {
         navigate({ pathname: "/list"});
     };*/
   // TODO 이동 관련 함수 추가
+
+  const moveToLogin = () => {
+    navigate({ pathname: "/login" });
+  };
+
+  // TODO 함수 작성 후 return 추가
+  return { moveToLogin };
 };
 export default useCustomMove;

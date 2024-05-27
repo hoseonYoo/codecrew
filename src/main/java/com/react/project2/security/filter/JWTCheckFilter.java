@@ -1,12 +1,15 @@
 package com.react.project2.security.filter;
 
 import com.google.gson.Gson;
+import com.react.project2.dto.MemberDTO;
 import com.react.project2.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -57,13 +60,31 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Map<String, Object> claims = JWTUtil.validateToken(accessToken);
             log.info("************ JWTCheckFilter - doFilterInternal : claims : {}", claims);
 
+            // 인증 정보 claims 로 MemberDTO 구성 -> 시큐리티에 반영 추가 (시큐리티용 권한)
+            // TODO Claims에 담을 데이터 바인딩
+            String email = (String) claims.get("email");
+            String role = (String) claims.get("role");
+            String nickname = (String) claims.get("nickname");
+            String profileImg = (String) claims.get("profileImg");
+            String password = (String) claims.get("password");
+            boolean disabled = (boolean) claims.get("disabled");
+
+            MemberDTO memberDTO = new MemberDTO(email, password, nickname, profileImg, disabled, role);
+
+            log.info("************ JWTCheckFilter - doFilterInternal : memberDTO : {}", memberDTO);
+
+            // 시큐리티 인증 추가 : JWT와 SpringSecurity 로그인상태 호환되도록 처리
+            UsernamePasswordAuthenticationToken authenticationToken
+                    = new UsernamePasswordAuthenticationToken(memberDTO, password, memberDTO.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
             filterChain.doFilter(request, response); // 다음필터 이동해라~
         } catch (Exception e) {
             // Access Token 검증 예외 처리
-             log.error("************ JWTCheckFilter error");
-             log.error(e.getMessage());
+            log.error("************ JWTCheckFilter error");
+            log.error(e.getMessage());
 
-             // 에러라고 응답해줄 메세지 생성 -> 전송
+            // 에러라고 응답해줄 메세지 생성 -> 전송
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
 

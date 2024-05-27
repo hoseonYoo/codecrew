@@ -27,7 +27,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // JWT 토큰 생성
         // TODO 토큰 유효시간 테스트 필요
-        String accessToken = JWTUtil.generateToken(claims, 10); // 10분
+        String accessToken = JWTUtil.generateToken(claims, 1); // 10분
         String refreshToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);

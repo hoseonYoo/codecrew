@@ -1,11 +1,13 @@
 package com.react.project2.config;
 
 import com.react.project2.security.filter.JWTCheckFilter;
+import com.react.project2.security.handler.CustomAccessDeniedHandler;
 import com.react.project2.security.handler.CustomLoginFailureHandler;
 import com.react.project2.security.handler.CustomLoginSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 
 @Configuration
 @Slf4j
+@EnableMethodSecurity
 public class CustomSecurityConfig {
 
     @Bean
@@ -43,6 +46,11 @@ public class CustomSecurityConfig {
         });
         // JWT 체크 필터 추가
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        // 접근 제한(허용X) 되었을경우 예외 처리
+        http.exceptionHandling(exception -> {
+            exception.accessDeniedHandler(new CustomAccessDeniedHandler());
+        });
         return http.build();
     }
 
