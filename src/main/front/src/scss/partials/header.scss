@@ -6,7 +6,7 @@ header{
   left:0;
   z-index: 999;
 }
-div.headerWrap{
+div.headerWrap, div.headerWrapList{
   width: 100%;
   background-color: #fff;
   height:52px;
@@ -15,6 +15,9 @@ div.headerWrap{
   border-bottom: 0.5px solid #dcdcdc;
   box-sizing: border-box;
   line-height: 52px;
+}
+div.headerWrapList{
+  border-bottom: 0px solid #dcdcdc;
 }
 div.headerShadow{
   box-shadow: 
@@ -36,12 +39,17 @@ div.headerNavContent{
 /*search-header*/
 div.headerBackContnent{
   width:36px;
-  margin-left: 16px;
+  margin-left: 6px;
   margin-right: 4px;
   img{
     cursor: pointer;
     transform: translateY(-2px);
   }
+}
+div.headerTitleContent{
+  width: calc(100% - 24px);
+  margin-right: 16px;
+  
 }
 div.headerSearchContent{
   width: calc(100% - 24px);
@@ -57,7 +65,7 @@ div.headerSearchContent{
     padding:0 32px 0 14px;
     line-height: 36px;
     border-radius: 12px;
-    border: 0.5px solid #dcdcdc;
+    border: 0.5px solid #828282;
   }
   input::placeholder{
     color:#dcdcdc;
