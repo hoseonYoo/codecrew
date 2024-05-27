@@ -12,6 +12,8 @@ const KakaoRedirectPage = () => {
   const dispatch = useDispatch();
   const { moveToPath } = useCustomLogin();
 
+  //TODO 페이지 안보이게 수정 필요
+
   // 꺼낸 인가코드를 주면서 AccessToken 달라고 카카오에 다시 요청
   useEffect(() => {
     getAccessToken(authCode).then((accessToken) => {
