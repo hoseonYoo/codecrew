@@ -5,7 +5,9 @@ import "../../scss/pages/mainPage.scss";
 const SearchIndex = () => {
   return (
     <BasicLayoutSearch>
-      <div></div>
+      {/* 최근검색 */}
+      <div>최근검색</div>
+      {/* 검색중 */}
     </BasicLayoutSearch>
   );
 };
