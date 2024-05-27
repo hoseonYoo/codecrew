@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./font/pretendard.css";
 import "./index.css";
 import "./scss/style.scss";
 import App from "./App";

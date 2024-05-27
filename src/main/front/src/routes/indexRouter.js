@@ -5,6 +5,7 @@ import LoadingPage from "../components/common/LoadingPage";
 // 지연 로딩 (lazy loading)을 위한 import
 const Main = lazy(() => import("../pages/MainPage"));
 const Login = lazy(() => import("../pages/LoginPage"));
+const Search = lazy(() => import("../pages/search/SearchIndex"));
 const TestMember = lazy(() => import("../pages/TestMemberPage"));
 
 // 경로 매핑 하는곳 (root)
@@ -24,6 +25,14 @@ const Router = () => {
       element: (
         <Suspense fallback={<LoadingPage />}>
           <Login />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/search",
+      element: (
+        <Suspense fallback={<LoadingPage />}>
+          <Search />
         </Suspense>
       ),
     },

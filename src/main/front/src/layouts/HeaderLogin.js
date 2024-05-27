@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../scss/partials/header.scss";
-import CategoryFilter from "./CategoryFilter";
 
-export default function Header() {
+export default function HeaderLogin() {
   return (
     <header>
-      <div className="headerWrap headerShadow">
+      <div className="headerWrap">
         {/* 메인페이지 헤더 */}
         <div className="headerLogoContent">
           <Link to="/">
@@ -14,7 +13,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="headerNavContent">
-          <Link to="/search">
+          <Link to="/">
             <img src="../assets/imgs/icon/ic_serch_bk.svg" alt="searchIcon" />
           </Link>
           <Link to="/">
@@ -22,7 +21,6 @@ export default function Header() {
           </Link>
         </div>
       </div>
-      <CategoryFilter />
     </header>
   );
 }
