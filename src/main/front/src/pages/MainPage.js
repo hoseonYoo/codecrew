@@ -3,6 +3,8 @@ import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
 import { useNavigate } from "react-router-dom";
 import KakaoMap from "../components/map/kakaoMap";
+import { useSelector } from "react-redux";
+import useCustomMove from "../hooks/useCustomMove";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -13,6 +15,20 @@ const MainPage = () => {
     navigate("/list/add");
   };
 
+  const loginState = useSelector((state) => state.loginSlice);
+  const { moveToLogin } = useCustomMove();
+
+  const handleLogin = () => {
+    console.log("test");
+    console.log(loginState.email);
+
+    if (!loginState.email) {
+      moveToLogin();
+    } else {
+        moveToMypage();
+    }
+  };
+
   return (
     <BasicLayout>
       {/* <div id="map" className="Map"></div> */}
@@ -20,7 +36,7 @@ const MainPage = () => {
       <div className="bottomBtnWrap">
         <div className="mainBtnWrap">
           <button onClick={moveToAddPage}>스터디추가</button>
-          <button onClick={moveToMypage}>MY</button>
+          <button onClick={handleLogin}>MY</button>
         </div>
 
         {/* 토스트팝업 */}
@@ -61,7 +77,7 @@ const MainPage = () => {
             <button className="btnLargePoint">스터디참가</button>
           </div>
         </div>
-        {/* 토스트팝업 */}
+        <div className="stPopupWrap"></div>
       </div>
     </BasicLayout>
   );
