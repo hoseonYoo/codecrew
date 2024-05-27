@@ -18,6 +18,7 @@ public interface MemberService {
             member.getNickname(),
             member.getProfileImg(),
             member.isDisabled(),
+            member.isNew(),
             member.getRole().toString()
         );
         return memberDTO;

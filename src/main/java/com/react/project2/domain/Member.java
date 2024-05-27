@@ -76,6 +76,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
+    // 신규 유저 여부
+    @Builder.Default
+    private boolean isNew = true;
+
     // ***** 값 수정 함수 *****
 
     // 닉네임 수정

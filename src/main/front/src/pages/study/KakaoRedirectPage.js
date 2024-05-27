@@ -24,7 +24,12 @@ const KakaoRedirectPage = () => {
         dispatch(login(memberInfo));
 
         // 화면 이동
-        moveToPath("/");
+        // 정보 수정이 필요하지 않으면
+        if (memberInfo && !memberInfo.isNew) {
+          moveToPath("/");
+        } else {
+          moveToPath("/testLogout");
+        }
       });
     });
   }, [authCode]); // authCode값이 변경될때만 요청되도록 useEffect 사용

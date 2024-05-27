@@ -38,6 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 member.getNickname(),
                 member.getProfileImg(),
                 member.isDisabled(),
+                member.isNew(),
                 member.getRole().toString());
 
         log.info("********* CustomUserDetailsService/loadUserByUsername - memberDTO : {}", memberDTO);

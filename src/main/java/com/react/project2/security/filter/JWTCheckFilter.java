@@ -68,8 +68,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String profileImg = (String) claims.get("profileImg");
             String password = (String) claims.get("password");
             boolean disabled = (boolean) claims.get("disabled");
+            boolean isNew = (boolean) claims.get("isNew");
 
-            MemberDTO memberDTO = new MemberDTO(email, password, nickname, profileImg, disabled, role);
+            MemberDTO memberDTO = new MemberDTO(email, password, nickname, profileImg, disabled, isNew, role);
 
             log.info("************ JWTCheckFilter - doFilterInternal : memberDTO : {}", memberDTO);
 

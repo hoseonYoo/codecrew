@@ -27,10 +27,11 @@ public class MemberDTO extends User {
     private LocalDateTime createdDate;
     private LocalDateTime disabledDate;
     private String role;
+    private boolean isNew;
 
     // 생성자
     public MemberDTO(String email, String password, String nickname, String profileImg,
-                     boolean disabled,
+                     boolean disabled, boolean isNew,
                      String role) {
         super(email, password, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
         this.email = email;
@@ -38,6 +39,7 @@ public class MemberDTO extends User {
         this.nickname = nickname;
         this.profileImg = profileImg;
         this.disabled = disabled;
+        this.isNew = isNew;
         this.role = role;
     }
 
