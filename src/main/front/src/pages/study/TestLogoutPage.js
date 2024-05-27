@@ -12,7 +12,9 @@ const TestLogoutPage = () => {
   return (
     <div>
       <h1>로그아웃 테스트 페이지</h1>
-      <button onClick={handleClickLogout}>로그아웃</button>
+      <button onClick={handleClickLogout}>
+        <p>로그아웃</p>
+      </button>
     </div>
   );
 };

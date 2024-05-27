@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { loginPostAsync, logout } from "../slices/loginSlice";
-import { useNavigate } from "react-router-dom";
+import { login, loginPostAsync, logout } from "../slices/loginSlice";
+import { createSearchParams, useNavigate } from "react-router-dom";
 const useCustomLogin = () => {
   const dispatch = useDispatch(); // 리덕스 state 값 변경해라~
 
@@ -32,6 +32,28 @@ const useCustomLogin = () => {
   const moveToLogin = () => {
     navigate({ pathname: "/member/login" }, { replace: true });
   };
+
+  // 예외 처리 함수 (토큰 문제 등)
+  const exceptionHandle = (ex) => {
+    console.log("exceptionHandle..........................");
+    console.log(ex);
+
+    const errorMsg = ex.response.data.error;
+    // 쿼리스트링 구조 문자열로 만들어주는 함수
+    const errorStr = createSearchParams({ error: errorMsg }).toString();
+    if (errorMsg === "REQUIRE_LOGIN") {
+      alert("로그인이 필요합니다.");
+      navigate({ pathname: "/login", search: errorStr });
+      return;
+    }
+    if (ex.response.data.error === "ERROR_ACCESS_DENIED") {
+      alert("해당 메뉴를 사용할 수 있는 권한이 없습니다.");
+      navigate({ pathname: "/", search: errorStr });
+      return;
+    }
+    // ....나머지 예외 처리
+  };
+
   return {
     loginState,
     isLogin,
@@ -39,6 +61,7 @@ const useCustomLogin = () => {
     execLogout,
     moveToPath,
     moveToLogin,
+    exceptionHandle,
   };
 };
 export default useCustomLogin;

@@ -10,6 +10,7 @@ const Search = lazy(() => import("../pages/search/SearchIndex"));
 const TestMember = lazy(() => import("../pages/TestMemberPage"));
 // TODO: 테스트용 로그아웃 페이지 삭제예정
 const TestLogoutPage = lazy(() => import("../pages/study/TestLogoutPage"));
+const KakaoRedirect = lazy(() => import("../pages/study/KakaoRedirectPage"));
 
 // 경로 매핑 하는곳 (root)
 const Router = () => {
@@ -54,6 +55,14 @@ const Router = () => {
       element: (
         <Suspense fallback={<LoadingPage />}>
           <TestLogoutPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/member/kakao",
+      element: (
+        <Suspense fallback={<LoadingPage />}>
+          <KakaoRedirect />
         </Suspense>
       ),
     },

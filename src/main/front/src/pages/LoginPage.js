@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import BasicLayoutLogin from "../layouts/BasicLayoutLogin";
 import { Link } from "react-router-dom";
 import "../scss/pages/loginPage.scss";
-import { useDispatch } from "react-redux";
-import { login } from "../slices/loginSlice";
 import useCustomLogin from "../hooks/useCustomLogin";
+import { getKakaoLoginLink } from "../api/kakaoAPI";
 
 // TODO: 로그인 테스트용 삭제예정
 const initState = {
@@ -35,6 +34,8 @@ const LoginPage = () => {
     setLoginParam({ ...loginParam });
   };
 
+  const kakaoLoginLink = getKakaoLoginLink();
+
   return (
     <BasicLayoutLogin>
       <div className="loginWrap">
@@ -52,10 +53,12 @@ const LoginPage = () => {
           <span>로그인</span>
         </button>
 
-        <button>
-          <img src="../assets/imgs/icon/ic_kakaoLogo.svg" alt="kakaologo" />
-          <span>카카오톡으로 로그인</span>
-        </button>
+        <Link to={kakaoLoginLink}>
+          <button>
+            <img src="../assets/imgs/icon/ic_kakaoLogo.svg" alt="kakaologo" />
+            <span>카카오톡으로 로그인</span>
+          </button>
+        </Link>
         <Link to="/">로그인하지 않고 둘러보기</Link>
       </div>
     </BasicLayoutLogin>
