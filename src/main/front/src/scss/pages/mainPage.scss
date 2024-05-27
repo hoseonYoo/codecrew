@@ -4,19 +4,20 @@
 div.bottomBtnWrap{
   position: fixed;
   width: 100%;
-  bottom: 40px;
+  bottom: 32px;
   left: 0;
   right: 0;
   text-align: center;
   z-index: 999;
     div{
-      width:calc(100% - 52px);
+      width: 100%;
       margin: 0 auto;
-      max-width: 448px;
+      max-width: 500px;
       display: flex;
       justify-content: space-between;
         button:first-child{
           width:calc(100% - 72px);
+          margin-left: 16px;
           height: 52px;
           background-color: #007BFF;
           border-radius: 12px;
@@ -26,6 +27,8 @@ div.bottomBtnWrap{
         button:last-child{
           width:52px;
           height: 52px;
+          margin-left: 16px;
+          margin-right: 16px;
           background-color: #000;
           border-radius: 12px;
           box-shadow: 
@@ -42,4 +45,16 @@ div.Map{
   background-image: url("../../../public/assets/imgs/Maskmap.png");
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+// 스터디 토스트 팝업
+div.stPopupWrap{
+  position: absolute;
+  // background-color: rgba(255,255,255,0.5);
+  width: 100vw;
+  height: 120px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 12px 12px 0px 0px;
 }
