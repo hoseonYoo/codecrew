@@ -1,30 +1,74 @@
 /* HEADER */ 
 header{
   width:100%;
-  background-color: #fff;
-  height:52px;
   position: sticky;
   top: 0;
   left:0;
   z-index: 999;
-  box-shadow: 
-  0px 6px 8px -2px rgba(0,0,0,0.1);
-  border-bottom: 0.5px solid #dcdcdc;
-  box-sizing: border-box;
-  overflow-y: hidden;
 }
 div.headerWrap{
-  width: calc(100% - 32px);
-  margin-left: 16px;
+  width: 100%;
+  background-color: #fff;
+  height:52px;
   display: flex;
   justify-content: space-between;
+  border-bottom: 0.5px solid #dcdcdc;
+  box-sizing: border-box;
   line-height: 52px;
 }
+div.headerShadow{
+  box-shadow: 
+  0px 6px 8px -2px rgba(0,0,0,0.1);
+}
+
+/*main-header*/
 div.headerLogoContent{
   width: calc(100% - 82px);
+  margin-left: 16px;
 }
 div.headerNavContent{
   display: flex;
   justify-content: flex-end;
   width: 82px;
+  margin-right: 16px;
+}
+
+/*search-header*/
+div.headerBackContnent{
+  width:36px;
+  margin-left: 16px;
+  margin-right: 4px;
+  img{
+    cursor: pointer;
+    transform: translateY(-2px);
+  }
+}
+div.headerSearchContent{
+  width: calc(100% - 24px);
+  margin-right: 16px;
+  input{
+    // 스타일 초기화
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    // 스타일 적용
+    width: 100%;
+    height: 36px;
+    padding:0 32px 0 14px;
+    line-height: 36px;
+    border-radius: 12px;
+    border: 0.5px solid #dcdcdc;
+  }
+  input::placeholder{
+    color:#dcdcdc;
+  }
+  input:focus{
+    outline: none;
+  }
+  img{
+    position: absolute;
+    right: 16px;
+    top:6px;
+    cursor: pointer;
+  }
 }

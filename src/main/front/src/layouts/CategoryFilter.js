@@ -4,8 +4,9 @@ import "../scss/partials/CategoryFilter.scss";
 export default function CategoryFilter() {
   return (
     <div className="filterWrap">
-      <div>
+      <div className="filterContainer">
         <ul>
+          <li className="activeFilter">전체</li>
           <li>웹개발</li>
           <li>프론트엔드</li>
           <li>백엔드</li>
