@@ -19,3 +19,18 @@ export const loginPost = async (loginParam) => {
 
   return response.data;
 };
+
+// API 회원 정보요청
+export const getMember = async (email) => {
+  console.log(`${host}/${email}`);
+  const response = await axios.get(`${host}/${email}`);
+  return response.data;
+};
+
+// API 회원 정보 수정
+export const modifyMember = async (member) => {
+  console.log(`${host}/modify`);
+  console.log(member);
+  const response = await axios.put(`${host}/modify`, member);
+  return response.data;
+};

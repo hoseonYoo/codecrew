@@ -27,10 +27,10 @@ const KakaoRedirectPage = () => {
 
         // 화면 이동
         // 정보 수정이 필요하지 않으면
-        if (memberInfo && !memberInfo.isNew) {
+        if (memberInfo && memberInfo.isNew) {
           moveToPath("/");
         } else {
-          moveToPath("/testLogout");
+          moveToPath("/mypage/modify");
         }
       });
     });

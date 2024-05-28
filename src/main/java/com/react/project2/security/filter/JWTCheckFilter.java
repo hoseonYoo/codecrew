@@ -1,6 +1,7 @@
 package com.react.project2.security.filter;
 
 import com.google.gson.Gson;
+import com.react.project2.domain.Category;
 import com.react.project2.dto.MemberDTO;
 import com.react.project2.util.JWTUtil;
 import jakarta.servlet.FilterChain;
@@ -14,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -39,7 +41,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
         // 이미지 경로 요청은 필터 체크 하지 않음
         // TODO : 이미지 요청 경로 확인
-        if (requestURI.startsWith("/api/view/")) {
+        if (requestURI.startsWith("/api/image")) {
             return true;
         }
         // 카테고리 필터 불러오기 경로 요청은 체크 하지 않음
@@ -70,11 +72,17 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String role = (String) claims.get("role");
             String nickname = (String) claims.get("nickname");
             String profileImg = (String) claims.get("profileImg");
+            Long phone = (Long) claims.get("phone");
+            String memberLink = (String) claims.get("memberLink");
+            String introduction = (String) claims.get("introduction");
             String password = (String) claims.get("password");
+            // TODO 확인 필요
+            List<Category> favoriteList = null;
             boolean disabled = (boolean) claims.get("disabled");
             boolean isNew = (boolean) claims.get("isNew");
 
-            MemberDTO memberDTO = new MemberDTO(email, password, nickname, profileImg, disabled, isNew, role);
+            MemberDTO memberDTO = new MemberDTO(
+                    email, password, nickname, profileImg, phone,memberLink, introduction, favoriteList, disabled, isNew, role);
 
             log.info("************ JWTCheckFilter - doFilterInternal : memberDTO : {}", memberDTO);
 

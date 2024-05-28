@@ -30,14 +30,18 @@ public class MemberDTO extends User {
     private boolean isNew;
 
     // 생성자
-    public MemberDTO(String email, String password, String nickname, String profileImg,
-                     boolean disabled, boolean isNew,
+    public MemberDTO(String email, String password, String nickname, String profileImg, Long phone, String memberLink, String introduction,
+                     List<Category> favoriteList, boolean disabled, boolean isNew,
                      String role) {
         super(email, password, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImg = profileImg;
+        this.phone = phone;
+        this.memberLink = memberLink;
+        this.introduction = introduction;
+        this.favoriteList = favoriteList;
         this.disabled = disabled;
         this.isNew = isNew;
         this.role = role;
@@ -51,8 +55,13 @@ public class MemberDTO extends User {
         map.put("password", password); // 비번은 나중에 전달 안하는 것으로 변경. 지금은 확인차 추가
         map.put("nickname", nickname);
         map.put("profileImg", profileImg);
+        map.put("phone", phone);
+        map.put("memberLink", memberLink);
+        map.put("introduction", introduction);
+        map.put("favoriteList", favoriteList);
         map.put("disabled", disabled);
         map.put("role", role);
+        map.put("isNew", isNew);
         return map;
     }
 
