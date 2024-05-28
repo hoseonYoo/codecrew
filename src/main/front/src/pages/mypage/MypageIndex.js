@@ -1,5 +1,4 @@
 import React from "react";
-import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/mainPage.scss";
 import { Outlet } from "react-router-dom";
 

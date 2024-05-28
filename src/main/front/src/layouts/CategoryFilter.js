@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../scss/partials/CategoryFilter.scss";
+import { API_SERVER_HOST } from "../api/memberAPI";
+const prefix = `${API_SERVER_HOST}/api/categories`;
 
 export default function CategoryFilter() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(prefix)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          console.log("Data is not an array!");
+        }
+      })
+      .catch((error) => {
+        console.log("There was an error fetching the categories.");
+      });
+  }, []);
+
   return (
     <div className="filterWrap">
       <div className="filterContainer">
         <ul>
           <li className="activeFilter">전체</li>
-          <li>웹개발</li>
-          <li>프론트엔드</li>
-          <li>백엔드</li>
-          <li>풀스텍</li>
-          <li>모바일앱개발</li>
-          <li>프로그래밍언어</li>
-          <li>알고리즘</li>
-          <li>데이터베이스</li>
-          <li>데브옵스</li>
-          <li>소프트웨어테스트</li>
-          <li>퍼블리싱</li>
-          <li>VR/AR</li>
-          <li>자격증</li>
+          {categories.length > 0 && categories.map((category, index) => <li key={index}>{category}</li>)}
         </ul>
       </div>
     </div>
