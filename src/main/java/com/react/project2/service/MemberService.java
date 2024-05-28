@@ -1,6 +1,7 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.Member;
+import com.react.project2.dto.DataMemberDTO;
 import com.react.project2.dto.MemberDTO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,21 @@ public interface MemberService {
             member.getPassword(),
             member.getNickname(),
             member.getProfileImg(),
+            member.getPhone(),
+            member.getMemberLink(),
+            member.getIntroduction(),
+            member.getFavoriteList(),
             member.isDisabled(),
             member.isNew(),
             member.getRole().toString()
         );
         return memberDTO;
     }
+
+    // 회원 조회
+    DataMemberDTO getMember(String email);
+
+    // 회원 정보 수정 처리
+    void modifyMember(DataMemberDTO dataMemberDTO);
 
 }

@@ -37,6 +37,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 member.getPassword(),
                 member.getNickname(),
                 member.getProfileImg(),
+                member.getPhone(),
+                member.getMemberLink(),
+                member.getIntroduction(),
+                member.getFavoriteList(),
                 member.isDisabled(),
                 member.isNew(),
                 member.getRole().toString());
