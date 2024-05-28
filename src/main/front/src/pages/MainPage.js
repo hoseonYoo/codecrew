@@ -25,7 +25,7 @@ const MainPage = () => {
     if (!loginState.email) {
       moveToLogin();
     } else {
-        moveToMypage();
+      moveToMypage();
     }
   };
 

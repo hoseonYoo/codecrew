@@ -16,7 +16,7 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div className="MyModifyImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+          <div className="MyModifyImg" style={{ backgroundImage: `url(${imgSrc || "../../../public/assets/imgs/icon/default_profile_img.png"})` }}>
             <label htmlFor="fileInput">
               편집
               <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -34,6 +34,10 @@ const ModifyPage = () => {
               <input id="check2" type="checkbox" />
               <label htmlFor="check2">프론트엔드</label>
             </div>
+          </div>
+          <div>
+            <h3>연락처</h3>
+            <input type="text" placeholder="전화번호를 입력해주세요." />
           </div>
           <div>
             <h3>링크</h3>

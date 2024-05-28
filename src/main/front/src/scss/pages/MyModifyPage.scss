@@ -46,8 +46,10 @@ div.MyModifyImg{
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  cursor: pointer;
   label{
     color: #fff;
+    cursor: pointer;
   }
   input{
     display: none;

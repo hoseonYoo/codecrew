@@ -1,25 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "../scss/partials/CategoryFilter.scss";
+import { fetchCategories } from "../slices/CategorySlice";
 
 export default function CategoryFilterList() {
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+  console.log(categories);
+
   return (
     <div className="filterWrap filterWrapListBack">
       <div className="filterContainer">
         <ul className="ListBackUl">
-          <li className="activeFilter">전체</li>
-          <li>웹개발</li>
-          <li>프론트엔드</li>
-          <li>백엔드</li>
-          <li>풀스텍</li>
-          <li>모바일앱개발</li>
-          <li>프로그래밍언어</li>
-          <li>알고리즘</li>
-          <li>데이터베이스</li>
-          <li>데브옵스</li>
-          <li>소프트웨어테스트</li>
-          <li>퍼블리싱</li>
-          <li>VR/AR</li>
-          <li>자격증</li>
+          {/* <li className="activeFilter">전체</li>
+          {categories.map((category, index) => (
+            <li key={index}>{category.value}</li>
+          ))} */}
         </ul>
       </div>
     </div>
