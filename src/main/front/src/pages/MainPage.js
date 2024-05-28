@@ -31,8 +31,8 @@ const MainPage = () => {
 
   return (
     <BasicLayout>
-      <div id="map" className="Map"></div>
-      {/*<KakaoMap />*/}
+      {/*<div id="map" className="Map"></div>*/}
+      <KakaoMap />
       <div className="bottomBtnWrap">
         <div className="mainBtnWrap">
           <button onClick={moveToAddPage}>스터디추가</button>
