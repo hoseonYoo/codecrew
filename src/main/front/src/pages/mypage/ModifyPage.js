@@ -44,7 +44,7 @@ const ModifyPage = () => {
       .catch((err) => exceptionHandle(err));
   }, [userEmail]);
 
-  //TODO 프로필 사진 수정기능 추가
+  //TODO 프로필 사진 중복 저장 문제 해결 필요
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
