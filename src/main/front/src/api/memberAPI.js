@@ -30,6 +30,7 @@ export const getMember = async (email) => {
 // API 회원 정보 수정
 export const modifyMember = async (member) => {
   console.log(`${host}/modify`);
+  console.log(member);
   const response = await axios.put(`${host}/modify`, member);
   return response.data;
 };

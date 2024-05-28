@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyModifyPage.scss";
 import { useSelector } from "react-redux";
-import { getMember, modifyMember } from "../../api/memberAPI";
+import { API_SERVER_HOST, getMember, modifyMember } from "../../api/memberAPI";
 import useCustomLogin from "../../hooks/useCustomLogin";
+import { uploadImage } from "../../api/imageAPI";
 
 const initState = {
   email: "",
@@ -14,14 +15,16 @@ const initState = {
   introduction: "",
   favoriteList: [],
 };
+const host = API_SERVER_HOST;
 
 const ModifyPage = () => {
   // 프로필 사진용
-  const [imgSrc, setImgSrc] = useState(null);
+  const [imgSrc, setImgSrc] = useState("");
 
   const [member, setMember] = useState(initState);
   const userEmail = useSelector((state) => state.loginSlice.email);
   const { exceptionHandle } = useCustomLogin();
+  const uploadRef = useRef();
 
   useEffect(() => {
     getMember(userEmail)
@@ -29,6 +32,14 @@ const ModifyPage = () => {
         console.log("회원정보");
         console.log(res);
         setMember({ ...res });
+        // 초기 로딩시 카카오 프로필인지 여부 체크
+        if (res.profileImg.startsWith("http")) {
+          console.log("카카오 프로필");
+          setImgSrc(res.profileImg);
+        } else {
+          console.log("일반 프로필");
+          setImgSrc(`${host}/api/image/view/${res.profileImg}`);
+        }
       })
       .catch((err) => exceptionHandle(err));
   }, [userEmail]);
@@ -39,6 +50,23 @@ const ModifyPage = () => {
     if (file) {
       setImgSrc(URL.createObjectURL(file));
     }
+    const uploadfile = uploadRef.current.files[0];
+    const formData = new FormData();
+    let profileImg = member.profileImg;
+    formData.append("file", file);
+
+    uploadImage(formData)
+      .then((res) => {
+        console.log("이미지 업로드 성공");
+        console.log(res);
+        profileImg = res;
+      })
+      .then(() => {
+        // member에 파일이름 넣어주기
+        let newMember = { ...member };
+        newMember.profileImg = profileImg;
+        setMember(newMember);
+      });
   };
   const handleChange = (e) => {
     member[e.target.name] = e.target.value;
@@ -47,6 +75,9 @@ const ModifyPage = () => {
   // TODO 관심스택 체크박스 기능 추가
 
   const handleClickModify = () => {
+    // TODO member에 uploadRef 넣어줘야함
+
+    // 따로 파일을 업로드 한후 파일이름 받아오기
     modifyMember(member)
       .then((res) => {
         console.log(res);
@@ -60,11 +91,16 @@ const ModifyPage = () => {
         <div className="MyModifyWrap">
           <div
             className="MyModifyImg"
-            style={{ backgroundImage: `url(${member.profileImg})` }}
+            style={{ backgroundImage: `url(${imgSrc})` }}
           >
             <label htmlFor="fileInput">
               편집
-              <input id="fileInput" type="file" onChange={handleFileChange} />
+              <input
+                id="fileInput"
+                ref={uploadRef}
+                type="file"
+                onChange={handleFileChange}
+              />
             </label>
           </div>
           <div>

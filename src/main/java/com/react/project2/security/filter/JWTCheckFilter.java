@@ -41,7 +41,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
         // 이미지 경로 요청은 필터 체크 하지 않음
         // TODO : 이미지 요청 경로 확인
-        if (requestURI.startsWith("/api/view/")) {
+        if (requestURI.startsWith("/api/image")) {
             return true;
         }
 

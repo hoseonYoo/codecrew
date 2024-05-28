@@ -20,7 +20,9 @@ public class MemberController {
     @GetMapping("/{email}")
     public DataMemberDTO getMember(@PathVariable("email") String email){
         log.info("************ MemberController - getMember -email : {}", email);
-        return memberService.getMember(email);
+        DataMemberDTO member = memberService.getMember(email);
+        log.info("************ MemberController - getMember -member : {}", member);
+        return member;
     }
 
     @PutMapping("/modify")
