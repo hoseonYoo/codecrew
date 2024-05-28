@@ -17,8 +17,6 @@ const initState = {
   favoriteList: [],
 };
 const host = API_SERVER_HOST;
-import { API_SERVER_HOST } from "../../api/memberAPI";
-const prefix = `${API_SERVER_HOST}/api/categories`;
 
 const ModifyPage = () => {
   // 프로필 사진용
@@ -92,7 +90,7 @@ const ModifyPage = () => {
 
   useEffect(() => {
     axios
-      .get(prefix)
+      .get(`${host}/api/categories`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setCategories(response.data);
@@ -109,29 +107,15 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div
-            className="MyModifyImg"
-            style={{ backgroundImage: `url(${imgSrc})` }}
-          >
+          <div className="MyModifyImg" style={{ backgroundImage: `url(${imgSrc})` }}>
             <label htmlFor="fileInput">
               편집
-              <input
-                id="fileInput"
-                ref={uploadRef}
-                type="file"
-                onChange={handleFileChange}
-              />
+              <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
             </label>
           </div>
           <div>
             <h3>닉네임</h3>
-            <input
-              type="text"
-              name="nickname"
-              value={member.nickname}
-              onChange={handleChange}
-              placeholder="닉네임을 입력해주세요."
-            />
+            <input type="text" name="nickname" value={member.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요." />
           </div>
           <div>
             <h3>관심스택</h3>
@@ -143,10 +127,6 @@ const ModifyPage = () => {
                     <label htmlFor={category}>{category}</label>
                   </>
                 ))}
-              {/* <input id="check1" type="checkbox" />
-              <label htmlFor="check1">웹개발</label>
-              <input id="check2" type="checkbox" />
-              <label htmlFor="check2">프론트엔드</label>
             </div>
           </div>
           <div>
@@ -155,22 +135,11 @@ const ModifyPage = () => {
           </div>
           <div>
             <h3>링크</h3>
-            <input
-              type="text"
-              name="memberLink"
-              value={member.memberLink}
-              onChange={handleChange}
-              placeholder="링크를 입력해주세요."
-            />
+            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="링크를 입력해주세요." />
           </div>
           <div>
             <h3>사용자 소개</h3>
-            <textarea
-              placeholder="사용자소개를 입력해주세요."
-              name="introduction"
-              value={member.introduction}
-              onChange={handleChange}
-            ></textarea>
+            <textarea placeholder="사용자소개를 입력해주세요." name="introduction" value={member.introduction} onChange={handleChange}></textarea>
           </div>
           <div className="MyModifyBtn">
             <button onClick={handleClickModify} className="btnLargePoint">
