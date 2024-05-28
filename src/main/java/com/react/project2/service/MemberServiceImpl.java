@@ -1,16 +1,19 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.Member;
+import com.react.project2.dto.DataMemberDTO;
 import com.react.project2.dto.MemberDTO;
 import com.react.project2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,10 +24,12 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
@@ -32,11 +37,12 @@ public class MemberServiceImpl implements MemberService {
         log.info("************ MemberService - getKakaoMember -email : {}", email);
 
         // DB에 회원이 있는지 조회
-        Optional<Member> findMember = memberRepository.findById(email);
+        Optional<Member> findMember = Optional.ofNullable(memberRepository.getMemberWithFavoriteList(email));
         // 기존회원 -> 로그인
         if (findMember.isPresent()) {
             log.info("기존 회원");
             MemberDTO memberDTO = entityToDto(findMember.get());
+            log.info("************ MemberService - getKakaoMember -memberDTO : {}", memberDTO);
             return memberDTO;
         }
         // 신규회원 -> 회원가입
@@ -48,6 +54,27 @@ public class MemberServiceImpl implements MemberService {
         // TODO 수정 분기 처리 필요
         memberRepository.save(socialMember);
         return memberDTO;
+    }
+
+    @Override
+    public DataMemberDTO getMember(String email) {
+        Member findMember = memberRepository.getMemberWithFavoriteList(email);
+        // Member Entity -> DataMemberDTO
+        DataMemberDTO dataMemberDTO = modelMapper.map(findMember, DataMemberDTO.class);
+        return dataMemberDTO;
+    }
+
+    @Override
+    public void modifyMember(DataMemberDTO dataMemberDTO) {
+        // DataMemberDTO -> Member Entity
+        Member member=  memberRepository.getMemberWithFavoriteList(dataMemberDTO.getEmail());
+        member.changeMemberLink(dataMemberDTO.getMemberLink());
+        member.changeIntroduction(dataMemberDTO.getIntroduction());
+        member.changeNickname(dataMemberDTO.getNickname());
+        member.changeProfileImg(dataMemberDTO.getProfileImg());
+        // TODO 관심스택 수정 기능 추가
+        memberRepository.save(member);
+
     }
 
     // 소셜회원 정보로 Member Entity 생성

@@ -12,6 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @EntityGraph(attributePaths = {"noticeList"})
     @Query("select m from Member m where m.email = :email")
     Member getMemberWithNoticeList(@Param("email") String email);
+
     // 회원 조회 + 관심 목록 포함
     @EntityGraph(attributePaths = {"favoriteList"})
     @Query("select m from Member m where m.email = :email")
