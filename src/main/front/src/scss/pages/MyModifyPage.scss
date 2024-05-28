@@ -76,6 +76,8 @@ div.checkboxWrap{
     margin-bottom: 12px;
     border: 0.5px solid #828282;
     cursor: pointer;
+    min-width: 54px;
+    text-align: center;
   }
   input:checked + label{
     background-color: #000;

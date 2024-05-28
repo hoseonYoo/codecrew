@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyModifyPage.scss";
+import { API_SERVER_HOST } from "../../api/memberAPI";
+const prefix = `${API_SERVER_HOST}/api/categories`;
 
 const ModifyPage = () => {
   const [imgSrc, setImgSrc] = useState(null);
@@ -11,6 +14,23 @@ const ModifyPage = () => {
       setImgSrc(URL.createObjectURL(file));
     }
   };
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(prefix)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          console.log("Data is not an array!");
+        }
+      })
+      .catch((error) => {
+        console.log("There was an error fetching the categories.");
+      });
+  }, []);
 
   return (
     <BasicLayoutPage headerTitle="정보수정">
@@ -29,10 +49,17 @@ const ModifyPage = () => {
           <div>
             <h3>관심스택</h3>
             <div className="checkboxWrap">
-              <input id="check1" type="checkbox" />
+              {categories.length > 0 &&
+                categories.map((category, index) => (
+                  <>
+                    <input key={index} id={category} type="checkbox" />
+                    <label htmlFor={category}>{category}</label>
+                  </>
+                ))}
+              {/* <input id="check1" type="checkbox" />
               <label htmlFor="check1">웹개발</label>
               <input id="check2" type="checkbox" />
-              <label htmlFor="check2">프론트엔드</label>
+              <label htmlFor="check2">프론트엔드</label> */}
             </div>
           </div>
           <div>

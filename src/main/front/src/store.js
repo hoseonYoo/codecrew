@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./slices/loginSlice";
-import CategorySlice from "./slices/CategorySlice";
 
 export default configureStore({
   reducer: {
+    // 로그인
     loginSlice: loginSlice,
-    // 카테고리
-    CategorySlice: CategorySlice,
   },
 });
