@@ -73,6 +73,8 @@ public class MemberServiceImpl implements MemberService {
         member.changeNickname(dataMemberDTO.getNickname());
         member.changeProfileImg(dataMemberDTO.getProfileImg());
         // TODO 관심스택 수정 기능 추가
+        member.changeFavoriteList(dataMemberDTO.getFavoriteList());
+        member.changePhone(dataMemberDTO.getPhone());
         memberRepository.save(member);
 
     }

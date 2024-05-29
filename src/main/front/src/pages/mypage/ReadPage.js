@@ -1,22 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyReadPage.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { API_SERVER_HOST, getMember } from "../../api/memberAPI";
+import useCustomMove from "../../hooks/useCustomMove";
+import { useSelector } from "react-redux";
+import useCustomLogin from "../../hooks/useCustomLogin";
+
+const initState = {
+  email: "",
+  nickname: "",
+  phone: 0,
+  profileImg: "",
+  memberLink: "",
+  introduction: "",
+  favoriteList: [],
+  noticeList: [],
+  penalty: 0,
+  blockedDate: "",
+};
+
+const host = API_SERVER_HOST;
 
 const ReadPage = () => {
-  const navigate = useNavigate();
-  const moveToModify = () => {
-    navigate("/mypage/modify");
+  const { moveToModify } = useCustomMove();
+
+  const [member, setMember] = useState(initState);
+  const userEmail = useSelector((state) => state.loginSlice.email);
+  const [categories, setCategories] = useState({});
+  const { exceptionHandle } = useCustomLogin();
+  const { execLogout, moveToPath } = useCustomLogin();
+
+  const handleClickLogout = () => {
+    execLogout();
+    moveToPath("/");
   };
+
+  useEffect(() => {
+    getMember(userEmail)
+      .then((res) => {
+        // 초기 로딩시 카카오 프로필인지 여부 체크
+        if (res.profileImg === "") {
+        } else if (res.profileImg.startsWith("http")) {
+          console.log("카카오 프로필");
+          member.profileImg = res.profileImg;
+        } else {
+          console.log("일반 프로필");
+          member.profileImg = `${host}/api/image/view/${res.profileImg}`;
+        }
+        setMember({ ...res });
+      })
+      .catch((err) => exceptionHandle(err));
+  }, [userEmail]);
 
   return (
     <BasicLayoutPage headerTitle="마이페이지">
       <div>
         <div className="MyBlockWrap">
-          <div className="MyReadImg"></div>
+          <div
+            className="MyReadImg"
+            style={
+              member.profileImg !== ""
+                ? { backgroundImage: `url(${member.profileImg})` }
+                : null
+            }
+          ></div>
           <div className="MyReadTitle">
-            <h3>김조은</h3>
-            <p>kimjohn@naver.com</p>
+            <h3>{member.nickname}</h3>
+            <p>{member.email}</p>
           </div>
           <div className="MyReadBtn">
             <button className="btnMediumBlack" onClick={moveToModify}>
@@ -33,7 +84,11 @@ const ReadPage = () => {
           </div>
           <div className="MyReadText">
             <h3>링 크 : </h3>
-            <p>www.github.io</p>
+            {member.memberLink ? (
+              <p>{member.memberLink}</p>
+            ) : (
+              <p>등록한 링크가 없습니다.</p>
+            )}
           </div>
           <div className="MyReadText">
             <h3>모임횟수 : </h3>
@@ -44,7 +99,11 @@ const ReadPage = () => {
         </div>
         <div className="MyReadUserText">
           <h2>사용자 소개</h2>
-          <p>만나서 반가워요! 풀스택개발자를 희망하는 김 조 은 입니다!</p>
+          {member.introduction ? (
+            <p>{member.introduction}</p>
+          ) : (
+            <p>사용자 소개가 없습니다.</p>
+          )}
         </div>
       </div>
       <div className="MyReadUserMenu">
@@ -67,7 +126,7 @@ const ReadPage = () => {
             <span>(9,999)</span>
           </Link>
         </div>
-        <div className="MenuWrap">
+        <div onClick={handleClickLogout} className="MenuWrap">
           <Link>
             <h3>🔑 로그아웃</h3>
             <span></span>

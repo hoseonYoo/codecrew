@@ -15,8 +15,15 @@ const useCustomMove = () => {
   const moveToLogin = () => {
     navigate({ pathname: "/login" });
   };
+  const moveToMypage = () => {
+    navigate({ pathname: "/mypage" });
+  };
+
+  const moveToModify = () => {
+    navigate("/mypage/modify");
+  };
 
   // TODO 함수 작성 후 return 추가
-  return { moveToLogin };
+  return { moveToLogin, moveToMypage, moveToModify };
 };
 export default useCustomMove;

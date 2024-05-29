@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { API_SERVER_HOST, getMember, modifyMember } from "../../api/memberAPI";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { uploadImage } from "../../api/imageAPI";
+import useCustomMove from "../../hooks/useCustomMove";
 
 const initState = {
   email: "",
@@ -21,10 +22,13 @@ const host = API_SERVER_HOST;
 const ModifyPage = () => {
   // 프로필 사진용
   const [imgSrc, setImgSrc] = useState("");
+  const { moveToMypage } = useCustomMove();
 
   const [member, setMember] = useState(initState);
   const userEmail = useSelector((state) => state.loginSlice.email);
   const { exceptionHandle } = useCustomLogin();
+  const [categories, setCategories] = useState({});
+
   const uploadRef = useRef();
 
   useEffect(() => {
@@ -34,7 +38,12 @@ const ModifyPage = () => {
         console.log(res);
         setMember({ ...res });
         // 초기 로딩시 카카오 프로필인지 여부 체크
-        if (res.profileImg.startsWith("http")) {
+        if (res.profileImg === "") {
+          console.log("프로필 없음");
+          setImgSrc(
+            "../../../public/assets/imgs/icon/default_profile_img.png)",
+          );
+        } else if (res.profileImg.startsWith("http")) {
           console.log("카카오 프로필");
           setImgSrc(res.profileImg);
         } else {
@@ -74,32 +83,42 @@ const ModifyPage = () => {
     setMember({ ...member });
   };
   // TODO 관심스택 체크박스 기능 추가
+  const handleCheckChange = (e) => {
+    console.log(member.favoriteList);
+    let newFavorite = [...member.favoriteList];
+    if (newFavorite.includes(e.target.id)) {
+      newFavorite = newFavorite.filter((item) => item !== e.target.id);
+    } else {
+      newFavorite.push(e.target.id);
+    }
+    member.favoriteList = newFavorite;
+    setMember({ ...member });
+  };
 
   const handleClickModify = () => {
     // TODO member에 uploadRef 넣어줘야함
 
-    // 따로 파일을 업로드 한후 파일이름 받아오기
+    console.log(member);
+
     modifyMember(member)
       .then((res) => {
         console.log(res);
       })
       .catch((err) => exceptionHandle(err));
+    moveToMypage();
   };
-
-  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${host}/api/categories`)
       .then((response) => {
-        if (Array.isArray(response.data)) {
-          setCategories(response.data);
-        } else {
-          console.log("Data is not an array!");
-        }
+        console.log(response.data);
+
+        setCategories({ ...response.data });
+        console.log(categories);
       })
       .catch((error) => {
-        console.log("There was an error fetching the categories.");
+        console.log(error);
       });
   }, []);
 
@@ -107,25 +126,48 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div className="MyModifyImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+          <div
+            className="MyModifyImg"
+            style={
+              member.profileImg !== ""
+                ? { backgroundImage: `url(${member.profileImg})` }
+                : null
+            }
+          >
             <label htmlFor="fileInput">
               편집
-              <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
+              <input
+                id="fileInput"
+                ref={uploadRef}
+                type="file"
+                onChange={handleFileChange}
+              />
             </label>
           </div>
           <div>
             <h3>닉네임</h3>
-            <input type="text" name="nickname" value={member.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요." />
+            <input
+              type="text"
+              name="nickname"
+              value={member.nickname}
+              onChange={handleChange}
+              placeholder="닉네임을 입력해주세요."
+            />
           </div>
           <div>
             <h3>관심스택</h3>
             <div className="checkboxWrap">
-              {categories.length > 0 &&
-                categories.map((category, index) => (
-                  <>
-                    <input key={index} id={category} type="checkbox" />
-                    <label htmlFor={category}>{category}</label>
-                  </>
+              {Object.entries(categories).length > 0 &&
+                Object.entries(categories).map(([key, value], index) => (
+                  <React.Fragment key={index}>
+                    <input
+                      onChange={handleCheckChange}
+                      id={key}
+                      type="checkbox"
+                      checked={member.favoriteList.includes(key)}
+                    />
+                    <label htmlFor={key}>{value}</label>
+                  </React.Fragment>
                 ))}
             </div>
           </div>
@@ -135,11 +177,22 @@ const ModifyPage = () => {
           </div>
           <div>
             <h3>링크</h3>
-            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="링크를 입력해주세요." />
+            <input
+              type="text"
+              name="memberLink"
+              value={member.memberLink}
+              onChange={handleChange}
+              placeholder="링크를 입력해주세요."
+            />
           </div>
           <div>
             <h3>사용자 소개</h3>
-            <textarea placeholder="사용자소개를 입력해주세요." name="introduction" value={member.introduction} onChange={handleChange}></textarea>
+            <textarea
+              placeholder="사용자소개를 입력해주세요."
+              name="introduction"
+              value={member.introduction}
+              onChange={handleChange}
+            ></textarea>
           </div>
           <div className="MyModifyBtn">
             <button onClick={handleClickModify} className="btnLargePoint">
