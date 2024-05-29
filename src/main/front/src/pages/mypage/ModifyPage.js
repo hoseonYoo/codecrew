@@ -40,9 +40,7 @@ const ModifyPage = () => {
         // 초기 로딩시 카카오 프로필인지 여부 체크
         if (res.profileImg === "") {
           console.log("프로필 없음");
-          setImgSrc(
-            "../../../public/assets/imgs/icon/default_profile_img.png)",
-          );
+          setImgSrc("../../../public/assets/imgs/icon/default_profile_img.png)");
         } else if (res.profileImg.startsWith("http")) {
           console.log("카카오 프로필");
           setImgSrc(res.profileImg);
@@ -126,33 +124,15 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div
-            className="MyModifyImg"
-            style={
-              member.profileImg !== ""
-                ? { backgroundImage: `url(${member.profileImg})` }
-                : null
-            }
-          >
+          <div className="MyModifyImg" style={member.profileImg !== "" ? { backgroundImage: `url(${member.profileImg})` } : null}>
             <label htmlFor="fileInput">
               편집
-              <input
-                id="fileInput"
-                ref={uploadRef}
-                type="file"
-                onChange={handleFileChange}
-              />
+              <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
             </label>
           </div>
           <div>
             <h3>닉네임</h3>
-            <input
-              type="text"
-              name="nickname"
-              value={member.nickname}
-              onChange={handleChange}
-              placeholder="닉네임을 입력해주세요."
-            />
+            <input type="text" name="nickname" value={member.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요." />
           </div>
           <div>
             <h3>관심스택</h3>
@@ -160,12 +140,7 @@ const ModifyPage = () => {
               {Object.entries(categories).length > 0 &&
                 Object.entries(categories).map(([key, value], index) => (
                   <React.Fragment key={index}>
-                    <input
-                      onChange={handleCheckChange}
-                      id={key}
-                      type="checkbox"
-                      checked={member.favoriteList.includes(key)}
-                    />
+                    <input onChange={handleCheckChange} id={key} type="checkbox" checked={member.favoriteList.includes(key)} />
                     <label htmlFor={key}>{value}</label>
                   </React.Fragment>
                 ))}
@@ -177,22 +152,11 @@ const ModifyPage = () => {
           </div>
           <div>
             <h3>링크</h3>
-            <input
-              type="text"
-              name="memberLink"
-              value={member.memberLink}
-              onChange={handleChange}
-              placeholder="링크를 입력해주세요."
-            />
+            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="링크를 입력해주세요." />
           </div>
           <div>
             <h3>사용자 소개</h3>
-            <textarea
-              placeholder="사용자소개를 입력해주세요."
-              name="introduction"
-              value={member.introduction}
-              onChange={handleChange}
-            ></textarea>
+            <textarea placeholder="사용자소개를 입력해주세요." name="introduction" value={member.introduction} onChange={handleChange}></textarea>
           </div>
           <div className="MyModifyBtn">
             <button onClick={handleClickModify} className="btnLargePoint">
