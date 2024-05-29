@@ -38,7 +38,12 @@ const ModifyPage = () => {
         console.log(res);
         setMember({ ...res });
         // 초기 로딩시 카카오 프로필인지 여부 체크
-        if (res.profileImg.startsWith("http")) {
+        if (res.profileImg === "") {
+          console.log("프로필 없음");
+          setImgSrc(
+            "../../../public/assets/imgs/icon/default_profile_img.png)",
+          );
+        } else if (res.profileImg.startsWith("http")) {
           console.log("카카오 프로필");
           setImgSrc(res.profileImg);
         } else {
@@ -123,7 +128,11 @@ const ModifyPage = () => {
         <div className="MyModifyWrap">
           <div
             className="MyModifyImg"
-            style={{ backgroundImage: `url(${imgSrc})` }}
+            style={
+              member.profileImg !== ""
+                ? { backgroundImage: `url(${member.profileImg})` }
+                : null
+            }
           >
             <label htmlFor="fileInput">
               편집
@@ -147,19 +156,6 @@ const ModifyPage = () => {
           </div>
           <div>
             <h3>관심스택</h3>
-            {/*<div className="checkboxWrap">
-              {Object.entries(categories).length > 0 &&
-                Object.entries(categories).map(([key, value], index) => (
-                  <React.Fragment key={index}>
-                    <input
-                      onChange={handleCheckChange}
-                      id={key}
-                      type="checkbox"
-                    />
-                    <label htmlFor={key}>{value}</label>
-                  </React.Fragment>
-                ))}
-            </div>*/}
             <div className="checkboxWrap">
               {Object.entries(categories).length > 0 &&
                 Object.entries(categories).map(([key, value], index) => (
