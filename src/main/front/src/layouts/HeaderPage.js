@@ -1,14 +1,20 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../scss/partials/header.scss";
+import useCustomMove from "../hooks/useCustomMove";
 
 export default function HeaderPage({ headerTitle }) {
   const navigate = useNavigate();
+  const { moveToMain } = useCustomMove();
   // console.log(headerTitle);
 
   // 뒤로가기 버튼
   const onclickBtn = () => {
-    navigate(-1);
+    if (headerTitle === "마이페이지") {
+      moveToMain();
+    } else {
+      navigate(-1);
+    }
   };
 
   return (

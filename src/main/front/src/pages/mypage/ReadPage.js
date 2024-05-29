@@ -6,6 +6,7 @@ import { API_SERVER_HOST, getMember } from "../../api/memberAPI";
 import useCustomMove from "../../hooks/useCustomMove";
 import { useSelector } from "react-redux";
 import useCustomLogin from "../../hooks/useCustomLogin";
+import axios from "axios";
 
 const initState = {
   email: "",
@@ -30,6 +31,7 @@ const ReadPage = () => {
   const [categories, setCategories] = useState({});
   const { exceptionHandle } = useCustomLogin();
   const { execLogout, moveToPath } = useCustomLogin();
+  const [imgSrc, setImgSrc] = useState("");
 
   const handleClickLogout = () => {
     execLogout();
@@ -43,15 +45,29 @@ const ReadPage = () => {
         if (res.profileImg === "") {
         } else if (res.profileImg.startsWith("http")) {
           console.log("카카오 프로필");
-          member.profileImg = res.profileImg;
+          setImgSrc(res.profileImg);
         } else {
           console.log("일반 프로필");
-          member.profileImg = `${host}/api/image/view/${res.profileImg}`;
+          setImgSrc(`${host}/api/image/view/${res.profileImg}`);
         }
         setMember({ ...res });
       })
       .catch((err) => exceptionHandle(err));
   }, [userEmail]);
+
+  useEffect(() => {
+    axios
+      .get(`${host}/api/categories`)
+      .then((response) => {
+        console.log(response.data);
+
+        setCategories({ ...response.data });
+        console.log(categories);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <BasicLayoutPage headerTitle="마이페이지">
@@ -59,11 +75,7 @@ const ReadPage = () => {
         <div className="MyBlockWrap">
           <div
             className="MyReadImg"
-            style={
-              member.profileImg !== ""
-                ? { backgroundImage: `url(${member.profileImg})` }
-                : null
-            }
+            style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}
           ></div>
           <div className="MyReadTitle">
             <h3>{member.nickname}</h3>
@@ -75,11 +87,19 @@ const ReadPage = () => {
             </button>
           </div>
         </div>
+        {/*TODO 관심스택 마진 변경 필요*/}
         <div className="MyReadTextWrap">
           <div className="MyReadText">
             <h3>관심스택 : </h3>
             <div>
-              <p>웹개발, 백엔드</p>
+              {Object.entries(categories).length > 0 &&
+                Object.entries(categories).map(([key, value], index) => (
+                  <React.Fragment key={index}>
+                    {member.favoriteList.includes(key) ? (
+                      <span>{value} </span>
+                    ) : null}
+                  </React.Fragment>
+                ))}
             </div>
           </div>
           <div className="MyReadText">

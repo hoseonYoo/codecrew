@@ -27,7 +27,7 @@ public class Member {
 
     // 전화번호
     @Builder.Default
-    private Long phone = 0L;
+    private Long phone = null;
 
     // 프로필 이미지
     @Builder.Default
