@@ -39,6 +39,5 @@ public class Study {
     private LocalDateTime createDate; // 생성일자
 
     private int studyMaxPeople; // 최대인원
-    private Member studyMemberList; // 참여인원 목록
 
 }

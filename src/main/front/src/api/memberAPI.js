@@ -22,7 +22,6 @@ export const loginPost = async (loginParam) => {
 
 // API 회원 정보요청
 export const getMember = async (email) => {
-  console.log(`${host}/${email}`);
   const response = await axios.get(`${host}/${email}`);
   return response.data;
 };

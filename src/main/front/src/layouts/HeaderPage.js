@@ -4,7 +4,7 @@ import "../scss/partials/header.scss";
 
 export default function HeaderPage({ headerTitle }) {
   const navigate = useNavigate();
-  console.log(headerTitle);
+  // console.log(headerTitle);
 
   // 뒤로가기 버튼
   const onclickBtn = () => {
@@ -17,7 +17,11 @@ export default function HeaderPage({ headerTitle }) {
         {/* 검색페이지 헤더 */}
         <div className="headerBackContnent">
           <div onClick={onclickBtn}>
-            <img src="../assets/imgs/icon/ic_ar_bk.svg" alt="backBtn" height="36px" />
+            <img
+              src="../assets/imgs/icon/ic_ar_bk.svg"
+              alt="backBtn"
+              height="36px"
+            />
           </div>
         </div>
         <div className="headerTitleContent">

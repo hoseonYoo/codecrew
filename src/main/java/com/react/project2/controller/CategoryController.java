@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Slf4j
 @ToString
 @RestController
@@ -14,9 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
     @GetMapping("/categories")
-    public Category[] getCategories() {
-        log.info("~~~~~~~~~~~~~응답!");
-        return Category.values();
+    public Map<String, String> getCategoryMap() {
+        Map<String, String> categoryMap = new HashMap<>();
+        for (Category category : Category.values()) {
+            categoryMap.put(category.name(), category.getValue());
+        }
+        return categoryMap;
     }
 }
 

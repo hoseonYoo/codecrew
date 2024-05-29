@@ -112,16 +112,10 @@ public class Member {
         this.disabled = disabled;
     }
 
-    // 관심 카테고리 추가
-    public void addFavorite(Category category) {
-        favoriteList.add(category);
+    // 관심 카테고리 변경
+    public void changeFavoriteList(List<Category> favoriteList) {
+        this.favoriteList = favoriteList;
     }
-
-    // 관심 카테고리 삭제
-    public void removeFavorite(Category category) {
-        favoriteList.remove(category);
-    }
-
 
 
 }

@@ -2,7 +2,7 @@ import React from "react";
 import HeaderPage from "./HeaderPage";
 
 const BasicLayoutPage = ({ children, headerTitle }) => {
-  console.log(headerTitle);
+  // console.log(headerTitle);
   return (
     <>
       <div className="bodyWrap">
