@@ -1,7 +1,7 @@
 package com.react.project2.dto;
 
 import com.react.project2.domain.Category;
-import com.react.project2.domain.notice;
+import com.react.project2.domain.Notice;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -21,7 +21,7 @@ public class MemberDTO extends User {
     private String introduction;
     private boolean disabled;
     private List<Category> favoriteList;
-    private List<notice> noticeList;
+    private List<Notice> noticeList;
     private int penalty;
     private LocalDateTime blockedDate;
     private LocalDateTime createdDate;

@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class notice {
+public class Notice {
+
+        // TODO: Notice Entity 수정
 
         private String title; // 제목
 

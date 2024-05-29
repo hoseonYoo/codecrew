@@ -2,7 +2,7 @@ package com.react.project2.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.react.project2.domain.Category;
-import com.react.project2.domain.notice;
+import com.react.project2.domain.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class DataMemberDTO {
     private String introduction;
     private boolean disabled;
     private List<Category> favoriteList;
-    private List<notice> noticeList;
+    private List<Notice> noticeList;
     private int penalty;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime blockedDate;

@@ -55,7 +55,7 @@ public class Member {
     // 알림 리스트
     @ElementCollection
     @Builder.Default
-    private List<notice> noticeList = new ArrayList<>();
+    private List<Notice> noticeList = new ArrayList<>();
 
     // 패널티
     @Builder.Default
