@@ -11,7 +11,7 @@ import useCustomMove from "../../hooks/useCustomMove";
 const initState = {
   email: "",
   nickname: "",
-  phone: 0,
+  phone: "",
   profileImg: "",
   memberLink: "",
   introduction: "",
@@ -40,7 +40,7 @@ const ModifyPage = () => {
         // 초기 로딩시 카카오 프로필인지 여부 체크
         if (res.profileImg === "") {
           console.log("프로필 없음");
-          setImgSrc("../../../public/assets/imgs/icon/default_profile_img.png)");
+          setImgSrc("");
         } else if (res.profileImg.startsWith("http")) {
           console.log("카카오 프로필");
           setImgSrc(res.profileImg);
@@ -80,7 +80,6 @@ const ModifyPage = () => {
     member[e.target.name] = e.target.value;
     setMember({ ...member });
   };
-  // TODO 관심스택 체크박스 기능 추가
   const handleCheckChange = (e) => {
     console.log(member.favoriteList);
     let newFavorite = [...member.favoriteList];
@@ -93,17 +92,39 @@ const ModifyPage = () => {
     setMember({ ...member });
   };
 
-  const handleClickModify = () => {
+  // 입력관련 방지
+  const characterCheck = (e) => {
+    const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+    // 입력된 값이 숫자, 백스페이스, 삭제 키가 아니면 입력을 막습니다.
+    if (
+      !/^[0-9]*$/.test(e.key) &&
+      e.type === "keydown" &&
+      e.key !== "Backspace" &&
+      e.key !== "Delete"
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  // TODO 예외 처리 필요
+  const handleClickModify = (e) => {
     // TODO member에 uploadRef 넣어줘야함
+    e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
 
     console.log(member);
+
+    // 닉네임 입력 안했을 때
+    if (member.nickname === "") {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
 
     modifyMember(member)
       .then((res) => {
         console.log(res);
       })
-      .catch((err) => exceptionHandle(err));
-    moveToMypage();
+      .catch((err) => exceptionHandle(err))
+      .then(moveToMypage);
   };
 
   useEffect(() => {
@@ -124,15 +145,33 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div className="MyModifyImg" style={member.profileImg !== "" ? { backgroundImage: `url(${member.profileImg})` } : null}>
+          <div
+            className="MyModifyImg"
+            style={
+              member.profileImg !== ""
+                ? { backgroundImage: `url(${imgSrc})` }
+                : null
+            }
+          >
             <label htmlFor="fileInput">
               편집
-              <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
+              <input
+                id="fileInput"
+                ref={uploadRef}
+                type="file"
+                onChange={handleFileChange}
+              />
             </label>
           </div>
           <div>
             <h3>닉네임</h3>
-            <input type="text" name="nickname" value={member.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요." />
+            <input
+              type="text"
+              name="nickname"
+              value={member.nickname}
+              onChange={handleChange}
+              placeholder="닉네임을 입력해주세요."
+            />
           </div>
           <div>
             <h3>관심스택</h3>
@@ -140,23 +179,49 @@ const ModifyPage = () => {
               {Object.entries(categories).length > 0 &&
                 Object.entries(categories).map(([key, value], index) => (
                   <React.Fragment key={index}>
-                    <input onChange={handleCheckChange} id={key} type="checkbox" checked={member.favoriteList.includes(key)} />
+                    <input
+                      onChange={handleCheckChange}
+                      id={key}
+                      type="checkbox"
+                      checked={member.favoriteList.includes(key)}
+                    />
                     <label htmlFor={key}>{value}</label>
                   </React.Fragment>
                 ))}
             </div>
           </div>
           <div>
+            {/*TODO 연락처 중복 방지 기능 추가*/}
             <h3>연락처</h3>
-            <input type="text" placeholder="전화번호를 입력해주세요." />
+            <input
+              type="text"
+              placeholder="연락처를 입력해주세요."
+              maxLength={11}
+              name="phone"
+              value={member.phone}
+              onKeyUp={characterCheck}
+              onKeyDown={characterCheck}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <h3>링크</h3>
-            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="링크를 입력해주세요." />
+            <input
+              type="text"
+              name="memberLink"
+              value={member.memberLink}
+              onChange={handleChange}
+              placeholder="링크를 입력해주세요."
+            />
           </div>
           <div>
             <h3>사용자 소개</h3>
-            <textarea placeholder="사용자소개를 입력해주세요." name="introduction" value={member.introduction} onChange={handleChange}></textarea>
+            <textarea
+              placeholder="사용자소개를 입력해주세요."
+              name="introduction"
+              value={member.introduction}
+              onChange={handleChange}
+            ></textarea>
           </div>
           <div className="MyModifyBtn">
             <button onClick={handleClickModify} className="btnLargePoint">
