@@ -22,4 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @EntityGraph(attributePaths = {"noticeList", "favoriteList"})
     @Query("select m from Member m where m.email = :email")
     Member getMemberWithNoticeListAndFavoriteList(@Param("email") String email);
+
+    Member findMemberByPhone(Long phone);
+
 }

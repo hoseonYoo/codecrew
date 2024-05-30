@@ -24,10 +24,11 @@ const KakaoRedirectPage = () => {
         console.log(memberInfo);
         // 로그인 처리
         dispatch(login(memberInfo));
+        console.log("memberInfo.isNew : ", memberInfo.isNew);
 
         // 화면 이동
         // 정보 수정이 필요하지 않으면
-        if (memberInfo && memberInfo.isNew) {
+        if (memberInfo && !memberInfo.isNew) {
           moveToPath("/");
         } else {
           moveToPath("/mypage/modify");

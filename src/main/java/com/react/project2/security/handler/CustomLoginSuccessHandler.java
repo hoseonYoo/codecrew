@@ -26,7 +26,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> claims = memberDTO.getClaims(); // 사용자정보 Map타입으로 변환
 
         // JWT 토큰 생성
-        // TODO 토큰 유효시간 테스트 필요
         String accessToken = JWTUtil.generateToken(claims, 10); // 10분
         String refreshToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
         claims.put("accessToken", accessToken);

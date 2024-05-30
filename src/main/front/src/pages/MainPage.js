@@ -10,14 +10,12 @@ const MainPage = () => {
   const loginState = useSelector((state) => state.loginSlice);
   const { moveToLogin, moveToMypage, moveToAddPage } = useCustomMove();
 
-  const handleLogin = () => {
-    console.log("test");
-    console.log(loginState.email);
-
+  // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
+  const handleLogin = (moveFunction) => {
     if (!loginState.email) {
       moveToLogin();
     } else {
-      moveToMypage();
+      moveFunction();
     }
   };
 
@@ -29,7 +27,13 @@ const MainPage = () => {
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
           <button onClick={moveToAddPage}>스터디추가</button>
-          <button onClick={handleLogin}>MY</button>
+          <button
+            onClick={() => {
+              handleLogin(moveToMypage);
+            }}
+          >
+            MY
+          </button>
         </div>
 
         {/* 토스트팝업 */}
