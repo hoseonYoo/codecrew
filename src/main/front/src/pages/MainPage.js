@@ -7,7 +7,10 @@ import { useSelector } from "react-redux";
 import useCustomMove from "../hooks/useCustomMove";
 
 const MainPage = () => {
+  // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
+
+  // 페이지 이동을 위한 함수들
   const { moveToLogin, moveToMypage, moveToAddPage } = useCustomMove();
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
@@ -26,7 +29,13 @@ const MainPage = () => {
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
-          <button onClick={moveToAddPage}>스터디추가</button>
+          <button
+            onClick={() => {
+              handleLogin(moveToAddPage);
+            }}
+          >
+            스터디추가
+          </button>
           <button
             onClick={() => {
               handleLogin(moveToMypage);
