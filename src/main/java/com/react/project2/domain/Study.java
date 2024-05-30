@@ -38,8 +38,8 @@ public class Study {
 
     // 장소 위치
     private String location;
-//    private double locationX;
-//    private double locationY;
+    private double locationX;
+    private double locationY;
 
     // 모임일자
     @Column(nullable = false)

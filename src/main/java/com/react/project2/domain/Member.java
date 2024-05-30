@@ -27,7 +27,7 @@ public class Member {
 
     // 전화번호
     @Builder.Default
-    private Long phone = null;
+    private String phone = null;
 
     // 프로필 이미지
     @Builder.Default
@@ -88,7 +88,7 @@ public class Member {
     }
 
     // 전화번호 수정
-    public void changePhone(Long phone) {
+    public void changePhone(String phone) {
         this.phone = phone;
     }
 

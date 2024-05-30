@@ -7,6 +7,7 @@ import "../../scss/pages/AddPage.scss";
 import { API_SERVER_HOST } from "../../api/memberAPI";
 import DaumPostcode from "react-daum-postcode";
 import { uploadImage } from "../../api/imageAPI";
+const { kakao } = window;
 
 const host = API_SERVER_HOST;
 
@@ -92,15 +93,32 @@ const AddPage = () => {
     console.log(study);
   };
 
+  const handleChangeLocation = () => {
+    let location = study.location;
+
+    // 주소-좌표 변환 객체를 생성합니다
+    let geocoder = new kakao.maps.services.Geocoder();
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(location, function (result, status) {
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) {
+        study.locationX = result[0].x;
+        study.locationY = result[0].y;
+        setStudy({ ...study });
+        console.log(study);
+      }
+    });
+  };
+
   //버튼
   const handleClickAdd = (e) => {
     e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
 
     // 확인 처리
-    // if (study.thImg === "") {
-    //   alert("이미지가 등록되지 않았습니다.");
-    //   return; // 함수 실행을 여기서 중단합니다.
-    // }
+    if (study.thImg === "") {
+      alert("이미지가 등록되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
     if (study.title === "") {
       alert("제목이 입력되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
@@ -113,6 +131,11 @@ const AddPage = () => {
       alert("참여날짜가 입력되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
     }
+    // 참여 날짜가 현재시간으로 부터 24시간이후 보다 전이면 중단
+    if (new Date(study.studyDate).getTime() < new Date().getTime() + 86400000) {
+      alert("참여날짜는 현재시간으로부터 24시간 이후로 설정해주세요.");
+      return;
+    }
     if (study.category === "카테고리 선택" || study.category === "") {
       alert("카테고리가 입력되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
@@ -121,6 +144,8 @@ const AddPage = () => {
       alert("소개글이 입력되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
     }
+
+    handleChangeLocation();
 
     const formData = new FormData();
     formData.append("thImg", study.thImg);
@@ -131,6 +156,8 @@ const AddPage = () => {
     formData.append("strStudyDate", study.studyDate);
     formData.append("maxPeople", parseInt(study.maxPeople));
     formData.append("category", study.category);
+    formData.append("locationX", study.locationX);
+    formData.append("locationY", study.locationY);
     console.log(formData);
 
     // 여기에 서버로 데이터를 전송하는 코드를 추가합니다.
@@ -208,11 +235,7 @@ const AddPage = () => {
                 onChange={handleChangeStudy}
               />
             </div>
-            {/* <div>
-              <h3>연락처</h3>
-              <input type="text" placeholder="연락처를 입력해주세요." maxLength={11} onKeyUp={characterCheck} onKeyDown={characterCheck} />
-            </div> */}
-            <div>
+            <div onClick={handleAddressSearchClick}>
               <h3>주소</h3>
               <input
                 name="location"
@@ -226,7 +249,6 @@ const AddPage = () => {
                 className="AdressSearch"
                 src="../assets/imgs/icon/ic_serch_gr.svg"
                 alt="searchIcon"
-                onClick={handleAddressSearchClick}
               />
             </div>
             <div>
@@ -237,6 +259,10 @@ const AddPage = () => {
                 type="datetime-local"
                 placeholder="참여일을 입력해주세요."
                 onChange={handleChangeStudy}
+                min={new Date().toISOString().substring(0, 16)}
+                max={new Date(new Date().getTime() + 12096e5)
+                  .toISOString()
+                  .substring(0, 16)}
               />
             </div>
             <div>
@@ -246,9 +272,9 @@ const AddPage = () => {
                 value={study.maxPeople}
                 onChange={handleChangeStudy}
               >
-                {Array.from({ length: 10 }, (_, index) => (
-                  <option key={index} value={index + 1}>
-                    {index + 1}
+                {Array.from({ length: 9 }, (_, index) => (
+                  <option key={index} value={index + 2}>
+                    {index + 2}
                   </option>
                 ))}
               </select>

@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public DataMemberDTO findMemberByPhone(Long phone) {
+    public DataMemberDTO findMemberByPhone(String phone) {
         Member findMember = memberRepository.findMemberByPhone(phone);
         if (findMember != null) {
             DataMemberDTO dataMemberDTO = modelMapper.map(findMember, DataMemberDTO.class);

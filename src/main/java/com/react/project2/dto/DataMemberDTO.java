@@ -21,7 +21,7 @@ public class DataMemberDTO {
     private String email;
     private String password;
     private String nickname;
-    private Long phone;
+    private String phone;
     private String profileImg;
     private String memberLink;
     private String introduction;
