@@ -21,10 +21,11 @@ public class StudyServiceImpl implements StudyService {
 
     // 스터디 등록
     @Override
-    public void add(StudyDTO studyDTO) {
+    public Long add(StudyDTO studyDTO) {
         Study study = dtoToEntity(studyDTO);
         // 저장 처리
-        Study saved = studyRepository.save(study);
+        studyRepository.save(study);
+        return 1L;
     }
 
     private Study dtoToEntity(StudyDTO studyDTO) {
@@ -34,12 +35,12 @@ public class StudyServiceImpl implements StudyService {
 
         // Study 엔티티를 생성하고 Member 엔티티를 설정합니다.
         Study study = Study.builder()
-                .id(studyDTO.getId())
                 .thImg(studyDTO.getThImg())
                 .title(studyDTO.getTitle())
                 .content(studyDTO.getContent())
                 .member(member) // 조회된 Member 엔티티를 사용합니다.
                 .location(studyDTO.getLocation())
+                .studyDeadlineDate(studyDTO.getStudyDate())
                 .studyDate(studyDTO.getStudyDate())
                 .maxPeople(studyDTO.getMaxPeople())
                 .build();

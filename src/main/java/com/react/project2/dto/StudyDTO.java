@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -24,10 +25,13 @@ public class StudyDTO {
     private String content;
     private String memberEmail;
     private String location;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh-mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
     private LocalDateTime studyDate;
+    private String strStudyDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
     private LocalDateTime studyDeadlineDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String strStudyDeadlineDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
     private LocalDateTime createDate;
     private int maxPeople;
     private boolean disabled;
@@ -35,6 +39,12 @@ public class StudyDTO {
     private Category category;
     // 스터디 참여자 목록
     private List<StudyMember> studyMemberList;
+
+
+    public void changeStudyDate(String strStudyDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
+    }
 
 
     // 생성자

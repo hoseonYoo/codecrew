@@ -128,7 +128,7 @@ const AddPage = () => {
     formData.append("content", study.content);
     formData.append("memberEmail", userEmail);
     formData.append("location", study.location);
-    formData.append("studyDate", study.studyDate);
+    formData.append("strStudyDate", study.studyDate);
     formData.append("maxPeople", parseInt(study.maxPeople));
     formData.append("category", study.category);
 
@@ -157,8 +157,24 @@ const AddPage = () => {
     <>
       {/* 모달창입니다. */}
       {modalState && (
-        <div style={{ position: "fixed", zIndex: "99999", width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div style={{ width: "100vw", maxWidth: "400px", minWidth: "320px", margin: "0 auto", marginTop: "20vh" }}>
+        <div
+          style={{
+            position: "fixed",
+            zIndex: "99999",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <div
+            style={{
+              width: "100vw",
+              maxWidth: "400px",
+              minWidth: "320px",
+              margin: "0 auto",
+              marginTop: "20vh",
+            }}
+          >
             <DaumPostcode onComplete={onCompletePost} />
           </div>
         </div>
@@ -167,15 +183,31 @@ const AddPage = () => {
       <BasicLayoutPage headerTitle="스터디추가">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+            <div
+              className="StudyAddImg"
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            >
               <label htmlFor="fileInput">
                 추가
-                <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
+                <input
+                  id="fileInput"
+                  ref={uploadRef}
+                  type="file"
+                  onChange={handleFileChange}
+                />
               </label>
             </div>
             <div>
               <h3>스터디명</h3>
-              <input name="title" value={study.title} type="text" placeholder="스터디명을 입력해주세요." onKeyUp={characterCheck} onKeyDown={characterCheck} onChange={handleChangeStudy} />
+              <input
+                name="title"
+                value={study.title}
+                type="text"
+                placeholder="스터디명을 입력해주세요."
+                onKeyUp={characterCheck}
+                onKeyDown={characterCheck}
+                onChange={handleChangeStudy}
+              />
             </div>
             {/* <div>
               <h3>연락처</h3>
@@ -183,17 +215,38 @@ const AddPage = () => {
             </div> */}
             <div>
               <h3>주소</h3>
-              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+              <input
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
 
-              <img className="AdressSearch" src="../assets/imgs/icon/ic_serch_gr.svg" alt="searchIcon" onClick={handleAddressSearchClick} />
+              <img
+                className="AdressSearch"
+                src="../assets/imgs/icon/ic_serch_gr.svg"
+                alt="searchIcon"
+                onClick={handleAddressSearchClick}
+              />
             </div>
             <div>
               <h3>참여날짜</h3>
-              <input name="studyDate" value={study.studyDate} type="datetime-local" placeholder="참여일을 입력해주세요." onChange={handleChangeStudy} />
+              <input
+                name="studyDate"
+                value={study.studyDate}
+                type="datetime-local"
+                placeholder="참여일을 입력해주세요."
+                onChange={handleChangeStudy}
+              />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -203,25 +256,32 @@ const AddPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (
                     <React.Fragment key={index}>
-                      <option id={key} value={value}>
+                      <option id={key} value={key}>
                         {value}
                       </option>
                     </React.Fragment>
                   ))}
-                {/* {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
-                  </option> */}
               </select>
             </div>
             <div>
               <h3>스터디 소개</h3>
-              <textarea name="content" value={study.content} placeholder="스터디소개를 입력해주세요." onChange={handleChangeStudy} onKeyUp={characterCheck} onKeyDown={characterCheck}></textarea>
+              <textarea
+                name="content"
+                value={study.content}
+                placeholder="스터디소개를 입력해주세요."
+                onChange={handleChangeStudy}
+                onKeyUp={characterCheck}
+                onKeyDown={characterCheck}
+              ></textarea>
             </div>
           </div>
           <div className="bottomBtnWrap">
