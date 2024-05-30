@@ -22,7 +22,7 @@ public class CheckController {
     private final MemberService memberService;
 
     @GetMapping("/phone/{phone}")
-    public String getMemberFromKakao(@PathVariable("phone") Long phone) {
+    public String getMemberFromKakao(@PathVariable("phone") String phone) {
         log.info("**************SocialController-getMemberFromKakao - phone: {}",
                 phone);
         DataMemberDTO memberByPhone = memberService.findMemberByPhone(phone);

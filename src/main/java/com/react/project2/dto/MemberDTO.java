@@ -15,7 +15,7 @@ public class MemberDTO extends User {
     private String email;
     private String password;
     private String nickname;
-    private Long phone;
+    private String phone;
     private String profileImg;
     private String memberLink;
     private String introduction;
@@ -30,7 +30,7 @@ public class MemberDTO extends User {
     private boolean isNew;
 
     // 생성자
-    public MemberDTO(String email, String password, String nickname, String profileImg, Long phone, String memberLink, String introduction,
+    public MemberDTO(String email, String password, String nickname, String profileImg, String phone, String memberLink, String introduction,
                      List<Category> favoriteList, boolean disabled, boolean isNew,
                      String role) {
         super(email, password, List.of(new SimpleGrantedAuthority("ROLE_" + role)));

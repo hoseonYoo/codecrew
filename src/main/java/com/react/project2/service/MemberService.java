@@ -35,6 +35,6 @@ public interface MemberService {
     // 회원 정보 수정 처리
     void modifyMember(DataMemberDTO dataMemberDTO);
 
-    DataMemberDTO findMemberByPhone(Long phone);
+    DataMemberDTO findMemberByPhone(String phone);
 
 }

@@ -14,6 +14,6 @@ export const uploadImage = async (image) => {
 
 export const checkPhone = async (phone) => {
   console.log("연락처 중복확인API");
-  const response = await jwtAxios.get(`${host}/checkPhone/${phone}`);
+  const response = await jwtAxios.get(`${host}/phone/${phone}`);
   return response.data;
 };
