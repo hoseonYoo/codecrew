@@ -73,10 +73,7 @@ const ReadPage = () => {
     <BasicLayoutPage headerTitle="마이페이지">
       <div>
         <div className="MyBlockWrap">
-          <div
-            className="MyReadImg"
-            style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}
-          ></div>
+          <div className="MyReadImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div>
           <div className="MyReadTitle">
             <h3>{member.nickname}</h3>
             <p>{member.email}</p>
@@ -93,22 +90,12 @@ const ReadPage = () => {
             <h3>관심스택 : </h3>
             <div>
               {Object.entries(categories).length > 0 &&
-                Object.entries(categories).map(([key, value], index) => (
-                  <React.Fragment key={index}>
-                    {member.favoriteList.includes(key) ? (
-                      <span>{value} </span>
-                    ) : null}
-                  </React.Fragment>
-                ))}
+                Object.entries(categories).map(([key, value], index) => <React.Fragment key={index}>{member.favoriteList.includes(key) ? <span>{value} </span> : null}</React.Fragment>)}
             </div>
           </div>
           <div className="MyReadText">
             <h3>링 크 : </h3>
-            {member.memberLink ? (
-              <p>{member.memberLink}</p>
-            ) : (
-              <p>등록한 링크가 없습니다.</p>
-            )}
+            {member.memberLink ? <p>{member.memberLink}</p> : <p>등록한 링크가 없습니다.</p>}
           </div>
           <div className="MyReadText">
             <h3>모임횟수 : </h3>
@@ -119,29 +106,25 @@ const ReadPage = () => {
         </div>
         <div className="MyReadUserText">
           <h2>사용자 소개</h2>
-          {member.introduction ? (
-            <p>{member.introduction}</p>
-          ) : (
-            <p>사용자 소개가 없습니다.</p>
-          )}
+          {member.introduction ? <p>{member.introduction}</p> : <p>사용자 소개가 없습니다.</p>}
         </div>
       </div>
       <div className="MyReadUserMenu">
         <h2>나의 어플</h2>
         <div className="MenuWrap">
-          <Link>
+          <Link to="/mypage/alarm">
             <h3>📡 나의 알림</h3>
             <span>(9,999)</span>
           </Link>
         </div>
         <div className="MenuWrap">
-          <Link>
+          <Link to="/mypage/createstudy">
             <h3>🧑🏻‍💻 나의 스터디</h3>
             <span>(9,999)</span>
           </Link>
         </div>
         <div className="MenuWrap">
-          <Link>
+          <Link to="/mypage/joinstudy">
             <h3>🏃🏻 참가 스터디</h3>
             <span>(9,999)</span>
           </Link>

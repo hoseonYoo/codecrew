@@ -77,6 +77,7 @@ const ModifyPage = () => {
         setMember(newMember);
       });
   };
+
   const handleChange = (e) => {
     member[e.target.name] = e.target.value;
     setMember({ ...member });
@@ -97,12 +98,7 @@ const ModifyPage = () => {
   const characterCheck = (e) => {
     const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
     // 입력된 값이 숫자, 백스페이스, 삭제 키가 아니면 입력을 막습니다.
-    if (
-      !/^[0-9]*$/.test(e.key) &&
-      e.type === "keydown" &&
-      e.key !== "Backspace" &&
-      e.key !== "Delete"
-    ) {
+    if (!/^[0-9]*$/.test(e.key) && e.type === "keydown" && e.key !== "Backspace" && e.key !== "Delete") {
       e.preventDefault();
     }
   };
@@ -185,33 +181,15 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div
-            className="MyModifyImg"
-            style={
-              member.profileImg !== ""
-                ? { backgroundImage: `url(${imgSrc})` }
-                : null
-            }
-          >
+          <div className="MyModifyImg" style={member.profileImg !== "" ? { backgroundImage: `url(${imgSrc})` } : null}>
             <label htmlFor="fileInput">
               편집
-              <input
-                id="fileInput"
-                ref={uploadRef}
-                type="file"
-                onChange={handleFileChange}
-              />
+              <input id="fileInput" ref={uploadRef} type="file" onChange={handleFileChange} />
             </label>
           </div>
           <div>
             <h3>닉네임</h3>
-            <input
-              type="text"
-              name="nickname"
-              value={member.nickname}
-              onChange={handleChange}
-              placeholder="닉네임을 입력해주세요."
-            />
+            <input type="text" name="nickname" value={member.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요." />
           </div>
           <div>
             <h3>관심스택</h3>
@@ -219,12 +197,7 @@ const ModifyPage = () => {
               {Object.entries(categories).length > 0 &&
                 Object.entries(categories).map(([key, value], index) => (
                   <React.Fragment key={index}>
-                    <input
-                      onChange={handleCheckChange}
-                      id={key}
-                      type="checkbox"
-                      checked={member.favoriteList.includes(key)}
-                    />
+                    <input onChange={handleCheckChange} id={key} type="checkbox" checked={member.favoriteList.includes(key)} />
                     <label htmlFor={key}>{value}</label>
                   </React.Fragment>
                 ))}
@@ -233,35 +206,15 @@ const ModifyPage = () => {
           <div>
             {/*TODO 연락처 중복 방지 기능 추가*/}
             <h3>연락처</h3>
-            <input
-              type="text"
-              placeholder="연락처를 입력해주세요."
-              maxLength={11}
-              name="phone"
-              value={member.phone}
-              onKeyUp={characterCheck}
-              onKeyDown={characterCheck}
-              onChange={handleChange}
-            />
+            <input type="text" placeholder="연락처를 입력해주세요." maxLength={11} name="phone" value={member.phone} onKeyUp={characterCheck} onKeyDown={characterCheck} onChange={handleChange} />
           </div>
           <div>
             <h3>링크</h3>
-            <input
-              type="text"
-              name="memberLink"
-              value={member.memberLink}
-              onChange={handleChange}
-              placeholder="링크를 입력해주세요."
-            />
+            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="링크를 입력해주세요." />
           </div>
           <div>
             <h3>사용자 소개</h3>
-            <textarea
-              placeholder="사용자소개를 입력해주세요."
-              name="introduction"
-              value={member.introduction}
-              onChange={handleChange}
-            ></textarea>
+            <textarea placeholder="사용자소개를 입력해주세요." name="introduction" value={member.introduction} onChange={handleChange}></textarea>
           </div>
           <div className="MyModifyBtn">
             <button onClick={handleClickModify} className="btnLargePoint">

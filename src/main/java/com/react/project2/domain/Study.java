@@ -1,10 +1,7 @@
 package com.react.project2.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,12 +33,13 @@ public class Study {
 
     // 스터디 주최자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "membr_email")
+    @JoinColumn(name = "member_email")
     private Member member;
 
     // 장소 위치
-    private double locationX;
-    private double locationY;
+    private String location;
+//    private double locationX;
+//    private double locationY;
 
     // 모임일자
     @Column(nullable = false)

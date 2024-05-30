@@ -53,8 +53,8 @@ const MainPage = () => {
               <p>서울 서대문구 신촌로 83</p>
             </div>
             <div className="stPopupBtn">
-              <button className="btnSmallPoint">공유하기</button>
-              <button className="btnSmallBlack">연락하기</button>
+              <button className="btnSmallPoint">연락하기</button>
+              <button className="btnSmallBlack">공유하기</button>
             </div>
           </div>
           <div className="stPopupContentBottom">
