@@ -1,16 +1,18 @@
 import React from "react";
 import "../../scss/partials/AlarmBlock.scss";
-const AlarmBlock = () => {
+const AlarmBlock = ({ isEditing }) => {
   return (
     // 이동 추가
-    <div className="studyBlockWrap">
-      <div className="studyBlockImg"></div>
-      <div className="studyBlockTitle">
-        <h3>프로젝트 모임</h3>
-        <p>서울 서대문구 신촌로 83</p>
+    <div className="AlBlockWrap">
+      <div className="AlBlockImg"></div>
+      <div className="AlBlockTitle">
+        <h3>스터디장소에 도착했습니다.</h3>
+        <p>2024.05.30</p>
       </div>
-      <div className="studyBlockBtn">
-        <button className="btnMediumPoint">상세보기</button>
+      <div className={`AlBlockBtn ${isEditing ? "delActive" : ""}`}>
+        <button>
+          <img src="/assets/imgs/icon/ic_del.png" alt="Delete" />
+        </button>
       </div>
     </div>
   );
