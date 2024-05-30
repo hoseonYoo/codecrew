@@ -48,6 +48,12 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (requestURI.startsWith("/api/categories")) {
             return true;
         }
+
+        // 카테고리 필터 불러오기 경로 요청은 체크 하지 않음
+        if (requestURI.startsWith("/api/study/Add")) {
+            return true;
+        }
+
         return false;
 //        return true;
     }
@@ -74,7 +80,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String profileImg = (String) claims.get("profileImg");
 //            Long phone = (Long) claims.get("phone");
             Integer phoneInteger = (Integer) claims.get("phone");
-            Long phoneLong = phoneInteger.longValue();
+            Long phone = phoneInteger.longValue();
 
             String memberLink = (String) claims.get("memberLink");
             String introduction = (String) claims.get("introduction");
@@ -85,7 +91,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             boolean isNew = (boolean) claims.get("isNew");
 
             MemberDTO memberDTO = new MemberDTO(
-                    email, password, nickname, profileImg, phone,memberLink, introduction, favoriteList, disabled, isNew, role);
+                    email, password, nickname, profileImg, phone, memberLink, introduction, favoriteList, disabled, isNew, role);
 
             log.info("************ JWTCheckFilter - doFilterInternal : memberDTO : {}", memberDTO);
 

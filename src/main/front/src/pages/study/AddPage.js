@@ -93,12 +93,32 @@ const AddPage = () => {
   };
 
   //버튼
-  const handleClickAdd = (e) => {
+  const handleClickAdd = async (e) => {
     e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
 
-    // '선택' 옵션이 선택되어 있는지 확인합니다.
-    if (study.category === "카테고리 선택") {
-      alert("카테고리를 선택해주세요.");
+    // 확인 처리
+    if (study.thImg === "") {
+      alert("이미지가 등록되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.title === "") {
+      alert("제목이 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.location === "") {
+      alert("위치정보가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.studyDate === "") {
+      alert("참여날짜가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.category === "카테고리 선택" || study.category === "") {
+      alert("카테고리가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.content === "") {
+      alert("소개글이 입력되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
     }
 
@@ -111,13 +131,14 @@ const AddPage = () => {
     formData.append("studyDate", study.studyDate);
     formData.append("maxPeople", parseInt(study.maxPeople));
     formData.append("category", study.category);
-    console.log(formData);
 
-    // 여기에 서버로 데이터를 전송하는 코드를 추가합니다.
-    postAdd(formData).then((data) => {
-      console.log("postAdd result : ", data);
+    try {
+      const data = await postAdd(formData);
+      console.log("postAdd result:", data);
       alert("저장완료");
-    });
+    } catch (error) {
+      console.error("저장 실패", error);
+    }
   };
 
   //카테고리 불러오기
@@ -125,10 +146,7 @@ const AddPage = () => {
     axios
       .get(`${host}/api/categories`)
       .then((response) => {
-        console.log(response.data);
-
         setCategories({ ...response.data });
-        console.log(categories);
       })
       .catch((error) => {
         console.log(error);
@@ -176,9 +194,9 @@ const AddPage = () => {
             <div>
               <h3>참여인원</h3>
               <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
-                {Array.from({ length: 10 }, (_, index) => (
-                  <option key={index} value={index + 1}>
-                    {index + 1}
+                {Array.from({ length: 9 }, (_, index) => (
+                  <option key={index} value={index + 2}>
+                    {index + 2}
                   </option>
                 ))}
               </select>

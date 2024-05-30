@@ -7,7 +7,8 @@ const host = `${API_SERVER_HOST}/api/study`;
 
 // API 등록 요청
 export const postAdd = async (study) => {
-  const header = { headers: { "Content-Type": "multipart/form-data" } };
-  const response = await jwtAxios.post(`${host}/`, study, header);
+  const response = await jwtAxios.post(`${host}/Add`, study, {
+    headers: { "Content-Type": "application/json" },
+  });
   return response.data;
 };

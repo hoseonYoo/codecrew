@@ -19,8 +19,8 @@ public class StudyController {
     private final StudyService studyService;
 
     // 스터디 등록
-    @PostMapping("/")
-    public Map<String, String> add(@RequestBody StudyDTO studyDTO){
+    @PostMapping("/Add")
+    public Map<String, String> add(StudyDTO studyDTO){
         log.info("**** StudyController POST / add {} ****", studyDTO);
         studyService.add(studyDTO);
         return Map.of("RESULT", "SUCCESS");
