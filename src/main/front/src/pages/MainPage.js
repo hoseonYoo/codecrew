@@ -1,49 +1,50 @@
 import React from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
-import { useNavigate } from "react-router-dom";
 import KakaoMap from "../components/map/kakaoMap";
+import NewKakaoMap from "../components/map/newKakaoMap";
 import { useSelector } from "react-redux";
 import useCustomMove from "../hooks/useCustomMove";
 
 const MainPage = () => {
-  const navigate = useNavigate();
-  const moveToMypage = () => {
-    navigate("/mypage");
-  };
-  const moveToAddPage = () => {
-    navigate("/list/add");
-  };
-
   const loginState = useSelector((state) => state.loginSlice);
-  const { moveToLogin } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage } = useCustomMove();
 
-  const handleLogin = () => {
-    console.log("test");
-    console.log(loginState.email);
-
+  // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
+  const handleLogin = (moveFunction) => {
     if (!loginState.email) {
       moveToLogin();
     } else {
-      moveToMypage();
+      moveFunction();
     }
   };
 
   return (
     <BasicLayout>
       {/*<div id="map" className="Map"></div>*/}
-      <KakaoMap />
+      <NewKakaoMap />
+
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
           <button onClick={moveToAddPage}>스터디추가</button>
-          <button onClick={handleLogin}>MY</button>
+          <button
+            onClick={() => {
+              handleLogin(moveToMypage);
+            }}
+          >
+            MY
+          </button>
         </div>
 
         {/* 토스트팝업 */}
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
         <div className="stPopupWrap">
           {/* 닫기버튼 */}
-          <img className="stPopupClose" src="../assets/imgs/icon/ic_popup_cl.svg" />
+          <img
+            className="stPopupClose"
+            src="../assets/imgs/icon/ic_popup_cl.svg"
+            alt="닫기버튼"
+          />
           {/* 컨텐츠 */}
           <div className="stPopupContentTop">
             <div className="stPopupImg"></div>

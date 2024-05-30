@@ -40,7 +40,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
         // 이미지 경로 요청은 필터 체크 하지 않음
-        // TODO : 이미지 요청 경로 확인
         if (requestURI.startsWith("/api/image")) {
             return true;
         }
@@ -76,7 +75,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String memberLink = (String) claims.get("memberLink");
             String introduction = (String) claims.get("introduction");
             String password = (String) claims.get("password");
-            // TODO 확인 필요
             List<Category> favoriteList = null;
             boolean disabled = (boolean) claims.get("disabled");
             boolean isNew = (boolean) claims.get("isNew");

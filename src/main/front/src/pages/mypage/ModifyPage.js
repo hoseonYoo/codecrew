@@ -7,6 +7,7 @@ import { API_SERVER_HOST, getMember, modifyMember } from "../../api/memberAPI";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { uploadImage } from "../../api/imageAPI";
 import useCustomMove from "../../hooks/useCustomMove";
+import { checkPhone } from "../../api/checkAPI";
 
 const initState = {
   email: "",
@@ -104,7 +105,6 @@ const ModifyPage = () => {
 
   // TODO 예외 처리 필요
   const handleClickModify = (e) => {
-    // TODO member에 uploadRef 넣어줘야함
     e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
 
     console.log(member);
@@ -114,7 +114,47 @@ const ModifyPage = () => {
       alert("닉네임을 입력해주세요.");
       return;
     }
+    // 닉네임 입력 안했을 때
+    if (member.nickname === "SocialMember") {
+      alert("닉네임을 변경해주세요.");
+      return;
+    }
+    // 연락처 중복 확인 함수
+    // 아무것도 입력이 안되어있을 때
+    if (member.phone === "" || member.phone === null) {
+      saveModify();
+    }
+    // 11자리가 아닐 때
+    else if (member.phone.length < 11) {
+      alert("연락처를 11자리로 입력해주세요.");
+      return;
+    }
+    // 010으로 시작하지 않을 때
+    else if (
+      !member.phone.startsWith("010") ||
+      !member.phone.startsWith("011") ||
+      !member.phone.startsWith("016") ||
+      !member.phone.startsWith("017") ||
+      !member.phone.startsWith("018") ||
+      !member.phone.startsWith("019")
+    ) {
+      alert("올바른 연락처 형식을 입력해주세요.");
+      return;
+    } else {
+      checkPhone(member.phone)
+        .then((res) => {
+          console.log(res);
+          if (res === "exist") {
+            alert("이미 등록된 연락처입니다.");
+          } else if (res === "not exist") {
+            saveModify();
+          }
+        })
+        .catch((err) => exceptionHandle(err));
+    }
+  };
 
+  const saveModify = () => {
     modifyMember(member)
       .then((res) => {
         console.log(res);

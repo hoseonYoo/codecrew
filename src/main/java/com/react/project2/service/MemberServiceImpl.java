@@ -51,7 +51,6 @@ public class MemberServiceImpl implements MemberService {
         Member socialMember = makeSocialMember(email, accessToken); // 소셜회원으로 만들어 받기
         MemberDTO memberDTO = entityToDto(socialMember);
         // 신규 회원 저장
-        // TODO 수정 분기 처리 필요
         memberRepository.save(socialMember);
         return memberDTO;
     }
@@ -72,11 +71,20 @@ public class MemberServiceImpl implements MemberService {
         member.changeIntroduction(dataMemberDTO.getIntroduction());
         member.changeNickname(dataMemberDTO.getNickname());
         member.changeProfileImg(dataMemberDTO.getProfileImg());
-        // TODO 관심스택 수정 기능 추가
         member.changeFavoriteList(dataMemberDTO.getFavoriteList());
         member.changePhone(dataMemberDTO.getPhone());
         memberRepository.save(member);
 
+    }
+
+    @Override
+    public DataMemberDTO findMemberByPhone(Long phone) {
+        Member findMember = memberRepository.findMemberByPhone(phone);
+        if (findMember != null) {
+            DataMemberDTO dataMemberDTO = modelMapper.map(findMember, DataMemberDTO.class);
+            return dataMemberDTO;
+        }
+        return null;
     }
 
     // 소셜회원 정보로 Member Entity 생성
@@ -84,7 +92,6 @@ public class MemberServiceImpl implements MemberService {
         // 임시비번 만들어서 Member 엔티티 생성해 리턴
         String tmpPassword = makeTempPassword();
         log.info("****** MemberService - tmpPassword : {}", tmpPassword);
-        // TODO 카카오 계정 정보 받아서 Member 엔티티 생성
 
         Object kakaoAccount = getDataFromKakaoAccesToken(accessToken);
 
@@ -95,13 +102,18 @@ public class MemberServiceImpl implements MemberService {
         String profile = "";
         if (kakaoAccount != null) {
             LinkedHashMap<String, String> account = (LinkedHashMap<String, String>) kakaoAccount;
-            nickname = account.get("nickname");
-            profile = account.get("profile_image_url");
+            if (account.get("nickname") != null && !account.get("nickname").equals("")) {
+                nickname = account.get("nickname");
+            }
+            if (account.get("profile_image_url") != null && !account.get("profile_image_url").equals("")) {
+                profile = account.get("profile_image_url");
+            }
             log.info("****** MemberService - nickname : {}", nickname);
             log.info("****** MemberService - profile : {}", profile);
-        }
 
+        }
         boolean needChangeProfile = false;
+
 
         if (nickname.equals("SocialMember")&&profile.equals("")) {
             needChangeProfile = true;

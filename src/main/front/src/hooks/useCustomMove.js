@@ -27,7 +27,11 @@ const useCustomMove = () => {
     navigate("/");
   };
 
+  const moveToAddPage = () => {
+    navigate("/list/add");
+  };
+
   // TODO 함수 작성 후 return 추가
-  return { moveToLogin, moveToMypage, moveToModify, moveToMain };
+  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage };
 };
 export default useCustomMove;

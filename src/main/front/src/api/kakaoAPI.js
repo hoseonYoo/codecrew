@@ -1,5 +1,3 @@
-// 카카오에서 발급 받은 내 REST API 키
-// TODO 카카오 API 키 수정
 import axios from "axios";
 import { API_SERVER_HOST } from "./memberAPI";
 
