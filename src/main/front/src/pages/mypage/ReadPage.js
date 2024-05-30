@@ -1,79 +1,40 @@
-import React, { useEffect, useState } from "react";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyReadPage.scss";
 import { Link } from "react-router-dom";
-import { API_SERVER_HOST, getMember } from "../../api/memberAPI";
 import useCustomMove from "../../hooks/useCustomMove";
 import { useSelector } from "react-redux";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import axios from "axios";
-
-const initState = {
-  email: "",
-  nickname: "",
-  phone: 0,
-  profileImg: "",
-  memberLink: "",
-  introduction: "",
-  favoriteList: [],
-  noticeList: [],
-  penalty: 0,
-  blockedDate: "",
-};
+import useMemberProfile from "../../hooks/useMemberProfile";
+import { API_SERVER_HOST } from "../../api/studyAPI";
+import useCategories from "../../hooks/useCategories";
+import React from "react";
 
 const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const { moveToModify } = useCustomMove();
-
-  const [member, setMember] = useState(initState);
-  const userEmail = useSelector((state) => state.loginSlice.email);
-  const [categories, setCategories] = useState({});
-  const { exceptionHandle } = useCustomLogin();
   const { execLogout, moveToPath } = useCustomLogin();
-  const [imgSrc, setImgSrc] = useState("");
+
+  // 현재 로그인 된 회원의 이메일 가져오기
+  const userEmail = useSelector((state) => state.loginSlice.email);
+  // 회원 정보 가져오기
+  const { member, imgSrc } = useMemberProfile(userEmail);
+  // 전체 관심스택 가져오기
+  const categories = useCategories(host);
 
   const handleClickLogout = () => {
     execLogout();
     moveToPath("/");
   };
 
-  useEffect(() => {
-    getMember(userEmail)
-      .then((res) => {
-        // 초기 로딩시 카카오 프로필인지 여부 체크
-        if (res.profileImg === "") {
-        } else if (res.profileImg.startsWith("http")) {
-          console.log("카카오 프로필");
-          setImgSrc(res.profileImg);
-        } else {
-          console.log("일반 프로필");
-          setImgSrc(`${host}/api/image/view/${res.profileImg}`);
-        }
-        setMember({ ...res });
-      })
-      .catch((err) => exceptionHandle(err));
-  }, [userEmail]);
-
-  useEffect(() => {
-    axios
-      .get(`${host}/api/categories`)
-      .then((response) => {
-        console.log(response.data);
-
-        setCategories({ ...response.data });
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <BasicLayoutPage headerTitle="마이페이지">
       <div>
         <div className="MyBlockWrap">
-          <div className="MyReadImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div>
+          <div
+            className="MyReadImg"
+            style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}
+          ></div>
           <div className="MyReadTitle">
             <h3>{member.nickname}</h3>
             <p>{member.email}</p>
@@ -90,12 +51,22 @@ const ReadPage = () => {
             <h3>관심스택 : </h3>
             <div>
               {Object.entries(categories).length > 0 &&
-                Object.entries(categories).map(([key, value], index) => <React.Fragment key={index}>{member.favoriteList.includes(key) ? <span>{value} </span> : null}</React.Fragment>)}
+                Object.entries(categories).map(([key, value], index) => (
+                  <React.Fragment key={index}>
+                    {member.favoriteList.includes(key) ? (
+                      <span>{value} </span>
+                    ) : null}
+                  </React.Fragment>
+                ))}
             </div>
           </div>
           <div className="MyReadText">
             <h3>링 크 : </h3>
-            {member.memberLink ? <p>{member.memberLink}</p> : <p>등록한 링크가 없습니다.</p>}
+            {member.memberLink ? (
+              <p>{member.memberLink}</p>
+            ) : (
+              <p>등록한 링크가 없습니다.</p>
+            )}
           </div>
           <div className="MyReadText">
             <h3>모임횟수 : </h3>
@@ -106,7 +77,11 @@ const ReadPage = () => {
         </div>
         <div className="MyReadUserText">
           <h2>사용자 소개</h2>
-          {member.introduction ? <p>{member.introduction}</p> : <p>사용자 소개가 없습니다.</p>}
+          {member.introduction ? (
+            <p>{member.introduction}</p>
+          ) : (
+            <p>사용자 소개가 없습니다.</p>
+          )}
         </div>
       </div>
       <div className="MyReadUserMenu">
