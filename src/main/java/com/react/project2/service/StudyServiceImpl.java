@@ -1,5 +1,6 @@
 package com.react.project2.service;
 
+import com.react.project2.domain.Category;
 import com.react.project2.domain.Member;
 import com.react.project2.domain.Study;
 import com.react.project2.dto.StudyDTO;
@@ -21,11 +22,10 @@ public class StudyServiceImpl implements StudyService {
 
     // 스터디 등록
     @Override
-    public Long add(StudyDTO studyDTO) {
+    public void add(StudyDTO studyDTO) {
         Study study = dtoToEntity(studyDTO);
         // 저장 처리
-        studyRepository.save(study);
-        return 1L;
+        Study saved = studyRepository.save(study);
     }
 
     private Study dtoToEntity(StudyDTO studyDTO) {
@@ -34,6 +34,8 @@ public class StudyServiceImpl implements StudyService {
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
         // Study 엔티티를 생성하고 Member 엔티티를 설정합니다.
+        studyDTO.changeStudyDate(studyDTO.getStrStudyDate());
+
         Study study = Study.builder()
                 .thImg(studyDTO.getThImg())
                 .title(studyDTO.getTitle())
@@ -43,6 +45,7 @@ public class StudyServiceImpl implements StudyService {
                 .studyDeadlineDate(studyDTO.getStudyDate())
                 .studyDate(studyDTO.getStudyDate())
                 .maxPeople(studyDTO.getMaxPeople())
+                .category(studyDTO.getCategory())
                 .build();
         return study;
     }
