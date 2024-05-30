@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MemberRepository extends JpaRepository<Member, String> {
 
     // 회원 조회 + 알림 목록 포함
@@ -22,4 +24,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @EntityGraph(attributePaths = {"noticeList", "favoriteList"})
     @Query("select m from Member m where m.email = :email")
     Member getMemberWithNoticeListAndFavoriteList(@Param("email") String email);
+
+    // 회원 이메일
+    Optional<Member> findByEmail(String email);
 }
