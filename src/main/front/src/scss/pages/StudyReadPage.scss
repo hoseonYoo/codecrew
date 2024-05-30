@@ -1,0 +1,114 @@
+/* Study Read Page */
+div.ReadContent{
+  width: 100%;
+  margin-top: 24px;
+  height: 86px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.5px solid #dcdcdc;
+}
+div.ReadImg{
+  width: 64px;
+  height: 64px;
+  background-color: #dcdcdc;
+  border-radius: 64px;
+  margin-left: 16px;
+  margin-right: 20px;
+  // 이미지 적용 시 위치값
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+div.ReadTitle{
+  width: calc(100% - 174px);
+  text-align: left;
+  margin-top: 8px;
+  h3{
+    font-weight: 500;
+    font-size: 18px;
+  }
+  p{
+    font-size: 14px;
+    color:#828282;
+  }
+}
+div.ReadBtn{
+  width:80px;
+  button{
+    margin-top: 0px;
+  }
+  button:last-child{
+    margin-top: 8px;
+  }
+}
+
+div.ReadTextWrap{
+  background-color: #F8F9FA;
+  padding: 22px 0px;
+}
+div.ReadText{
+  display: flex;
+  justify-content: space-between;
+  line-height: 14px;
+  margin-bottom: 8px;
+  color:#555;
+  h3{
+    font-size:14px;
+    margin-left: 16px;
+    min-width:70px;
+    margin-right: 10px;
+  }
+  p, div{
+    width:calc(100% - 102px);
+    font-size: 14px;
+    margin-right: 16px;
+  }
+}
+
+div.ReadStudyText{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  margin-top: 32px;
+  h2{
+    width: 100%;
+    height:32px;
+    font-size: 16px;
+    line-height: 32px;
+    margin: 0;
+    border-bottom: 0.5px solid #dcdcdc;
+  }
+  p{
+    margin-top: 14px;
+    width: 100%;
+    font-size: 14px;
+  }
+}
+div.ReadStudyUser{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  margin-top: 32px;
+  h2{
+    width: 100%;
+    height:32px;
+    font-size: 16px;
+    line-height: 32px;
+    margin: 0;
+    border-bottom: 0.5px solid #dcdcdc;
+  }
+}
+
+div.StudyJoinBtn{
+  position: fixed;
+  bottom:0px;
+  padding-bottom: 32px;
+  background-color: #fff;
+  width: 100%;
+  max-width: 500px;
+  button{
+  margin:0;
+    width: 100%;
+    box-shadow: 
+          0 0px 6px rgba(0,0,0,0.1);
+    margin-top: 32px;
+  }
+}
