@@ -25,6 +25,8 @@ public class StudyDTO {
     private String content;
     private String memberEmail;
     private String location;
+    private double locationX;
+    private double locationY;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
     private LocalDateTime studyDate;
     private String strStudyDate;
@@ -45,6 +47,8 @@ public class StudyDTO {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
     }
+
+
 
 
     // 생성자

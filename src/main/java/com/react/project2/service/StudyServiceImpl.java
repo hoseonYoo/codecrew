@@ -36,6 +36,8 @@ public class StudyServiceImpl implements StudyService {
         // Study 엔티티를 생성하고 Member 엔티티를 설정합니다.
         studyDTO.changeStudyDate(studyDTO.getStrStudyDate());
 
+
+
         Study study = Study.builder()
                 .thImg(studyDTO.getThImg())
                 .title(studyDTO.getTitle())
@@ -43,6 +45,8 @@ public class StudyServiceImpl implements StudyService {
                 .member(member) // 조회된 Member 엔티티를 사용합니다.
                 .location(studyDTO.getLocation())
                 .studyDeadlineDate(studyDTO.getStudyDate())
+                .locationX((Double) studyDTO.getLocationX())
+                .locationY((Double) studyDTO.getLocationY())
                 .studyDate(studyDTO.getStudyDate())
                 .maxPeople(studyDTO.getMaxPeople())
                 .category(studyDTO.getCategory())
