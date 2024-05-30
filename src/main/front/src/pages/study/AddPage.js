@@ -1,17 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { postAdd } from "../../api/studyAPI";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/AddPage.scss";
 import { API_SERVER_HOST } from "../../api/memberAPI";
 import DaumPostcode from "react-daum-postcode";
+import { uploadImage } from "../../api/imageAPI";
 
 const host = API_SERVER_HOST;
 
+// 스터디 저장값 초기화
+const initState = {
+  thImg: "",
+  title: "",
+  content: "",
+  memberEmail: "",
+  location: "",
+  studyDate: "",
+  maxPeople: 1,
+  category: "",
+};
+// 유즈 셀렉트
 const AddPage = () => {
   //주소입력 모달
   const [modalState, setModalState] = useState(false);
+  const [study, setStudy] = useState(initState);
   const [inputAddressValue, setInputAddressValue] = useState("");
   const [categories, setCategories] = useState({});
+  const uploadRef = useRef();
+  const userEmail = useSelector((state) => state.loginSlice.email);
 
   const handleAddressSearchClick = () => {
     setModalState(true); // 모달을 표시하도록 상태 변경
@@ -20,6 +38,12 @@ const AddPage = () => {
   const onCompletePost = (data) => {
     setModalState(false); // 모달을 숨기도록 상태 변경
     setInputAddressValue(data.address); // 주소 값을 설정
+
+    // study 객체의 location 필드를 업데이트합니다.
+    setStudy((prevStudy) => ({
+      ...prevStudy,
+      location: data.address,
+    }));
   };
 
   // 이미지 관련
@@ -30,10 +54,28 @@ const AddPage = () => {
     if (file) {
       setImgSrc(URL.createObjectURL(file));
     }
+    const uploadfile = uploadRef.current.files[0];
+    const formData = new FormData();
+    let thImg = study.thImg;
+    formData.append("file", file);
+
+    uploadImage(formData)
+      .then((res) => {
+        console.log("이미지 업로드 성공");
+        console.log(res);
+        thImg = res;
+      })
+      .then(() => {
+        // member에 파일이름 넣어주기
+        let newStudy = { ...study };
+        newStudy.thImg = thImg;
+        setStudy(newStudy);
+      });
   };
+
   // 입력관련 방지
   const characterCheck = (e) => {
-    const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+    const regExp = /[ \{\}\[\]\/?,;:|\)*~`\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
     // 입력된 값이 숫자, 백스페이스, 삭제 키가 아니면 입력을 막습니다.
     // if (!/^[0-9]*$/.test(e.key) && e.type === "keydown" && e.key !== "Backspace" && e.key !== "Delete") {
     //   e.preventDefault();
@@ -44,15 +86,66 @@ const AddPage = () => {
     }
   };
 
+  const handleChangeStudy = (e) => {
+    study[e.target.name] = e.target.value;
+    setStudy({ ...study });
+    console.log(study);
+  };
+
+  //버튼
+  const handleClickAdd = (e) => {
+    e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
+
+    // 확인 처리
+    // if (study.thImg === "") {
+    //   alert("이미지가 등록되지 않았습니다.");
+    //   return; // 함수 실행을 여기서 중단합니다.
+    // }
+    if (study.title === "") {
+      alert("제목이 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.location === "") {
+      alert("위치정보가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.studyDate === "") {
+      alert("참여날짜가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.category === "카테고리 선택" || study.category === "") {
+      alert("카테고리가 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+    if (study.content === "") {
+      alert("소개글이 입력되지 않았습니다.");
+      return; // 함수 실행을 여기서 중단합니다.
+    }
+
+    const formData = new FormData();
+    formData.append("thImg", study.thImg);
+    formData.append("title", study.title);
+    formData.append("content", study.content);
+    formData.append("memberEmail", userEmail);
+    formData.append("location", study.location);
+    formData.append("strStudyDate", study.studyDate);
+    formData.append("maxPeople", parseInt(study.maxPeople));
+    formData.append("category", study.category);
+    console.log(formData);
+
+    // 여기에 서버로 데이터를 전송하는 코드를 추가합니다.
+    postAdd(formData).then((data) => {
+      console.log("postAdd result : ", data);
+      alert("저장완료");
+    });
+  };
+
   //카테고리 불러오기
   useEffect(() => {
     axios
       .get(`${host}/api/categories`)
       .then((response) => {
-        console.log(response.data);
-
         setCategories({ ...response.data });
-        console.log(categories);
       })
       .catch((error) => {
         console.log(error);
@@ -63,8 +156,24 @@ const AddPage = () => {
     <>
       {/* 모달창입니다. */}
       {modalState && (
-        <div style={{ position: "fixed", zIndex: "99999", width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div style={{ width: "100vw", maxWidth: "400px", minWidth: "320px", margin: "0 auto", marginTop: "20vh" }}>
+        <div
+          style={{
+            position: "fixed",
+            zIndex: "99999",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <div
+            style={{
+              width: "100vw",
+              maxWidth: "400px",
+              minWidth: "320px",
+              margin: "0 auto",
+              marginTop: "20vh",
+            }}
+          >
             <DaumPostcode onComplete={onCompletePost} />
           </div>
         </div>
@@ -73,15 +182,31 @@ const AddPage = () => {
       <BasicLayoutPage headerTitle="스터디추가">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+            <div
+              className="StudyAddImg"
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            >
               <label htmlFor="fileInput">
                 추가
-                <input id="fileInput" type="file" onChange={handleFileChange} />
+                <input
+                  id="fileInput"
+                  ref={uploadRef}
+                  type="file"
+                  onChange={handleFileChange}
+                />
               </label>
             </div>
             <div>
               <h3>스터디명</h3>
-              <input type="text" placeholder="스터디명을 입력해주세요." onKeyUp={characterCheck} onKeyDown={characterCheck} />
+              <input
+                name="title"
+                value={study.title}
+                type="text"
+                placeholder="스터디명을 입력해주세요."
+                onKeyUp={characterCheck}
+                onKeyDown={characterCheck}
+                onChange={handleChangeStudy}
+              />
             </div>
             {/* <div>
               <h3>연락처</h3>
@@ -89,16 +214,38 @@ const AddPage = () => {
             </div> */}
             <div>
               <h3>주소</h3>
-              <input type="text" value={inputAddressValue} placeholder="주소를 입력해주세요." readOnly />
-              <img className="AdressSearch" src="../assets/imgs/icon/ic_serch_gr.svg" alt="searchIcon" onClick={handleAddressSearchClick} />
+              <input
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
+
+              <img
+                className="AdressSearch"
+                src="../assets/imgs/icon/ic_serch_gr.svg"
+                alt="searchIcon"
+                onClick={handleAddressSearchClick}
+              />
             </div>
             <div>
-              <h3>참여일자</h3>
-              <input type="datetime-local" placeholder="연락처를 입력해주세요." />
+              <h3>참여날짜</h3>
+              <input
+                name="studyDate"
+                value={study.studyDate}
+                type="datetime-local"
+                placeholder="참여일을 입력해주세요."
+                onChange={handleChangeStudy}
+              />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select>
+              <select
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 10 }, (_, index) => (
                   <option key={index} value={index + 1}>
                     {index + 1}
@@ -108,28 +255,38 @@ const AddPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select>
+              <select
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
+                <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (
                     <React.Fragment key={index}>
-                      <option id={key} value={value}>
+                      <option id={key} value={key}>
                         {value}
                       </option>
                     </React.Fragment>
                   ))}
-                {/* {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
-                  </option> */}
               </select>
             </div>
             <div>
               <h3>스터디 소개</h3>
-              <textarea placeholder="스터디소개를 입력해주세요." onKeyUp={characterCheck} onKeyDown={characterCheck}></textarea>
+              <textarea
+                name="content"
+                value={study.content}
+                placeholder="스터디소개를 입력해주세요."
+                onChange={handleChangeStudy}
+                onKeyUp={characterCheck}
+                onKeyDown={characterCheck}
+              ></textarea>
             </div>
           </div>
           <div className="bottomBtnWrap">
-            <button className="btnLargePoint">스터디추가</button>
+            <button onClick={handleClickAdd} className="btnLargePoint">
+              스터디추가
+            </button>
           </div>
         </form>
       </BasicLayoutPage>
