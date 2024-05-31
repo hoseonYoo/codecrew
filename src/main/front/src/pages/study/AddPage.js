@@ -8,6 +8,7 @@ import DaumPostcode from "react-daum-postcode";
 import useCategories from "../../hooks/useCategories";
 import useProfileImage from "../../hooks/useProfileImage";
 import useCharacterCheck from "../../hooks/useCharactercheck";
+import useCustomMove from "../../hooks/useCustomMove";
 const { kakao } = window;
 
 const host = API_SERVER_HOST;
@@ -23,7 +24,6 @@ const initState = {
   maxPeople: 1,
   category: "",
 };
-// 유즈 셀렉트
 const AddPage = () => {
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
@@ -31,6 +31,9 @@ const AddPage = () => {
   const userEmail = useSelector((state) => state.loginSlice.email);
   // 사진 수정용 CustomHook 사용하기
   const { imgSrc, handleFileChange, saveFile } = useProfileImage(null, "http:");
+
+  // 페이지 이동 관련 CustomHook 사용하기
+  const { moveToMain } = useCustomMove();
 
   // 특수 문자 입력 관련 방지
   const { checkSpecialCharacters } = useCharacterCheck();
@@ -123,7 +126,7 @@ const AddPage = () => {
 
   // 입력값 예외 처리 후 실제 저장 함수
   const saveAdd = async () => {
-    handleChangeLocation();
+    await handleChangeLocation();
 
     study.thImg = await saveFile();
 
@@ -144,6 +147,7 @@ const AddPage = () => {
     postAdd(formData).then((data) => {
       console.log("postAdd result : ", data);
       alert("저장완료");
+      moveToMain();
     });
   };
 

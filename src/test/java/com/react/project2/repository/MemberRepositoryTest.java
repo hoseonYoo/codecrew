@@ -28,15 +28,7 @@ class MemberRepositoryTest {
                     .password(passwordEncoder.encode("1111"))
                     .nickname("사용자" + i)
                     .build();
-            if (i >= 3) {
-                member.addFavorite(Category.AI);
-            }
-            if (i >=4) {
-                member.addFavorite(Category.DATA);
-            }
-            if (i >= 5) {
-                member.addFavorite(Category.SECURITY);
-            }
+
 
             memberRepository.save(member);
         }

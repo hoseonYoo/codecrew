@@ -1,7 +1,6 @@
 import React from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
-import KakaoMap from "../components/map/kakaoMap";
 import NewKakaoMap from "../components/map/newKakaoMap";
 import { useSelector } from "react-redux";
 import useCustomMove from "../hooks/useCustomMove";
