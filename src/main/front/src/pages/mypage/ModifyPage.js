@@ -258,13 +258,13 @@ const ModifyPage = () => {
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className="MyModifyBtn">
-            <button onClick={handleClickModify} className="btnLargePoint">
-              저장
-            </button>
-          </div>
         </div>
       </form>
+      <div className="MyModifyBtn">
+        <button onClick={handleClickModify} className="btnLargePoint">
+          저장
+        </button>
+      </div>
     </BasicLayoutPage>
   );
 };
