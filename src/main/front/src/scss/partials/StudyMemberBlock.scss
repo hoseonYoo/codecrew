@@ -1,0 +1,46 @@
+/* Study Block */ 
+div.studyMemberBlockWrap{
+  width: 100%;
+  height:80px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.5px solid #dcdcdc;
+  cursor: pointer;
+  div.studyMemberBlockImg{
+    width: 64px;
+    height:64px;
+    border-radius: 64px;
+    margin-left: 16px;
+    margin-right: 20px;
+    background-color: #dcdcdc;
+    // 이미지 적용 시 위치값
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  div.studyMemberBlockTitle{
+    width: calc(100% - 198px);
+    text-align: left;
+    margin-top: 8px;
+    h3{
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 18px;
+    }
+    p{
+      font-size: 14px;
+      line-height: 14px;
+      color:#828282;
+    }
+  }
+
+  // 관리자 들어올 경우
+  div.studyMemberBlockBtn{
+    width:80px;
+    margin-right: 16px;
+    button:last-child{
+      margin-top: 4px;
+    }
+  }
+}
