@@ -123,7 +123,7 @@ const AddPage = () => {
 
   // 입력값 예외 처리 후 실제 저장 함수
   const saveAdd = async () => {
-    handleChangeLocation();
+    await handleChangeLocation();
 
     study.thImg = await saveFile();
 

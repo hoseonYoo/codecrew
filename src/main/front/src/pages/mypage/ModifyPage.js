@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyModifyPage.scss";
 import { useSelector } from "react-redux";
