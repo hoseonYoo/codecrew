@@ -1,63 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { getOne } from "../../api/studyAPI";
-import { API_SERVER_HOST, getMember } from "../../api/memberAPI";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
 import "../../components/study/StudyMemberBlock";
-import useCustomLogin from "../../hooks/useCustomLogin";
+import React, { useEffect } from "react";
+import { API_SERVER_HOST } from "../../api/studyAPI";
+import useCustomMove from "../../hooks/useCustomMove";
+import useStudyData from "../../hooks/useStudyData";
+import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
-
-// 스터디 저장값 초기화
-const initState = {
-  thImg: "th_d3a45401-c1b4-43f1-b4f0-8353237d7e25.png",
-  title: "제목",
-  content: "",
-  memberEmail: "",
-  memberNickname: "",
-  memberPhone: "",
-  location: "주소",
-  studyDate: "날짜",
-  maxPeople: 2,
-  category: "",
-};
 
 const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const { id } = useParams();
-  const [study, setStudy] = useState(initState);
-  const [imgStudySrc, setStudyImgSrc] = useState("");
-  const [imgSrc, setImgSrc] = useState("");
-  const { moveToPath } = useCustomLogin();
+  // 스터디 정보 가져오기
+  const { study, imgStudySrc } = useStudyData(id);
 
-  const handleClickProfile = () => {
-    moveToPath("/list/profile");
-  };
+  // 수정이 필요없는 조회용 회원 정보 가져오기
+  const userEmail = study.memberEmail;
+  console.log(userEmail);
+  // const { member, imgSrc } = useMemberProfile(userEmail);
 
-  // 스터디 데이터 가져오기
-  useEffect(() => {
-    getOne(id).then((data) => {
-      console.log(data);
-      setStudy({ ...data });
-      setStudyImgSrc(`${host}/api/image/view/${data.thImg}`);
-    });
-  }, [id]);
+  // 클릭 이동관련
+  const { moveToProfilePage } = useCustomMove();
 
-  // 작성자 프로필 가져오기
-  useEffect(() => {
-    getMember(study.memberEmail).then((res) => {
-      // 초기 로딩시 카카오 프로필인지 여부 체크
-      if (res.profileImg === "") {
-      } else if (res.profileImg.startsWith("http")) {
-        console.log("카카오 프로필");
-        setImgSrc(res.profileImg);
-      } else {
-        console.log("일반 프로필");
-        setImgSrc(`${host}/api/image/view/${res.profileImg}`);
-      }
-    });
-  }, [study.memberEmail]);
-
+  // 카카오 공유하기
   useEffect(() => {
     // Kakao SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
@@ -91,7 +57,10 @@ const ReadPage = () => {
             <p>{study.location}</p>
           </div>
           <div className="ReadBtn">
-            <button className="btnSmallPoint">연락하기</button>
+            <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
+              연락하기
+            </button>
+
             <button className="btnSmallBlack" onClick={handleShareClick}>
               공유하기
             </button>
@@ -127,8 +96,9 @@ const ReadPage = () => {
         <div className="ReadStudyText">
           <h2>참가자 리스트</h2>
           {/* 생성자 디폴트 */}
-          <div className="studyMemberBlockWrap" onClick={handleClickProfile}>
-            <div className="studyMemberBlockImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div>
+          <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
+            <div className="studyMemberBlockImg"></div>
+            {/* <div className="studyMemberBlockImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div> */}
             <div className="studyMemberBlockTitle">
               <h3>{study.memberNickname}</h3>
               <p>{study.memberEmail}</p>
