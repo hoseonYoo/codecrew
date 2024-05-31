@@ -11,3 +11,9 @@ export const uploadImage = async (image) => {
   const response = await jwtAxios.post(`${host}/upload`, image, header);
   return response.data;
 };
+
+export const deleteImage = async (image) => {
+  console.log("이미지 삭제API");
+  const response = await jwtAxios.delete(`${host}/delete/${image}`);
+  return response.data;
+};

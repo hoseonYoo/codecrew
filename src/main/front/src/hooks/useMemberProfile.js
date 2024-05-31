@@ -6,7 +6,7 @@ const useMemberProfile = (userEmail) => {
   const initState = {
     email: "",
     nickname: "",
-    phone: 0,
+    phone: "",
     profileImg: "",
     memberLink: "",
     introduction: "",
@@ -37,6 +37,7 @@ const useMemberProfile = (userEmail) => {
       .catch((err) => exceptionHandle(err));
   }, [userEmail]);
 
+  // 회원 정보와 출력용 이미지 주소를 반환
   return { member, imgSrc };
 };
 

@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { postAdd } from "../../api/studyAPI";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/AddPage.scss";
 import { API_SERVER_HOST } from "../../api/memberAPI";
 import DaumPostcode from "react-daum-postcode";
-import { uploadImage } from "../../api/imageAPI";
+import useCategories from "../../hooks/useCategories";
+import useProfileImage from "../../hooks/useProfileImage";
+import useCharacterCheck from "../../hooks/useCharactercheck";
 const { kakao } = window;
 
 const host = API_SERVER_HOST;
@@ -24,18 +25,29 @@ const initState = {
 };
 // 유즈 셀렉트
 const AddPage = () => {
+  // 전체 관심스택 가져오기
+  const categories = useCategories(host);
+  // 현재 로그인 된 회원의 이메일 가져오기
+  const userEmail = useSelector((state) => state.loginSlice.email);
+  // 사진 수정용 CustomHook 사용하기
+  const { imgSrc, handleFileChange, saveFile } = useProfileImage(null, "http:");
+
+  // 특수 문자 입력 관련 방지
+  const { checkSpecialCharacters } = useCharacterCheck();
+
   //주소입력 모달
   const [modalState, setModalState] = useState(false);
-  const [study, setStudy] = useState(initState);
   const [inputAddressValue, setInputAddressValue] = useState("");
-  const [categories, setCategories] = useState({});
-  const uploadRef = useRef();
-  const userEmail = useSelector((state) => state.loginSlice.email);
 
+  // 스터디 저장값 state
+  const [study, setStudy] = useState(initState);
+
+  // 모달 표시용
   const handleAddressSearchClick = () => {
     setModalState(true); // 모달을 표시하도록 상태 변경
   };
 
+  // 모달 닫기용
   const onCompletePost = (data) => {
     setModalState(false); // 모달을 숨기도록 상태 변경
     setInputAddressValue(data.address); // 주소 값을 설정
@@ -47,52 +59,13 @@ const AddPage = () => {
     }));
   };
 
-  // 이미지 관련
-  const [imgSrc, setImgSrc] = useState(null);
-  // 이미지 업로드시 배경 변경
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImgSrc(URL.createObjectURL(file));
-    }
-    const uploadfile = uploadRef.current.files[0];
-    const formData = new FormData();
-    let thImg = study.thImg;
-    formData.append("file", file);
-
-    uploadImage(formData)
-      .then((res) => {
-        console.log("이미지 업로드 성공");
-        console.log(res);
-        thImg = res;
-      })
-      .then(() => {
-        // member에 파일이름 넣어주기
-        let newStudy = { ...study };
-        newStudy.thImg = thImg;
-        setStudy(newStudy);
-      });
-  };
-
-  // 입력관련 방지
-  const characterCheck = (e) => {
-    const regExp = /[ \{\}\[\]\/?,;:|\)*~`\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
-    // 입력된 값이 숫자, 백스페이스, 삭제 키가 아니면 입력을 막습니다.
-    // if (!/^[0-9]*$/.test(e.key) && e.type === "keydown" && e.key !== "Backspace" && e.key !== "Delete") {
-    //   e.preventDefault();
-    // }
-    if (regExp.test(e.target.value)) {
-      alert("특수문자는 입력하실수 없습니다.");
-      e.target.value = e.target.value.substring(0, e.target.value.length - 1); // 입력한 특수문자 한자리 지움
-    }
-  };
-
   const handleChangeStudy = (e) => {
     study[e.target.name] = e.target.value;
     setStudy({ ...study });
     console.log(study);
   };
 
+  // 주소-좌표 변환 함수
   const handleChangeLocation = () => {
     let location = study.location;
 
@@ -110,12 +83,12 @@ const AddPage = () => {
     });
   };
 
-  //버튼
+  // 저장 버튼 클릭시 예외처리용 함수
   const handleClickAdd = (e) => {
     e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
 
     // 확인 처리
-    if (study.thImg === "") {
+    if (imgSrc === null) {
       alert("이미지가 등록되지 않았습니다.");
       return; // 함수 실행을 여기서 중단합니다.
     }
@@ -145,7 +118,14 @@ const AddPage = () => {
       return; // 함수 실행을 여기서 중단합니다.
     }
 
+    saveAdd();
+  };
+
+  // 입력값 예외 처리 후 실제 저장 함수
+  const saveAdd = async () => {
     handleChangeLocation();
+
+    study.thImg = await saveFile();
 
     const formData = new FormData();
     formData.append("thImg", study.thImg);
@@ -166,18 +146,6 @@ const AddPage = () => {
       alert("저장완료");
     });
   };
-
-  //카테고리 불러오기
-  useEffect(() => {
-    axios
-      .get(`${host}/api/categories`)
-      .then((response) => {
-        setCategories({ ...response.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   return (
     <>
@@ -215,12 +183,7 @@ const AddPage = () => {
             >
               <label htmlFor="fileInput">
                 추가
-                <input
-                  id="fileInput"
-                  ref={uploadRef}
-                  type="file"
-                  onChange={handleFileChange}
-                />
+                <input id="fileInput" type="file" onChange={handleFileChange} />
               </label>
             </div>
             <div>
@@ -230,8 +193,8 @@ const AddPage = () => {
                 value={study.title}
                 type="text"
                 placeholder="스터디명을 입력해주세요."
-                onKeyUp={characterCheck}
-                onKeyDown={characterCheck}
+                onKeyUp={checkSpecialCharacters}
+                onKeyDown={checkSpecialCharacters}
                 onChange={handleChangeStudy}
               />
             </div>
@@ -304,8 +267,8 @@ const AddPage = () => {
                 value={study.content}
                 placeholder="스터디소개를 입력해주세요."
                 onChange={handleChangeStudy}
-                onKeyUp={characterCheck}
-                onKeyDown={characterCheck}
+                onKeyUp={checkSpecialCharacters}
+                onKeyDown={checkSpecialCharacters}
               ></textarea>
             </div>
           </div>

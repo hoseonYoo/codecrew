@@ -6,7 +6,7 @@ const LoadingPage = () => {
       <h4>로딩 중..</h4>
       {/*TODO 로딩 이미지 변경 */}
       <img
-        src={process.env.PUBLIC_URL + "/assets/images/spinner.svg"}
+        src={process.env.PUBLIC_URL + "/assets/imgs/spinner.svg"}
         alt="loading"
       />
     </div>

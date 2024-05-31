@@ -1,82 +1,46 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/MyModifyPage.scss";
 import { useSelector } from "react-redux";
-import { API_SERVER_HOST, getMember, modifyMember } from "../../api/memberAPI";
+import { API_SERVER_HOST, modifyMember } from "../../api/memberAPI";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import { uploadImage } from "../../api/imageAPI";
 import useCustomMove from "../../hooks/useCustomMove";
 import { checkPhone } from "../../api/checkAPI";
+import useMemberProfile from "../../hooks/useMemberProfile";
+import useCategories from "../../hooks/useCategories";
+import useProfileImage from "../../hooks/useProfileImage";
+import useCharacterCheck from "../../hooks/useCharactercheck";
 
-const initState = {
-  email: "",
-  nickname: "",
-  phone: "",
-  profileImg: "",
-  memberLink: "",
-  introduction: "",
-  favoriteList: [],
-};
 const host = API_SERVER_HOST;
 
 const ModifyPage = () => {
-  // 프로필 사진용
-  const [imgSrc, setImgSrc] = useState("");
+  // 이동 관련 CustomHook 사용하기
   const { moveToMypage } = useCustomMove();
 
-  const [member, setMember] = useState(initState);
+  // 현재 로그인 된 회원의 이메일 가져오기
   const userEmail = useSelector((state) => state.loginSlice.email);
-  const { exceptionHandle } = useCustomLogin();
-  const [categories, setCategories] = useState({});
 
-  const uploadRef = useRef();
-
+  // 수정이 필요한 회원 정보 가져오기
+  const [member, setMember] = useState({});
+  const memberProfile = useMemberProfile(userEmail).member;
+  const memberProfileImg = useMemberProfile(userEmail).imgSrc;
   useEffect(() => {
-    getMember(userEmail)
-      .then((res) => {
-        console.log("회원정보");
-        console.log(res);
-        setMember({ ...res });
-        // 초기 로딩시 카카오 프로필인지 여부 체크
-        if (res.profileImg === "") {
-          console.log("프로필 없음");
-          setImgSrc("");
-        } else if (res.profileImg.startsWith("http")) {
-          console.log("카카오 프로필");
-          setImgSrc(res.profileImg);
-        } else {
-          console.log("일반 프로필");
-          setImgSrc(`${host}/api/image/view/${res.profileImg}`);
-        }
-      })
-      .catch((err) => exceptionHandle(err));
-  }, [userEmail]);
+    setMember(memberProfile);
+  }, [memberProfile]);
 
-  //TODO 프로필 사진 중복 저장 문제 해결 필요
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImgSrc(URL.createObjectURL(file));
-    }
-    const uploadfile = uploadRef.current.files[0];
-    const formData = new FormData();
-    let profileImg = member.profileImg;
-    formData.append("file", file);
+  // 사진 수정용 CustomHook 사용하기
+  const { imgSrc, handleFileChange, saveFile } = useProfileImage(
+    memberProfileImg,
+    memberProfile.profileImg,
+  );
 
-    uploadImage(formData)
-      .then((res) => {
-        console.log("이미지 업로드 성공");
-        console.log(res);
-        profileImg = res;
-      })
-      .then(() => {
-        // member에 파일이름 넣어주기
-        let newMember = { ...member };
-        newMember.profileImg = profileImg;
-        setMember(newMember);
-      });
-  };
+  // 전체 관심스택 가져오기
+  const categories = useCategories(host);
+
+  // 입력관련 방지 함수
+  const { checkSpecialCharacters, checkNumericInput } = useCharacterCheck();
+
+  const { exceptionHandle } = useCustomLogin();
 
   const handleChange = (e) => {
     member[e.target.name] = e.target.value;
@@ -95,25 +59,9 @@ const ModifyPage = () => {
     setMember({ ...member });
   };
 
-  // 입력관련 방지
-  const characterCheck = (e) => {
-    // 입력된 값이 숫자, 백스페이스, 삭제 키가 아니면 입력을 막습니다.
-    const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
-    if (
-      !/^[0-9]*$/.test(e.key) &&
-      e.type === "keydown" &&
-      e.key !== "Backspace" &&
-      e.key !== "Delete"
-    ) {
-      e.preventDefault();
-    }
-  };
-
-  // TODO 예외 처리 필요
+  // 저장 클릭시 입력값 예외 처리용 함수
   const handleClickModify = (e) => {
     e.preventDefault(); // 이벤트의 기본 동작을 방지합니다.
-
-    console.log(member);
 
     // 닉네임 입력 안했을 때
     if (member.nickname === "") {
@@ -153,28 +101,17 @@ const ModifyPage = () => {
     }
   };
 
-  const saveModify = () => {
-    modifyMember(member)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => exceptionHandle(err))
-      .then(moveToMypage);
+  // 입력값 예외 처리후 실제 회원 정보 실제 저장 하는 함수
+  const saveModify = async () => {
+    member.profileImg = await saveFile();
+    try {
+      const res = await modifyMember(member);
+      console.log(res);
+    } catch (err) {
+      exceptionHandle(err);
+    }
+    moveToMypage();
   };
-
-  useEffect(() => {
-    axios
-      .get(`${host}/api/categories`)
-      .then((response) => {
-        console.log(response.data);
-
-        setCategories({ ...response.data });
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   return (
     <BasicLayoutPage headerTitle="정보수정">
@@ -190,12 +127,7 @@ const ModifyPage = () => {
           >
             <label htmlFor="fileInput">
               편집
-              <input
-                id="fileInput"
-                ref={uploadRef}
-                type="file"
-                onChange={handleFileChange}
-              />
+              <input id="fileInput" type="file" onChange={handleFileChange} />
             </label>
           </div>
           <div>
@@ -204,6 +136,8 @@ const ModifyPage = () => {
               type="text"
               name="nickname"
               value={member.nickname}
+              onKeyUp={checkSpecialCharacters}
+              onKeyDown={checkSpecialCharacters}
               onChange={handleChange}
               placeholder="닉네임을 입력해주세요."
             />
@@ -234,8 +168,8 @@ const ModifyPage = () => {
               maxLength={11}
               name="phone"
               value={member.phone}
-              onKeyUp={characterCheck}
-              onKeyDown={characterCheck}
+              onKeyUp={checkNumericInput}
+              onKeyDown={checkNumericInput}
               onChange={handleChange}
             />
           </div>
@@ -256,6 +190,8 @@ const ModifyPage = () => {
               name="introduction"
               value={member.introduction}
               onChange={handleChange}
+              onKeyUp={checkSpecialCharacters}
+              onKeyDown={checkSpecialCharacters}
             ></textarea>
           </div>
           <div className="MyModifyBtn">

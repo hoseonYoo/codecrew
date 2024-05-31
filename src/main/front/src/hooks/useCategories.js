@@ -15,6 +15,7 @@ const useCategories = (host) => {
       });
   }, [host]);
 
+  // 출력용 전체 카테고리 반환
   return categories;
 };
 
