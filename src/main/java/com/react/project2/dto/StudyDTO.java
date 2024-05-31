@@ -24,16 +24,18 @@ public class StudyDTO {
     private String title;
     private String content;
     private String memberEmail;
+    private String memberNickname;
+    private String memberPhone;
     private String location;
     private double locationX;
     private double locationY;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime studyDate;
     private String strStudyDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime studyDeadlineDate;
     private String strStudyDeadlineDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createDate;
     private int maxPeople;
     private boolean disabled;
@@ -42,15 +44,9 @@ public class StudyDTO {
     // 스터디 참여자 목록
     private List<StudyMember> studyMemberList;
 
-
     public void changeStudyDate(String strStudyDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
     }
-
-
-
-
-    // 생성자
 
 }

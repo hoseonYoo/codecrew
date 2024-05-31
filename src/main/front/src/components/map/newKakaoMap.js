@@ -39,7 +39,7 @@ const NewKakaoMap = () => {
             ...prev,
             errMsg: err.message,
           }));
-        },
+        }
       );
     } else {
       // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
@@ -57,7 +57,7 @@ const NewKakaoMap = () => {
   return (
     <Map
       center={mapLocation.center}
-      style={{ width: "100%", height: "calc(100vh - 52px)" }}
+      style={{ width: "100%", height: "calc(100vh - 52px)", position: "relative" }}
       level={3} // 지도의 확대 레벨
     >
       {/*현재 좌표를 사용할수 있다면 현위치 아이콘 생성*/}
@@ -87,10 +87,9 @@ const NewKakaoMap = () => {
       {/*TODO 위치 변경 필요*/}
       <div
         style={{
-          position: "fixed",
-          top: "20%",
-          left: "30%",
-          transform: "translate(-50%, -50%)",
+          position: "absolute",
+          top: "64px",
+          right: "16px",
           zIndex: 10,
           cursor: "pointer",
         }}

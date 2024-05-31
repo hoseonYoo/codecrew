@@ -11,3 +11,11 @@ export const postAdd = async (study) => {
   const response = await jwtAxios.post(`${host}/`, study, header);
   return response.data;
 };
+
+// API 스터디 조회 요청
+export const getOne = async (id) => {
+  console.log(`${host}/${id}`);
+  const response = await axios.get(`${host}/${id}`);
+  console.log(response.data);
+  return response.data;
+};

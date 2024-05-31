@@ -99,8 +99,9 @@ div.MyModifyBtn{
   width: 100%;
   max-width: 500px;
   button{
-  margin:0;
-    width: 100%;
+    width: calc(100% - 32px);
+    display: block;
+    margin: 0 auto;
     box-shadow: 
           0 0px 6px rgba(0,0,0,0.1);
     margin-top: 32px;
