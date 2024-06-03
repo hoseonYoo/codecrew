@@ -1,20 +1,69 @@
-import React from "react";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
+import "../../components/study/StudyMemberBlock";
+import React, { useEffect } from "react";
+import { API_SERVER_HOST } from "../../api/studyAPI";
+import useCustomMove from "../../hooks/useCustomMove";
+import useStudyData from "../../hooks/useStudyData";
+import useMemberProfile from "../../hooks/useMemberProfile";
+import { useParams } from "react-router-dom";
+
+const host = API_SERVER_HOST;
 
 const ReadPage = () => {
+  const { id } = useParams();
+  // 스터디 정보 가져오기
+  const { study, imgStudySrc } = useStudyData(id);
+
+  // 수정이 필요없는 조회용 회원 정보 가져오기
+  const userEmail = study.memberEmail;
+  console.log(userEmail);
+  // const { member, imgSrc } = useMemberProfile(userEmail);
+
+  // 클릭 이동관련
+  const { moveToProfilePage } = useCustomMove();
+
+  // 카카오 공유하기
+  useEffect(() => {
+    // Kakao SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init("a485d66609c6ba8d3f85dd817c4e295d");
+    }
+  }, []);
+
+  // 공유하기 버튼
+  const handleShareClick = () => {
+    window.Kakao.Link.sendDefault({
+      objectType: "feed",
+      content: {
+        title: study.title,
+        description: study.content,
+        imageUrl: imgStudySrc,
+        link: {
+          mobileWebUrl: window.location.href,
+          webUrl: window.location.href,
+        },
+      },
+    });
+  };
+
   return (
     <BasicLayoutPage headerTitle="스터디">
       <div>
         <div className="ReadContent">
-          <div className="ReadImg"></div>
+          <div className="ReadImg" style={imgStudySrc !== "" ? { backgroundImage: `url(${imgStudySrc})` } : null}></div>
           <div className="ReadTitle">
-            <h3>프로젝트 모임</h3>
-            <p>서울 서대문구 신촌로 83</p>
+            <h3>{study.title}</h3>
+            <p>{study.location}</p>
           </div>
           <div className="ReadBtn">
-            <button className="btnSmallPoint">연락하기</button>
-            <button className="btnSmallBlack">공유하기</button>
+            <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
+              연락하기
+            </button>
+
+            <button className="btnSmallBlack" onClick={handleShareClick}>
+              공유하기
+            </button>
           </div>
         </div>
 
@@ -22,34 +71,46 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>작성자 : </h3>
             <div>
-              <p>김유저</p>
-              <p>dbghtjs112@naver.com</p>
+              <p>{study.memberNickname}</p>
+              <p>{study.memberEmail}</p>
             </div>
           </div>
           <div className="ReadText">
             <h3>참여일자 : </h3>
-            <p>2024.05.30</p>
+            <p>{study.studyDate}</p>
           </div>
           <div className="ReadText">
             <h3>참여인원 : </h3>
             <p>
-              0<span>/</span>10
+              1<span>/</span>
+              {study.maxPeople}
             </p>
           </div>
         </div>
 
         <div className="ReadStudyText">
           <h2>스터디 소개</h2>
-          <p>
-            안녕하세요~ 저희 프로젝트 컨셉은 결혼은 웨딩 플래너에게 맡기듯 주거와 관련된 부동산 중개 계약 및 이사, 청소 생활과 관련된 서비스를 집 플래너가 문제 해결을 도와 드리는 원스톱 주거 서비스
-            프로젝트를 시작할 예정입니다!
-          </p>
+          <p>{study.content}</p>
         </div>
 
         <div className="ReadStudyText">
           <h2>참가자 리스트</h2>
+          {/* 생성자 디폴트 */}
+          <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
+            <div className="studyMemberBlockImg"></div>
+            {/* <div className="studyMemberBlockImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div> */}
+            <div className="studyMemberBlockTitle">
+              <h3>{study.memberNickname}</h3>
+              <p>{study.memberEmail}</p>
+            </div>
+            <div className="studyMemberBlockBtn"></div>
+          </div>
+          {/* 생성자 디폴트 */}
+          {/* 참가자 리스트 - 컴포넌트 */}
+          {/* <StudyMemberBlock /> */}
         </div>
 
+        {/* 기본 */}
         <div className="StudyJoinBtn">
           <button className="btnLargePoint">스터디참가</button>
         </div>

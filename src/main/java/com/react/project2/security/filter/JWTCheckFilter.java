@@ -51,6 +51,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (requestURI.startsWith("/api/map")) {
             return true;
         }
+        // 스터디 상세 불러오기 경로 요청은 체크 하지 않음
+        if (requestURI.matches("/api/study/\\d+")) {
+            return true;
+        }
         return false;
 //        return true;
     }

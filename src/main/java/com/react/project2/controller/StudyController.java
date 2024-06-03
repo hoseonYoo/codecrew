@@ -4,10 +4,7 @@ import com.react.project2.dto.StudyDTO;
 import com.react.project2.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -24,5 +21,15 @@ public class StudyController {
         log.info("**** StudyController POST / add {} ****", studyDTO);
         studyService.add(studyDTO);
         return Map.of("RESULT", "SUCCESS");
+    }
+    // 스터디 전부 조회
+
+    // 스터디 조회
+    @GetMapping("/{id}")
+    public StudyDTO get(@PathVariable("id") Long id){
+        log.info("스터디 id 값은 : {}", id);
+        StudyDTO studyDTO = studyService.get(id);
+        log.info("----GETSTUDYID----");
+        return studyDTO;
     }
 }

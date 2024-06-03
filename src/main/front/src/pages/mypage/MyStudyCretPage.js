@@ -1,5 +1,6 @@
 import React from "react";
 import "../../scss/partials/NonePage.scss";
+import "../../scss/pages/MySTListPage.scss";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import StudyBlockMy from "../../components/study/StudyBlockMy";
 
@@ -12,7 +13,11 @@ const MyStudyCretPage = () => {
         <h2>아직 생성한 스터디가 없어요</h2>
         <p>새로운 스터디를 생성해보세요</p>
       </div> */}
-      {/* block 반복 */}
+      {/* 컨텐츠 있을 경우 block 반복 */}
+      <div className="myStListFilter">
+        <button>모집중</button>
+        <button>종료</button>
+      </div>
       <div>
         <StudyBlockMy />
       </div>

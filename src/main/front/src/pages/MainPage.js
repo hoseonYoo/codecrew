@@ -48,11 +48,7 @@ const MainPage = () => {
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
         <div className="stPopupWrap">
           {/* 닫기버튼 */}
-          <img
-            className="stPopupClose"
-            src="../assets/imgs/icon/ic_popup_cl.svg"
-            alt="닫기버튼"
-          />
+          <img className="stPopupClose" src="../assets/imgs/icon/ic_popup_cl.svg" alt="닫기버튼" />
           {/* 컨텐츠 */}
           <div className="stPopupContentTop">
             <div className="stPopupImg"></div>

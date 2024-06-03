@@ -27,11 +27,16 @@ const useCustomMove = () => {
     navigate("/");
   };
 
+  // 스터디
   const moveToAddPage = () => {
     navigate("/list/add");
   };
 
+  const moveToProfilePage = () => {
+    navigate("/list/profile");
+  };
+
   // TODO 함수 작성 후 return 추가
-  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage };
+  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage, moveToProfilePage };
 };
 export default useCustomMove;
