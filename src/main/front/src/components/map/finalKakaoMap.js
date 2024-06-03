@@ -63,6 +63,7 @@ const FinalKakaoMap = () => {
         position: markerPosition,
         image: markerImage,
       });
+      console.log("현위치 마커 생성");
       marker.setMap(map);
     }
   }, [map, myLocation.get]);
@@ -70,13 +71,23 @@ const FinalKakaoMap = () => {
   // 카테고리 필터링데이터 가져오기
   useEffect(() => {
     dispatch(getStudyLocationList(categoryFilter)).then(() => {
-      console.log(studyLocationList);
+      console.log("studyLocationList 가져오기");
+      // console.log(studyLocationList);
     });
   }, [categoryFilter]);
 
   // 마커 클러스터 생성
   useEffect(() => {
     if (map && studyLocationList.length > 0) {
+      console.log("클러스터 생성");
+      const newCluster =new kakao.maps.MarkerClusterer({
+            map: map,
+            averageCenter: true,
+            minLevel: 6,
+            disableClickZoom: true,
+          });
+      setCluster(newCluster);
+
       const markers = studyLocationList.map((location) => {
         let marker = new kakao.maps.Marker({
           position: new kakao.maps.LatLng(
@@ -86,13 +97,14 @@ const FinalKakaoMap = () => {
         });
         return marker;
       });
-      cluster.addMarkers(markers);
+      console.log("클러스터에 마커 추가");
+      newCluster.addMarkers(markers);
 
       // MarkerClusterer 객체 출력
-      console.log(cluster);
+      console.log(newCluster);
 
       // 추가된 마커의 수 출력
-      console.log(cluster.getMarkers().length);
+      console.log(newCluster.getMarkers().length);
     }
   }, [map, studyLocationList]);
 
@@ -109,15 +121,6 @@ const FinalKakaoMap = () => {
       setMap(map1);
       setIsLoadingMap(false);
 
-      console.log("클러스터 생성");
-      setCluster(
-        new kakao.maps.MarkerClusterer({
-          map: map,
-          averageCenter: true,
-          minLevel: 10,
-          disableClickZoom: true,
-        }),
-      );
     }
   }, [myLocation]);
 
