@@ -3,6 +3,7 @@ package com.react.project2.service;
 import com.react.project2.domain.Category;
 import com.react.project2.domain.Member;
 import com.react.project2.domain.Study;
+import com.react.project2.domain.StudyMember;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
@@ -78,6 +79,39 @@ public class StudyServiceImpl implements StudyService {
     public void modifyStudy(StudyDTO studyDTO) {
 
     }
+
+    @Override
+    public boolean participate(Long id, String userEmail) {
+        // 스터디 엔티티 조회
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        // 사용자 엔티티 조회
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        // 이미 참가신청을 했는지 확인
+        if (study.getStudyMemberList().stream().anyMatch(m -> m.getEmail().equals(userEmail))) {
+            log.info("이미 참가신청을 한 사용자입니다.");
+            return false;
+        }
+
+        // 참가인원이 최대인원을 초과하지 않았는지 확인
+        if (study.getStudyMemberList().size() >= study.getMaxPeople()) {
+            log.info("참가인원이 이미 최대입니다.");
+            return false;
+        }
+
+        // 참가신청 로직
+        StudyMember newMember = new StudyMember();
+        newMember.setEmail(userEmail);
+        study.addStudyMember(newMember);
+
+        // 변경사항 저장
+        studyRepository.save(study);
+        return true;
+    }
+
 
     private StudyDTO entityToDTO(Study study){
 

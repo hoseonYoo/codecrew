@@ -18,6 +18,7 @@ const ReadPage = () => {
 
   // 현재 로그인 된 회원의 이메일 가져오기
   const userEmail = useSelector((state) => state.loginSlice.email);
+
   // 수정이 필요없는 조회용 회원 정보 가져오기
   const { member, imgSrc } = useMemberProfile(userEmail);
   // 전체 관심스택 가져오기

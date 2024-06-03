@@ -8,6 +8,7 @@ import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const host = API_SERVER_HOST;
 
@@ -21,14 +22,20 @@ const ReadPage = () => {
   const userEmail = useSelector((state) => state.loginSlice.email);
   console.log(userEmail);
 
-  // 스터디 생성자 회원 정보 가져오기
+  // 스터디 생성자의 이메일 주소 가져오기
   const studyUserEmail = study.memberEmail;
-  console.log(studyUserEmail);
+
+  // 스터디 생성자의 회원 정보 가져오기
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
+
+  // const studyUserEmail = study.memberEmail;
+  // console.log(studyUserEmail);
   // const { member, imgSrc } = useMemberProfile(userEmail);
 
   // 클릭 이동관련
   const { moveToProfilePage } = useCustomMove();
   const { moveToModifyPage } = useCustomMove();
+  const { moveToLogin } = useCustomMove();
 
   // 카카오 공유하기
   useEffect(() => {
@@ -52,6 +59,26 @@ const ReadPage = () => {
         },
       },
     });
+  };
+
+  // handleParticipate 참가하기 구현
+  const handleParticipate = async () => {
+    if (userEmail) {
+      try {
+        // 백엔드 서버에 참가 요청을 보냄
+        const response = await axios.post(`${host}/api/study/${id}/participate`, {
+          email: userEmail,
+        });
+        // 성공적으로 참가 처리되었을 때의 로직
+        console.log(response.data);
+        alert("스터디 참가신청이 완료되었습니다.");
+      } catch (error) {
+        // 에러 처리 로직
+        console.error(error);
+      }
+    } else {
+      moveToLogin();
+    }
   };
 
   return (
@@ -116,8 +143,8 @@ const ReadPage = () => {
           <h2>참가자 리스트</h2>
           {/* 생성자 디폴트 */}
           <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
-            <div className="studyMemberBlockImg"></div>
-            {/* <div className="studyMemberBlockImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div> */}
+            {/* <div className="studyMemberBlockImg"></div> */}
+            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null}></div>
             <div className="studyMemberBlockTitle">
               <h3>{study.memberNickname}</h3>
               <p>{study.memberEmail}</p>
@@ -130,7 +157,15 @@ const ReadPage = () => {
         </div>
 
         {/* 기본 */}
-        <div className="StudyJoinBtn">{!userEmail || userEmail !== studyUserEmail ? <button className="btnLargePoint">스터디참가</button> : <button className="btnLargePoint">스터디시작</button>}</div>
+        <div className="StudyJoinBtn">
+          {!userEmail || userEmail !== studyUserEmail ? (
+            <button className="btnLargePoint" onClick={handleParticipate}>
+              스터디참가
+            </button>
+          ) : (
+            <button className="btnLargePoint">스터디시작</button>
+          )}
+        </div>
       </div>
     </BasicLayoutPage>
   );
