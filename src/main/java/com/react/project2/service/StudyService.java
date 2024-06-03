@@ -21,9 +21,6 @@ public interface StudyService {
 
 
     // 마커용 스터디 카테고리별 전체 조회
-    List<StudyMarkerDTO> getStudyMarkerByCategory(String category);
-
-    // 마커용 스터디 전체 조회
-    List<StudyMarkerDTO> getStudyMarkerAll();
+    List<StudyDTO> getStudyMarkerByCategory(String category);
 
 }

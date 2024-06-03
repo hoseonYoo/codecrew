@@ -1,9 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllStudyLocation } from "../api/mapAPI";
+
+export const getStudyLocationList = createAsyncThunk(
+  "category/getStudyLocationList",
+  async (category, thunkAPI) => {
+    console.log("category : ", category);
+    const data = await getAllStudyLocation(category);
+    return data;
+  },
+);
 
 const initState = {
   category: "ALL",
-  studyLocationList: 1,
+  studyLocationList: [],
+  status: "idle",
+  error: null,
 };
 
 const categorySlice = createSlice({
@@ -11,22 +22,26 @@ const categorySlice = createSlice({
   initialState: initState,
   reducers: {
     setCategory: (state, action) => {
-      return { category: action.payload };
+      console.log("Setting category:", action.payload);
+      state.category = action.payload;
     },
-
-    getStudyLocationList: (state, action) => {
-      // 카테고리별로 가져온 마커들의 위치와 id값을 저장
-      // mapAPI.js에서 가져온 데이터를 저장
-      getAllStudyLocation(state.category).then((data) => {
-        console.log(data);
-        return { studyLocationList: data };
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getStudyLocationList.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getStudyLocationList.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.studyLocationList = action.payload;
+      })
+      .addCase(getStudyLocationList.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
-
-      return state;
-    },
   },
 });
 
-export const { setCategory, getStudyLocationList } = categorySlice.actions;
+export const { setCategory } = categorySlice.actions;
 
 export default categorySlice.reducer;
