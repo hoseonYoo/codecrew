@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
+import { useSelector, useDispatch } from "react-redux";
+import { getStudyLocationList } from "../../slices/categorySlice";
 
 const NewKakaoMap = () => {
   // 내 현재 주소 가져올 수 있게 해주는 state
@@ -9,6 +11,8 @@ const NewKakaoMap = () => {
     isLoading: true,
   });
 
+  const dispatch = useDispatch();
+
   // 지도의 위치를 변경해주는 state
   const [mapLocation, setMapLocation] = useState({
     // 지도의 초기 위치
@@ -16,6 +20,17 @@ const NewKakaoMap = () => {
     // 지도 위치 변경시 panto를 이용할지에 대해서 정의
     isPanto: false,
   });
+  // 셀렉터로 카테고리 가져오기
+  const categoryFilter = useSelector((state) => state.categorySlice.category);
+  const studyLocationList = useSelector(
+    (state) => state.categorySlice.studyLocationList,
+  );
+
+  const setStudyLocationList = () => {
+    // 카테고리별로 가져온 마커들의 위치와 id값을 저장
+    // mapAPI.js에서 가져온 데이터를 저장
+    dispatch(getStudyLocationList());
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,7 +68,9 @@ const NewKakaoMap = () => {
       isPanto: false,
       refresh: !mapLocation.refresh,
     });
-  }, []);
+    // TODO 오류 수정 필요
+    // setStudyLocationList();
+  }, [categoryFilter]);
 
   return (
     <Map
@@ -106,6 +123,7 @@ const NewKakaoMap = () => {
             isPanto: false,
             refresh: !mapLocation.refresh,
           });
+          console.log(studyLocationList);
         }}
       >
         <img src="assets/imgs/icon/mylocationBtn.svg" alt="myLocation" />
@@ -115,12 +133,12 @@ const NewKakaoMap = () => {
         averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
         minLevel={10} // 클러스터 할 최소 지도 레벨
       >
-        {positions.map((pos) => (
+        {studyLocationList.stream().map((studyLocation) => (
           <MapMarker
-            key={`${pos.lat}-${pos.lng}`}
+            key={`${studyLocation.locationX}-${studyLocation.locationY}`}
             position={{
-              lat: pos.lat,
-              lng: pos.lng,
+              lat: studyLocation.locationX,
+              lng: studyLocation.locationY,
             }}
           />
         ))}

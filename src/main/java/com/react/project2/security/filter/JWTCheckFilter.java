@@ -47,6 +47,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (requestURI.startsWith("/api/categories")) {
             return true;
         }
+        // 마커 불러오기 용 경로 요청은 체크 하지 않음
+        if (requestURI.startsWith("/api/map")) {
+            return true;
+        }
         return false;
 //        return true;
     }

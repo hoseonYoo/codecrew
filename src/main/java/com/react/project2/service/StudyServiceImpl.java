@@ -4,12 +4,15 @@ import com.react.project2.domain.Category;
 import com.react.project2.domain.Member;
 import com.react.project2.domain.Study;
 import com.react.project2.dto.StudyDTO;
+import com.react.project2.dto.StudyMarkerDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -26,6 +29,26 @@ public class StudyServiceImpl implements StudyService {
         Study study = dtoToEntity(studyDTO);
         // 저장 처리
         Study saved = studyRepository.save(study);
+    }
+
+    @Override
+    public List<StudyMarkerDTO> getStudyMarkerByCategory(String category) {
+
+        Category categoryEnum = Category.valueOf(category);
+        //List<Study> -> List<StudyMarkerDTO>
+        List<Study> studyList = studyRepository.findAllByCategory(categoryEnum);
+        List<StudyMarkerDTO> byCategory = studyList.stream().map(study -> StudyMarkerDTO.builder()
+                .id(study.getId())
+                .locationX(study.getLocationX())
+                .locationY(study.getLocationY())
+                .build()).toList();
+        return byCategory;
+    }
+
+    @Override
+    public List<StudyMarkerDTO> getStudyMarkerAll() {
+
+        return null;
     }
 
     private Study dtoToEntity(StudyDTO studyDTO) {
