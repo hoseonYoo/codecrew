@@ -23,6 +23,8 @@ const initState = {
   studyDate: "",
   maxPeople: 1,
   category: "",
+  locationX: "",
+  locationY: "",
 };
 const AddPage = () => {
   // 전체 관심스택 가져오기
@@ -69,20 +71,26 @@ const AddPage = () => {
   };
 
   // 주소-좌표 변환 함수
-  const handleChangeLocation = () => {
+  const handleChangeLocation = async () => {
     let location = study.location;
 
     // 주소-좌표 변환 객체를 생성합니다
     let geocoder = new kakao.maps.services.Geocoder();
+
     // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(location, function (result, status) {
-      // 정상적으로 검색이 완료됐으면
-      if (status === kakao.maps.services.Status.OK) {
-        study.locationX = result[0].x;
-        study.locationY = result[0].y;
-        setStudy({ ...study });
-        console.log(study);
-      }
+    await new Promise((resolve, reject) => {
+      geocoder.addressSearch(location, function (result, status) {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          study.locationX = result[0].x;
+          study.locationY = result[0].y;
+          setStudy({ ...study });
+          console.log(study);
+          resolve();
+        } else {
+          reject(new Error("Failed to search address"));
+        }
+      });
     });
   };
 
