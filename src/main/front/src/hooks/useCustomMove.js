@@ -31,12 +31,17 @@ const useCustomMove = () => {
   const moveToAddPage = () => {
     navigate("/list/add");
   };
-
+  const moveToReadPage = (id) => {
+    navigate(`/list/${id}`);
+  };
+  const moveToModifyPage = (id) => {
+    navigate(`/list/modify/${id}`);
+  };
   const moveToProfilePage = () => {
     navigate("/list/profile");
   };
 
   // TODO 함수 작성 후 return 추가
-  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage, moveToProfilePage };
+  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage, moveToProfilePage, moveToModifyPage, moveToReadPage };
 };
 export default useCustomMove;

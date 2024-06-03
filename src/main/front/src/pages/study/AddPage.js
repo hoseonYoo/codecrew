@@ -21,10 +21,11 @@ const initState = {
   memberEmail: "",
   location: "",
   studyDate: "",
-  maxPeople: 1,
+  maxPeople: 2,
   category: "",
   locationX: "",
   locationY: "",
+  studyMemberList: [],
 };
 const AddPage = () => {
   // 전체 관심스택 가져오기
@@ -171,6 +172,7 @@ const AddPage = () => {
             height: "100vh",
             backgroundColor: "rgba(0,0,0,0.5)",
           }}
+          onClick={() => onCompletePost({ address: "" })}
         >
           <div
             style={{
@@ -189,10 +191,7 @@ const AddPage = () => {
       <BasicLayoutPage headerTitle="스터디추가">
         <form>
           <div className="StudyAddWrap">
-            <div
-              className="StudyAddImg"
-              style={{ backgroundImage: `url(${imgSrc})` }}
-            >
+            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
               <label htmlFor="fileInput">
                 추가
                 <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -212,19 +211,9 @@ const AddPage = () => {
             </div>
             <div onClick={handleAddressSearchClick}>
               <h3>주소</h3>
-              <input
-                name="location"
-                type="text"
-                value={study.location}
-                placeholder="주소를 입력해주세요."
-                readOnly
-              />
+              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
 
-              <img
-                className="AdressSearch"
-                src="../assets/imgs/icon/ic_serch_gr.svg"
-                alt="searchIcon"
-              />
+              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
             </div>
             <div>
               <h3>참여날짜</h3>
@@ -235,18 +224,12 @@ const AddPage = () => {
                 placeholder="참여일을 입력해주세요."
                 onChange={handleChangeStudy}
                 min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5)
-                  .toISOString()
-                  .substring(0, 16)}
+                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
               />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select
-                name="maxPeople"
-                value={study.maxPeople}
-                onChange={handleChangeStudy}
-              >
+              <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -256,11 +239,7 @@ const AddPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select
-                name="category"
-                value={study.category}
-                onChange={handleChangeStudy}
-              >
+              <select name="category" value={study.category} onChange={handleChangeStudy}>
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (

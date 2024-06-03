@@ -7,21 +7,28 @@ import useCustomMove from "../../hooks/useCustomMove";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const { id } = useParams();
+  console.log(id);
   // 스터디 정보 가져오기
   const { study, imgStudySrc } = useStudyData(id);
 
-  // 수정이 필요없는 조회용 회원 정보 가져오기
-  const userEmail = study.memberEmail;
+  // 현재 로그인 된 회원의 이메일 가져오기
+  const userEmail = useSelector((state) => state.loginSlice.email);
   console.log(userEmail);
+
+  // 스터디 생성자 회원 정보 가져오기
+  const studyUserEmail = study.memberEmail;
+  console.log(studyUserEmail);
   // const { member, imgSrc } = useMemberProfile(userEmail);
 
   // 클릭 이동관련
   const { moveToProfilePage } = useCustomMove();
+  const { moveToModifyPage } = useCustomMove();
 
   // 카카오 공유하기
   useEffect(() => {
@@ -56,14 +63,25 @@ const ReadPage = () => {
             <h3>{study.title}</h3>
             <p>{study.location}</p>
           </div>
-          <div className="ReadBtn">
-            <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
-              연락하기
-            </button>
 
-            <button className="btnSmallBlack" onClick={handleShareClick}>
-              공유하기
-            </button>
+          <div className="ReadBtn">
+            {!userEmail || userEmail !== studyUserEmail ? (
+              <>
+                <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
+                  연락하기
+                </button>
+                <button className="btnSmallBlack" onClick={handleShareClick}>
+                  공유하기
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
+                  수정하기
+                </button>
+                <button className="btnSmallBlack">삭제하기</button>
+              </>
+            )}
           </div>
         </div>
 
@@ -82,7 +100,8 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>참여인원 : </h3>
             <p>
-              1<span>/</span>
+              {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
+              <span>/</span>
               {study.maxPeople}
             </p>
           </div>
@@ -111,9 +130,7 @@ const ReadPage = () => {
         </div>
 
         {/* 기본 */}
-        <div className="StudyJoinBtn">
-          <button className="btnLargePoint">스터디참가</button>
-        </div>
+        <div className="StudyJoinBtn">{!userEmail || userEmail !== studyUserEmail ? <button className="btnLargePoint">스터디참가</button> : <button className="btnLargePoint">스터디시작</button>}</div>
       </div>
     </BasicLayoutPage>
   );

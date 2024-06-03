@@ -32,7 +32,7 @@ export default function HeaderList() {
         </div>
         <div className="headerSearchContent">
           <input type="text" name="search" maxlength="20" placeholder="검색어를 입력해주세요." onInput={handleInput} />
-          <img src="../assets/imgs/icon/ic_serch_gr.svg" onClick={searchBtn} />
+          <img src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} onClick={searchBtn} />
         </div>
       </div>
       <CategoryFilterList />

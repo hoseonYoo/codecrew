@@ -3,16 +3,25 @@ package com.react.project2.service;
 import com.react.project2.domain.Category;
 import com.react.project2.domain.Member;
 import com.react.project2.domain.Study;
+import com.react.project2.dto.PageRequestDTO;
+import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
 import com.react.project2.dto.StudyMarkerDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,6 +40,30 @@ public class StudyServiceImpl implements StudyService {
         Study saved = studyRepository.save(study);
     }
 
+    @Override
+    public PageResponseDTO<StudyDTO> getList(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Object[]> result = studyRepository.selectList(pageable);
+
+        List<StudyDTO> list = result.getContent().stream().map(objArr -> {
+            Study study = (Study)objArr[0];
+            StudyDTO studyDTO = entityToDTO(study);
+            return studyDTO;
+        }).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDTO.<StudyDTO>withList()
+                .list(list)
+                .totalCount(totalCount)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
     // 스터디 조회
     @Override
     public StudyDTO get(Long id) {
@@ -39,6 +72,11 @@ public class StudyServiceImpl implements StudyService {
         log.info("Study-serviceImpl-----");
         log.info(StudyDTO.getTitle());
         return StudyDTO;
+    }
+
+    @Override
+    public void modifyStudy(StudyDTO studyDTO) {
+
     }
 
     private StudyDTO entityToDTO(Study study){
