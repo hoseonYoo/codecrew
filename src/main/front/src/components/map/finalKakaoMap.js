@@ -80,13 +80,16 @@ const FinalKakaoMap = () => {
   useEffect(() => {
     if (map && studyLocationList.length > 0) {
       console.log("클러스터 생성");
+
+      // 현재 지도의 중심 좌표를 저장합니다.
+      const currentCenter = map.getCenter();
+
       const newCluster =new kakao.maps.MarkerClusterer({
             map: map,
             averageCenter: true,
             minLevel: 6,
             disableClickZoom: true,
           });
-      setCluster(newCluster);
 
       const markers = studyLocationList.map((location) => {
         let marker = new kakao.maps.Marker({
@@ -97,16 +100,26 @@ const FinalKakaoMap = () => {
         });
         return marker;
       });
+
+      // 마커 클러스터에 마커 지우기
+      if (cluster!=undefined) cluster.clear();
+
       console.log("클러스터에 마커 추가");
+      // 클러스터 초기화
       newCluster.addMarkers(markers);
+
+      setCluster(newCluster);
 
       // MarkerClusterer 객체 출력
       console.log(newCluster);
 
       // 추가된 마커의 수 출력
       console.log(newCluster.getMarkers().length);
+
+      // 클러스터가 변경된 후에 이전에 저장한 중심 좌표를 다시 지도의 중심으로 설정합니다.
+      map.setCenter(currentCenter);
     }
-  }, [map, studyLocationList]);
+  }, [map, studyLocationList,categoryFilter]);
 
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {

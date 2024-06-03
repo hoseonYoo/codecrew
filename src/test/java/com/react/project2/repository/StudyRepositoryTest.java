@@ -32,7 +32,9 @@ class StudyRepositoryTest {
 //            37.58 ~ 37.59 사이 랜덤값 생성
             double locationY = 37.000000 + Math.random() * (38.000000 - 37.000000);
 // 126.9668859784500 ~ 126.9868859784600 사이 랜덤값 생성
-            double locationX = 126.000000 + Math.random() * (127.000000 - 126.000000);
+            double locationX = 126.500000 + Math.random() * (127.500000 - 126.500000);
+
+            Category category = Category.values()[(int) (Math.random() * Category.values().length)];
 
 
 
@@ -53,7 +55,7 @@ class StudyRepositoryTest {
                     .member(memberRepository.findByEmail("comejun@naver.com").get())
                     .studyDate(studyDate)
                     .maxPeople(10)
-                    .category(Category.AI)
+                    .category(category)
                     .build();
 
             studyRepository.save(study);
