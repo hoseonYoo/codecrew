@@ -91,10 +91,10 @@ const ModifyPage = () => {
       checkPhone(member.phone)
         .then((res) => {
           console.log(res);
-          if (res === "exist") {
-            alert("이미 등록된 연락처입니다.");
-          } else if (res === "not exist") {
+          if (res === userEmail || res === "not exist") {
             saveModify();
+          } else {
+            alert("이미 등록된 연락처입니다.");
           }
         })
         .catch((err) => exceptionHandle(err));
@@ -103,7 +103,11 @@ const ModifyPage = () => {
 
   // 입력값 예외 처리후 실제 회원 정보 실제 저장 하는 함수
   const saveModify = async () => {
-    member.profileImg = await saveFile();
+    // TODO 분기 처리
+    if (!imgSrc.includes(member.profileImg)) {
+      member.profileImg = await saveFile();
+    }
+
     try {
       const res = await modifyMember(member);
       console.log(res);

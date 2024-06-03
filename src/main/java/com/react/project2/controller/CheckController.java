@@ -27,7 +27,7 @@ public class CheckController {
                 phone);
         DataMemberDTO memberByPhone = memberService.findMemberByPhone(phone);
         if (memberByPhone != null) {
-            return "exist";
+            return memberByPhone.getEmail();
         }
 
         return "not exist";
