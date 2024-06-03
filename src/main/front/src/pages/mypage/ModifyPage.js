@@ -142,7 +142,7 @@ const ModifyPage = () => {
               value={member.nickname}
               onKeyUp={checkSpecialCharacters}
               onKeyDown={checkSpecialCharacters}
-              onChange={handleChange}ㄸ
+              onChange={handleChange}
               placeholder="닉네임을 입력해주세요."
             />
           </div>
