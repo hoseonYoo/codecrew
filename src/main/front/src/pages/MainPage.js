@@ -1,7 +1,6 @@
 import React from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
-import KakaoMap from "../components/map/kakaoMap";
 import NewKakaoMap from "../components/map/newKakaoMap";
 import { useSelector } from "react-redux";
 import useCustomMove from "../hooks/useCustomMove";
@@ -49,11 +48,7 @@ const MainPage = () => {
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
         <div className="stPopupWrap">
           {/* 닫기버튼 */}
-          <img
-            className="stPopupClose"
-            src="../assets/imgs/icon/ic_popup_cl.svg"
-            alt="닫기버튼"
-          />
+          <img className="stPopupClose" src="../assets/imgs/icon/ic_popup_cl.svg" alt="닫기버튼" />
           {/* 컨텐츠 */}
           <div className="stPopupContentTop">
             <div className="stPopupImg"></div>
