@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
@@ -167,26 +168,27 @@ public class StudyServiceImpl implements StudyService {
     }
 
     @Override
-    public List<StudyMarkerDTO> getStudyMarkerByCategory(String category) {
+    public List<StudyDTO> getStudyMarkerByCategory(String category) {
 
-        Category categoryEnum = Category.valueOf(category);
-        //List<Study> -> List<StudyMarkerDTO>
-        List<Study> studyList = studyRepository.findAllByCategory(categoryEnum);
-        List<StudyMarkerDTO> byCategory = studyList.stream().map(study -> StudyMarkerDTO.builder()
-                .id(study.getId())
-                .locationX(study.getLocationX())
-                .locationY(study.getLocationY())
-                .build()).toList();
-        return byCategory;
+        Category categoryEnum;
+        //List<Study> -> List<StudyDTO>
+        List<Study> studyList = new ArrayList<>();
+        if (category.equals("ALL")) {
+            studyList = studyRepository.findAllCategory();
+        } else {
+            categoryEnum = Category.valueOf(category);
+            studyList = studyRepository.findAllByCategory(categoryEnum);
+        }
+        List<StudyDTO> studyDTOList = new ArrayList<>();
+        for (Study study : studyList) {
+            StudyDTO studyDTO = entityToDTO(study);
+            studyDTOList.add(studyDTO);
+        }
+        return studyDTOList;
+
     }
 
-    @Override
-    public List<StudyMarkerDTO> getStudyMarkerAll() {
-
-        return null;
-    }
-
-    private Study dtoToEntity(StudyDTO studyDTO) {
+       private Study dtoToEntity(StudyDTO studyDTO) {
         // MemberRepository를 사용하여 이메일 주소로 Member 엔티티를 조회합니다.
         Member member = memberRepository.findByEmail(studyDTO.getMemberEmail())
                 .orElseThrow(() -> new RuntimeException("Member not found"));

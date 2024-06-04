@@ -10,6 +10,8 @@ const NewKakaoMap = () => {
     errMsg: null,
     isLoading: true,
   });
+  // 마커 데이터 로딩 상태를 추적하는 상태 변수
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -26,13 +28,9 @@ const NewKakaoMap = () => {
     (state) => state.categorySlice.studyLocationList,
   );
 
-  const setStudyLocationList = () => {
-    // 카테고리별로 가져온 마커들의 위치와 id값을 저장
-    // mapAPI.js에서 가져온 데이터를 저장
-    dispatch(getStudyLocationList());
-  };
-
   useEffect(() => {
+    console.log("categoryFilter:", categoryFilter); // 이 줄을 추가합니다.
+
     if (navigator.geolocation) {
       // GeoLocation을 이용해서 접속 위치를 얻어옵니다
       navigator.geolocation.getCurrentPosition(
@@ -54,7 +52,7 @@ const NewKakaoMap = () => {
             ...prev,
             errMsg: err.message,
           }));
-        }
+        },
       );
     } else {
       // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
@@ -68,14 +66,21 @@ const NewKakaoMap = () => {
       isPanto: false,
       refresh: !mapLocation.refresh,
     });
-    // TODO 오류 수정 필요
-    // setStudyLocationList();
+    setIsLoading(true);
+    dispatch(getStudyLocationList(categoryFilter)).then(() => {
+      setIsLoading(false);
+      console.log(studyLocationList);
+    });
   }, [categoryFilter]);
 
   return (
     <Map
       center={mapLocation.center}
-      style={{ width: "100%", height: "calc(100vh - 52px)", position: "relative" }}
+      style={{
+        width: "100%",
+        height: "calc(100vh - 52px)",
+        position: "relative",
+      }}
       level={3} // 지도의 확대 레벨
     >
       {/*현재 좌표를 사용할수 있다면 현위치 아이콘 생성*/}
@@ -102,7 +107,6 @@ const NewKakaoMap = () => {
         />
       ) : null}
 
-      {/*TODO 위치 변경 필요*/}
       <div
         style={{
           position: "absolute",
@@ -128,20 +132,27 @@ const NewKakaoMap = () => {
         <img src="assets/imgs/icon/mylocationBtn.svg" alt="myLocation" />
       </div>
 
-      {/*<MarkerClusterer
-        averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-        minLevel={10} // 클러스터 할 최소 지도 레벨
-      >
-        {studyLocationList.stream().map((studyLocation) => (
-          <MapMarker
-            key={`${studyLocation.locationX}-${studyLocation.locationY}`}
-            position={{
-              lat: studyLocation.locationX,
-              lng: studyLocation.locationY,
-            }}
-          />
-        ))}
-      </MarkerClusterer>*/}
+      {/*{!isLoading && ( // 로딩 상태가 false일 때만 MarkerClusterer를 렌더링
+        <MarkerClusterer averageCenter={true} minLevel={10}>
+          {studyLocationList.map((location, index) => {
+            const position = {
+              lat: location.locationX,
+              lng: location.locationY,
+            };
+            console.log("MapMarker position:", position);
+            return <MapMarker key={index} position={position} />;
+          })}
+        </MarkerClusterer>
+      )}*/}
+      {!isLoading &&
+        studyLocationList.map((location, index) => {
+          const position = {
+            lat: location.locationX,
+            lng: location.locationY,
+          };
+          console.log("MapMarker position:", position);
+          return <MapMarker key={index} position={position} />;
+        })}
     </Map>
   );
 };
