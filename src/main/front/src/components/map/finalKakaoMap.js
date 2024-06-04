@@ -86,6 +86,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           popupImg = `${host}/api/image/view/${location.thImg}`;
         }
         const popupData = {
+          id: location.id,
           thImg: popupImg,
           title: location.title,
           location: location.location,
