@@ -92,6 +92,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           location: location.location,
           memberNickname: location.memberNickname,
           memberEmail: location.memberEmail,
+          memberPhone: location.memberPhone,
           studyDate: location.studyDate,
           maxPeople: location.maxPeople,
           clickable: true,

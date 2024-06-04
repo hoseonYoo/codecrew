@@ -13,7 +13,7 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage } = useCustomMove();
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -32,8 +32,9 @@ const MainPage = () => {
     location: "서울 서대문구 신촌로 83",
     memberNickname: "김유저",
     memberEmail: "dbghtjs112@naver.com",
+    memberPhone: "",
     studyDate: "2024.05.22",
-    maxPeople: "10/2",
+    maxPeople: "1/10",
   };
   const [popup, setPopup] = useState(false);
   const [popupData, setPopupData] = useState(popupInit);
@@ -41,7 +42,6 @@ const MainPage = () => {
     setPopupData(data);
     setPopup(true);
   };
-
   // 확인후 삭제
   useEffect(() => {
     console.log("popup:", popup);
@@ -82,7 +82,7 @@ const MainPage = () => {
     if (userEmail) {
       try {
         // 백엔드 서버에 참가 요청을 보냄
-        const response = await axios.post(`${host}/api/study/${id}/participate`, {
+        const response = await axios.post(`${host}/api/study/${popupData.id}/participate`, {
           email: userEmail,
         });
         // 성공적으로 참가 처리되었을 때의 로직
@@ -136,24 +136,48 @@ const MainPage = () => {
             />
             {/* 컨텐츠 */}
             <div className="stPopupContentTop">
-              <div className="stPopupImg" style={{ backgroundImage: `url(${popupData.thImg})` }}></div>
+              <div className="stPopupImg" onClick={() => moveToReadPage(popupData.id)} style={{ backgroundImage: `url(${popupData.thImg})`, cursor: "pointer" }}></div>
               <div className="stPopupTitle">
-                <h3>{popupData.title}</h3>
-                <p>{popupData.location}</p>
+                <h3 onClick={() => moveToReadPage(popupData.id)} style={{ cursor: "pointer" }}>
+                  {popupData.title}
+                </h3>
+                <p
+                  onClick={() => {
+                    const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
+                    if (confirmOpen) {
+                      const encodedLocation = encodeURIComponent(popupData.location);
+                      const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
+                      window.open(kakaoMapUrl, "_blank");
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {popupData.location}
+                </p>
               </div>
               <div className="stPopupBtn">
                 {!userEmail || userEmail !== studyUserEmail ? (
                   <>
-                    <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${popupData.memberPhone}`)}>
+                    <button
+                      className="btnSmallPoint"
+                      onClick={() => {
+                        if (popupData.memberPhone) {
+                          window.location.href = `tel:${popupData.memberPhone}`;
+                        } else {
+                          alert("크루가 연락처를 공개하지 않았습니다.");
+                        }
+                      }}
+                    >
                       연락하기
                     </button>
+
                     <button className="btnSmallBlack" onClick={handleShareClick}>
                       공유하기
                     </button>
                   </>
                 ) : (
                   <>
-                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
+                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(popupData.id)}>
                       수정하기
                     </button>
                     <button className="btnSmallBlack">삭제하기</button>
@@ -175,7 +199,11 @@ const MainPage = () => {
               </div>
               <div>
                 <h4>참여인원 : </h4>
-                <p>{popupData.maxPeople}</p>
+                <p>
+                  {(popupData.studyMemberList ? popupData.studyMemberList.length : 0) + 1}
+                  <span>/</span>
+                  {popupData.maxPeople}
+                </p>
               </div>
             </div>
             <div className="stPopupContentButton">
