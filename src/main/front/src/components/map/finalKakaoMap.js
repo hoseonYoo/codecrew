@@ -17,9 +17,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
 
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
-  const studyLocationList = useSelector(
-    (state) => state.categorySlice.studyLocationList,
-  );
+  const studyLocationList = useSelector((state) => state.categorySlice.studyLocationList);
   const dispatch = useDispatch();
 
   // 내 위치로 이동
@@ -47,15 +45,8 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   // 현위치 가져오면 마커 띄우기
   useEffect(() => {
     if (map && myLocation.get) {
-      const markerPosition = new kakao.maps.LatLng(
-        myLocation.lat,
-        myLocation.lng,
-      );
-      const markerImage = new kakao.maps.MarkerImage(
-        "assets/imgs/icon/oval.svg",
-        new kakao.maps.Size(50, 50),
-        { offset: new kakao.maps.Point(25, 25) },
-      );
+      const markerPosition = new kakao.maps.LatLng(myLocation.lat, myLocation.lng);
+      const markerImage = new kakao.maps.MarkerImage("assets/imgs/icon/oval.svg", new kakao.maps.Size(50, 50), { offset: new kakao.maps.Point(25, 25) });
       const marker = new kakao.maps.Marker({
         position: markerPosition,
         image: markerImage,
@@ -105,10 +96,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           clickable: true,
         };
         let marker = new kakao.maps.Marker({
-          position: new kakao.maps.LatLng(
-            location.locationY,
-            location.locationX,
-          ),
+          position: new kakao.maps.LatLng(location.locationY, location.locationX),
         });
         kakao.maps.event.addListener(marker, "click", function () {
           changePopup(popupData);
@@ -153,15 +141,21 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
 
   return (
     <>
-      <div id="map" style={{ width: "100%", height: "calc(100vh - 52px)" }}>
+      <div
+        id="map"
+        style={{
+          width: "100%",
+          height: "calc(100vh - 52px)",
+          position: "relative",
+        }}
+      >
         {/*내위치 이동 버튼*/}
         <div
           onClick={moveToMyLocation}
           style={{
-            position: "fixed",
-            top: "20%",
-            left: "30%",
-            transform: "translate(-50%, -50%)",
+            position: "absolute",
+            top: "62px",
+            right: "16px",
             zIndex: 10,
             cursor: "pointer",
           }}
