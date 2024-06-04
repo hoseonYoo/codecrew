@@ -95,11 +95,14 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           popupImg = `${host}/api/image/view/${location.thImg}`;
         }
         const popupData = {
+          id: location.id,
           thImg: popupImg,
           title: location.title,
           location: location.location,
+          content: location.content,
           memberNickname: location.memberNickname,
           memberEmail: location.memberEmail,
+          memberPhone: location.memberPhone,
           studyDate: location.studyDate,
           maxPeople: location.maxPeople,
           clickable: true,
@@ -166,15 +169,21 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
 
   return (
     <>
-      <div id="map" style={{ width: "100%", height: "calc(100vh - 52px)" }}>
+      <div
+        id="map"
+        style={{
+          width: "100%",
+          height: "calc(100vh - 52px)",
+          position: "relative",
+        }}
+      >
         {/*내위치 이동 버튼*/}
         <div
           onClick={moveToMyLocation}
           style={{
-            position: "fixed",
-            top: "20%",
-            left: "30%",
-            transform: "translate(-50%, -50%)",
+            position: "absolute",
+            top: "62px",
+            right: "16px",
             zIndex: 10,
             cursor: "pointer",
           }}
