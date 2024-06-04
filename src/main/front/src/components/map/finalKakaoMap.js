@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getStudyLocationList } from "../../slices/categorySlice";
+import { API_SERVER_HOST } from "../../api/studyAPI";
 const { kakao } = window;
 
-const FinalKakaoMap = () => {
+const FinalKakaoMap = ({ changePopup, popupInit }) => {
   const [map, setMap] = useState();
   const [isLoadingMap, setIsLoadingMap] = useState(true);
   const [cluster, setCluster] = useState();
@@ -11,8 +12,8 @@ const FinalKakaoMap = () => {
     lat: 37.57163048751097,
     lng: 126.97591715920376,
     get: false,
-    refresh: false,
   });
+  const host = API_SERVER_HOST;
 
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
@@ -23,12 +24,8 @@ const FinalKakaoMap = () => {
 
   // 내 위치로 이동
   const moveToMyLocation = () => {
-    if (myLocation.refresh === true) {
-      myLocation.lat = myLocation.lat + 0.00000000000001;
-    } else {
-      myLocation.lat = myLocation.lat - 0.00000000000001;
-    }
-    setMyLocation({ ...myLocation, refresh: !myLocation.refresh });
+    const moveLatLon = new kakao.maps.LatLng(myLocation.lat, myLocation.lng);
+    map.setCenter(moveLatLon);
   };
 
   // 내 위치 가져오기
@@ -84,25 +81,43 @@ const FinalKakaoMap = () => {
       // 현재 지도의 중심 좌표를 저장합니다.
       const currentCenter = map.getCenter();
 
-      const newCluster =new kakao.maps.MarkerClusterer({
-            map: map,
-            averageCenter: true,
-            minLevel: 6,
-            disableClickZoom: true,
-          });
+      const newCluster = new kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 6,
+        disableClickZoom: true,
+      });
 
       const markers = studyLocationList.map((location) => {
+        console.log("location : ", location);
+        let popupImg = location.thImg;
+        if (!location.thImg.startsWith("http")) {
+          popupImg = `${host}/api/image/view/${location.thImg}`;
+        }
+        const popupData = {
+          thImg: popupImg,
+          title: location.title,
+          location: location.location,
+          memberNickname: location.memberNickname,
+          memberEmail: location.memberEmail,
+          studyDate: location.studyDate,
+          maxPeople: location.maxPeople,
+          clickable: true,
+        };
         let marker = new kakao.maps.Marker({
           position: new kakao.maps.LatLng(
             location.locationY,
             location.locationX,
           ),
         });
+        kakao.maps.event.addListener(marker, "click", function () {
+          changePopup(popupData);
+        });
         return marker;
       });
 
       // 마커 클러스터에 마커 지우기
-      if (cluster!=undefined) cluster.clear();
+      if (cluster != undefined) cluster.clear();
 
       console.log("클러스터에 마커 추가");
       // 클러스터 초기화
@@ -119,7 +134,7 @@ const FinalKakaoMap = () => {
       // 클러스터가 변경된 후에 이전에 저장한 중심 좌표를 다시 지도의 중심으로 설정합니다.
       map.setCenter(currentCenter);
     }
-  }, [map, studyLocationList,categoryFilter]);
+  }, [map, studyLocationList, categoryFilter]);
 
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {
@@ -133,7 +148,6 @@ const FinalKakaoMap = () => {
       const map1 = new kakao.maps.Map(container, options);
       setMap(map1);
       setIsLoadingMap(false);
-
     }
   }, [myLocation]);
 

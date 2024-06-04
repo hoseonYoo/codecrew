@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
 import NewKakaoMap from "../components/map/newKakaoMap";
@@ -22,11 +22,28 @@ const MainPage = () => {
     }
   };
 
+  // 토스트팝업 상태
+  const popupInit = {
+    thImg: "",
+    title: "프로젝트 모임",
+    location: "서울 서대문구 신촌로 83",
+    memberNickname: "김유저",
+    memberEmail: "dbghtjs112@naver.com",
+    studyDate: "2024.05.22",
+    maxPeople: "10/2",
+  };
+  const [popup, setPopup] = useState(false);
+  const [popupData, setPopupData] = useState(popupInit);
+  const changePopup = (data) => {
+    setPopupData(data);
+    setPopup(true);
+  };
+
   return (
     <BasicLayout>
       {/*<div id="map" className="Map"></div>*/}
       {/*<NewKakaoMap />*/}
-      <FinalKakaoMap />
+      <FinalKakaoMap changePopup={changePopup} popupInit={popupInit} />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
@@ -48,46 +65,56 @@ const MainPage = () => {
 
         {/* 토스트팝업 */}
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
-        <div className="stPopupWrap">
-          {/* 닫기버튼 */}
-          <img
-            className="stPopupClose"
-            src="../assets/imgs/icon/ic_popup_cl.svg"
-            alt="닫기버튼"
-          />
-          {/* 컨텐츠 */}
-          <div className="stPopupContentTop">
-            <div className="stPopupImg"></div>
-            <div className="stPopupTitle">
-              <h3>프로젝트 모임</h3>
-              <p>서울 서대문구 신촌로 83</p>
-            </div>
-            <div className="stPopupBtn">
-              <button className="btnSmallPoint">연락하기</button>
-              <button className="btnSmallBlack">공유하기</button>
-            </div>
-          </div>
-          <div className="stPopupContentBottom">
-            <div>
-              <h4>작성자 : </h4>
-              <div>
-                <p>김유저</p>
-                <p className="contentEmail">dbghtjs112@naver.com</p>
+        {popup ? (
+          <div className="stPopupWrap popupActive">
+            {/* 닫기버튼 */}
+            <img
+              className="stPopupClose"
+              onClick={() => {
+                setPopup(false);
+              }}
+              src="/assets/imgs/icon/ic_popup_cl.svg"
+              alt="닫기버튼"
+            />
+            {/* 컨텐츠 */}
+            <div className="stPopupContentTop">
+              <div
+                className="stPopupImg"
+                style={{ backgroundImage: `url(${popupData.thImg})` }}
+              ></div>
+              <div className="stPopupTitle">
+                <h3>{popupData.title}</h3>
+                <p>{popupData.location}</p>
+              </div>
+              <div className="stPopupBtn">
+                <button className="btnSmallPoint">연락하기</button>
+                <button className="btnSmallBlack">공유하기</button>
               </div>
             </div>
-            <div>
-              <h4>참여일자 : </h4>
-              <p>2024.05.22</p>
+            <div className="stPopupContentBottom">
+              <div>
+                <h4>작성자 : </h4>
+                <div>
+                  <p>{popupData.memberNickname}</p>
+                  <p className="contentEmail">{popupData.memberEmail}</p>
+                </div>
+              </div>
+              <div>
+                <h4>참여일자 : </h4>
+                <p>{popupData.studyDate}</p>
+              </div>
+              <div>
+                <h4>참여인원 : </h4>
+                <p>{popupData.maxPeople}</p>
+              </div>
             </div>
-            <div>
-              <h4>참여인원 : </h4>
-              <p>10/2</p>
+            <div className="stPopupContentButton">
+              <button className="btnLargePoint">스터디참가</button>
             </div>
           </div>
-          <div className="stPopupContentButton">
-            <button className="btnLargePoint">스터디참가</button>
-          </div>
-        </div>
+        ) : (
+          <></>
+        )}
         <div className="stPopupWrap"></div>
       </div>
     </BasicLayout>
