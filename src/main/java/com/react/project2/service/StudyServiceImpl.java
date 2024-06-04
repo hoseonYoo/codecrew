@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,6 +66,26 @@ public class StudyServiceImpl implements StudyService {
                 .build();
     }
 
+    @Override
+    public PageResponseDTO<StudyDTO> getListMember(PageRequestDTO pageRequestDTO, String memberEmail) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Study> page = studyRepository.findAllByMemberEmail(memberEmail, pageable);
+        List<StudyDTO> dtos = page.getContent().stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<StudyDTO>withList()
+                .list(dtos)
+                .totalCount(page.getTotalElements())
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+
     // 스터디 조회
     @Override
     public StudyDTO get(Long id) {
@@ -78,6 +99,18 @@ public class StudyServiceImpl implements StudyService {
     @Override
     public void modifyStudy(StudyDTO studyDTO) {
 
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        Optional<Study> studyOptional = studyRepository.findById(id);
+        if (studyOptional.isPresent()) {
+            Study study = studyOptional.get();
+            study.setDisabled(true);
+            studyRepository.save(study);
+            return true;
+        }
+        return false;
     }
 
     @Override

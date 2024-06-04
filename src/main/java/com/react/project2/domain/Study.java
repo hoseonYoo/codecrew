@@ -77,6 +77,12 @@ public class Study {
         this.studyMemberList.add(member);
     }
 
+    // 스터디 삭제 메소드
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+
 
 
 }

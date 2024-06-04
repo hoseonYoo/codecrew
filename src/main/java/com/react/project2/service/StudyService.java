@@ -18,6 +18,9 @@ public interface StudyService {
     // 스터디 조회(목록)
     PageResponseDTO<StudyDTO> getList(PageRequestDTO pageRequestDTO);
 
+    // 스터디 조회(이메일/목록)
+    PageResponseDTO<StudyDTO> getListMember(PageRequestDTO pageRequestDTO, String memberEmail);
+
     // 스터디 조회(1개)
     StudyDTO get(Long id);
 
@@ -25,7 +28,7 @@ public interface StudyService {
     void modifyStudy(StudyDTO studyDTO);
 
     // 스터디 삭제
-
+    boolean delete(Long id);
 
     // 스터디 참가신청
     boolean participate(Long id, String userEmail);

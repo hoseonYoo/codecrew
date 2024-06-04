@@ -50,6 +50,18 @@ public class StudyController {
         return Map.of("result", "SUCCESS");
     }
 
+    // 스터디 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        boolean result = studyService.delete(id);
+        if (result) {
+            return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 삭제되었습니다."));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "삭제할 스터디를 찾을 수 없습니다."));
+        }
+    }
+
+
     // 스터디 참가신청
     @PostMapping("/{id}/participate")
     public ResponseEntity<?> participate(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
@@ -61,6 +73,7 @@ public class StudyController {
             // 스터디 참가 로직 구현
             boolean result = studyService.participate(id, userEmail);
             if (result) {
+                log.info("테스트-------체크");
                 return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 완료되었습니다."));
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 참가신청 처리 중 오류가 발생했습니다."));
