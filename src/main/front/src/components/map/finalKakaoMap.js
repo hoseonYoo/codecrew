@@ -8,11 +8,18 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   const [map, setMap] = useState();
   const [isLoadingMap, setIsLoadingMap] = useState(true);
   const [cluster, setCluster] = useState();
+  const [addMarker, setAddMarker] = useState();
   const [myLocation, setMyLocation] = useState({
     lat: 37.57163048751097,
     lng: 126.97591715920376,
     get: false,
   });
+  const mapClickInit = {
+    latlng: null,
+    modalState: false,
+  };
+  const [mapClick, setMapClick] = useState(mapClickInit);
+
   const host = API_SERVER_HOST;
 
   // 셀렉터로 카테고리 가져오기
@@ -162,6 +169,8 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
         level: 3,
       };
       const map1 = new kakao.maps.Map(container, options);
+      // 지도 마우스 클릭 이벤트
+
       setMap(map1);
       setIsLoadingMap(false);
     }

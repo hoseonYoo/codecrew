@@ -13,7 +13,13 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage } = useCustomMove();
+  const {
+    moveToLogin,
+    moveToMypage,
+    moveToAddPage,
+    moveToModifyPage,
+    moveToReadPage,
+  } = useCustomMove();
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -82,9 +88,12 @@ const MainPage = () => {
     if (userEmail) {
       try {
         // 백엔드 서버에 참가 요청을 보냄
-        const response = await axios.post(`${host}/api/study/${popupData.id}/participate`, {
-          email: userEmail,
-        });
+        const response = await axios.post(
+          `${host}/api/study/${popupData.id}/participate`,
+          {
+            email: userEmail,
+          },
+        );
         // 성공적으로 참가 처리되었을 때의 로직
         console.log(response.data);
         alert("스터디 참가신청이 완료되었습니다.");
@@ -136,16 +145,29 @@ const MainPage = () => {
             />
             {/* 컨텐츠 */}
             <div className="stPopupContentTop">
-              <div className="stPopupImg" onClick={() => moveToReadPage(popupData.id)} style={{ backgroundImage: `url(${popupData.thImg})`, cursor: "pointer" }}></div>
+              <div
+                className="stPopupImg"
+                onClick={() => moveToReadPage(popupData.id)}
+                style={{
+                  backgroundImage: `url(${popupData.thImg})`,
+                  cursor: "pointer",
+                }}
+              ></div>
               <div className="stPopupTitle">
-                <h3 onClick={() => moveToReadPage(popupData.id)} style={{ cursor: "pointer" }}>
+                <h3
+                  onClick={() => moveToReadPage(popupData.id)}
+                  style={{ cursor: "pointer" }}
+                >
                   {popupData.title}
                 </h3>
                 <p
                   onClick={() => {
-                    const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
+                    const confirmOpen =
+                      window.confirm("카카오지도를 여시겠습니까?");
                     if (confirmOpen) {
-                      const encodedLocation = encodeURIComponent(popupData.location);
+                      const encodedLocation = encodeURIComponent(
+                        popupData.location,
+                      );
                       const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
                       window.open(kakaoMapUrl, "_blank");
                     }
@@ -171,13 +193,19 @@ const MainPage = () => {
                       연락하기
                     </button>
 
-                    <button className="btnSmallBlack" onClick={handleShareClick}>
+                    <button
+                      className="btnSmallBlack"
+                      onClick={handleShareClick}
+                    >
                       공유하기
                     </button>
                   </>
                 ) : (
                   <>
-                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(popupData.id)}>
+                    <button
+                      className="btnSmallPoint"
+                      onClick={() => moveToModifyPage(popupData.id)}
+                    >
                       수정하기
                     </button>
                     <button className="btnSmallBlack">삭제하기</button>
@@ -200,7 +228,9 @@ const MainPage = () => {
               <div>
                 <h4>참여인원 : </h4>
                 <p>
-                  {(popupData.studyMemberList ? popupData.studyMemberList.length : 0) + 1}
+                  {(popupData.studyMemberList
+                    ? popupData.studyMemberList.length
+                    : 0) + 1}
                   <span>/</span>
                   {popupData.maxPeople}
                 </p>
