@@ -25,7 +25,7 @@ class StudyRepositoryTest {
 
     @Test
     public void testInsert() {
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 100; i++) {
 
             // 37.57163048751097, 126.9768859784546
 
@@ -35,7 +35,6 @@ class StudyRepositoryTest {
             double locationX = 126.500000 + Math.random() * (127.500000 - 126.500000);
 
             Category category = Category.values()[(int) (Math.random() * Category.values().length)];
-
 
 
             // 현재 시간 부터 2주뒤 사이의 랜덤 시간 생성
