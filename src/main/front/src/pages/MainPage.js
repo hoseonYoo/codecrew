@@ -40,7 +40,7 @@ const MainPage = () => {
   };
 
   return (
-    <BasicLayout>
+    <BasicLayout className="MainPageSet">
       {/*<div id="map" className="Map"></div>*/}
       {/*<NewKakaoMap />*/}
       <FinalKakaoMap changePopup={changePopup} popupInit={popupInit} />

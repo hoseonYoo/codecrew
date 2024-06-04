@@ -17,6 +17,8 @@ public class StudyMember {
 
     // TODO : StudyMember Entity 수정
 
+    private String email;
+
     private String title; // 제목
 
     private LocalDateTime createdDate; // 생성 날짜
@@ -30,4 +32,10 @@ public class StudyMember {
     private String boardWriter; // 게시판 작성자
 
     private String boardWriterProfileImg; // 게시판 작성자 프로필 이미지
+
+    // 이메일을 설정하는 메소드
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

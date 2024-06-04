@@ -3,17 +3,28 @@ package com.react.project2.service;
 import com.react.project2.domain.Category;
 import com.react.project2.domain.Member;
 import com.react.project2.domain.Study;
+import com.react.project2.domain.StudyMember;
+import com.react.project2.dto.PageRequestDTO;
+import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
 import com.react.project2.dto.StudyMarkerDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,6 +43,50 @@ public class StudyServiceImpl implements StudyService {
         Study saved = studyRepository.save(study);
     }
 
+    @Override
+    public PageResponseDTO<StudyDTO> getList(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Object[]> result = studyRepository.selectList(pageable);
+
+        List<StudyDTO> list = result.getContent().stream().map(objArr -> {
+            Study study = (Study)objArr[0];
+            StudyDTO studyDTO = entityToDTO(study);
+            return studyDTO;
+        }).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDTO.<StudyDTO>withList()
+                .list(list)
+                .totalCount(totalCount)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<StudyDTO> getListMember(PageRequestDTO pageRequestDTO, String memberEmail) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Study> page = studyRepository.findAllByMemberEmail(memberEmail, pageable);
+        List<StudyDTO> dtos = page.getContent().stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<StudyDTO>withList()
+                .list(dtos)
+                .totalCount(page.getTotalElements())
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+
     // 스터디 조회
     @Override
     public StudyDTO get(Long id) {
@@ -42,7 +97,57 @@ public class StudyServiceImpl implements StudyService {
         return StudyDTO;
     }
 
-    private StudyDTO entityToDTO(Study study) {
+    @Override
+    public void modifyStudy(StudyDTO studyDTO) {
+
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        Optional<Study> studyOptional = studyRepository.findById(id);
+        if (studyOptional.isPresent()) {
+            Study study = studyOptional.get();
+            study.setDisabled(true);
+            studyRepository.save(study);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean participate(Long id, String userEmail) {
+        // 스터디 엔티티 조회
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        // 사용자 엔티티 조회
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        // 이미 참가신청을 했는지 확인
+        if (study.getStudyMemberList().stream().anyMatch(m -> m.getEmail().equals(userEmail))) {
+            log.info("이미 참가신청을 한 사용자입니다.");
+            return false;
+        }
+
+        // 참가인원이 최대인원을 초과하지 않았는지 확인
+        if (study.getStudyMemberList().size() >= study.getMaxPeople()) {
+            log.info("참가인원이 이미 최대입니다.");
+            return false;
+        }
+
+        // 참가신청 로직
+        StudyMember newMember = new StudyMember();
+        newMember.setEmail(userEmail);
+        study.addStudyMember(newMember);
+
+        // 변경사항 저장
+        studyRepository.save(study);
+        return true;
+    }
+
+
+    private StudyDTO entityToDTO(Study study){
 
         StudyDTO studyDTO = StudyDTO.builder()
                 .thImg(study.getThImg())

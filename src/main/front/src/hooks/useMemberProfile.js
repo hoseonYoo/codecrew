@@ -23,13 +23,9 @@ const useMemberProfile = (userEmail) => {
   useEffect(() => {
     getMember(userEmail)
       .then((res) => {
-        // 초기 로딩시 카카오 프로필인지 여부 체크
-        if (res.profileImg === "") {
-        } else if (res.profileImg.startsWith("http")) {
-          console.log("카카오 프로필");
+        if (res.profileImg && res.profileImg.startsWith("http")) {
           setImgSrc(res.profileImg);
-        } else {
-          console.log("일반 프로필");
+        } else if (res.profileImg) {
           setImgSrc(`${host}/api/image/view/${res.profileImg}`);
         }
         setMember({ ...res });

@@ -72,5 +72,17 @@ public class Study {
     @Builder.Default
     private List<StudyMember> studyMemberList = new ArrayList<>();
 
+    // 스터디 참가자를 추가하는 메소드
+    public void addStudyMember(StudyMember member) {
+        this.studyMemberList.add(member);
+    }
+
+    // 스터디 삭제 메소드
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+
+
 
 }

@@ -22,15 +22,21 @@ const useProfileImage = (printInItImage, originalImage) => {
   const saveFile = async () => {
     const formData = new FormData();
 
-    if (!originalImage.startsWith("http:")) {
+    // originalImage가 정의되어 있고 null이 아닌지 확인
+    if (originalImage && !originalImage.startsWith("http:")) {
       console.log("기존 이미지 파일 삭제");
       try {
         const res = await deleteImage(originalImage);
         console.log(res);
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    formData.append("file", file);
+    // 파일이 있는 경우에만 formData에 추가
+    if (file) {
+      formData.append("file", file);
+    }
 
     try {
       const res = await uploadImage(formData);
