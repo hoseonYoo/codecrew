@@ -17,7 +17,9 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
 
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
-  const studyLocationList = useSelector((state) => state.categorySlice.studyLocationList);
+  const studyLocationList = useSelector(
+    (state) => state.categorySlice.studyLocationList,
+  );
   const dispatch = useDispatch();
 
   // 내 위치로 이동
@@ -45,8 +47,15 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   // 현위치 가져오면 마커 띄우기
   useEffect(() => {
     if (map && myLocation.get) {
-      const markerPosition = new kakao.maps.LatLng(myLocation.lat, myLocation.lng);
-      const markerImage = new kakao.maps.MarkerImage("assets/imgs/icon/oval.svg", new kakao.maps.Size(50, 50), { offset: new kakao.maps.Point(25, 25) });
+      const markerPosition = new kakao.maps.LatLng(
+        myLocation.lat,
+        myLocation.lng,
+      );
+      const markerImage = new kakao.maps.MarkerImage(
+        "assets/imgs/icon/oval.svg",
+        new kakao.maps.Size(50, 50),
+        { offset: new kakao.maps.Point(25, 25) },
+      );
       const marker = new kakao.maps.Marker({
         position: markerPosition,
         image: markerImage,
@@ -75,12 +84,12 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
       const newCluster = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
-        minLevel: 6,
+        minLevel: 7,
         disableClickZoom: true,
       });
 
       const markers = studyLocationList.map((location) => {
-        console.log("location : ", location);
+        // console.log("location : ", location);
         let popupImg = location.thImg;
         if (!location.thImg.startsWith("http")) {
           popupImg = `${host}/api/image/view/${location.thImg}`;
@@ -98,8 +107,24 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           maxPeople: location.maxPeople,
           clickable: true,
         };
+
+        var imageSrc = "/assets/imgs/icon/ic_map.svg", // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
+          imageOption = { offset: new kakao.maps.Point(25, 50) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption,
+        );
+
         let marker = new kakao.maps.Marker({
-          position: new kakao.maps.LatLng(location.locationY, location.locationX),
+          position: new kakao.maps.LatLng(
+            location.locationY,
+            location.locationX,
+          ),
+          image: markerImage,
         });
         kakao.maps.event.addListener(marker, "click", function () {
           changePopup(popupData);
