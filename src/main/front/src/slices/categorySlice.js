@@ -4,13 +4,13 @@ import { getAllStudyLocation } from "../api/mapAPI";
 // 두 좌표 사이의 거리를 계산하는 함수
 function calculateDistance(location1, location2) {
   const R = 6371; // 지구의 반지름 (km)
-  const dLat = ((location2.lat - location1.lat) * Math.PI) / 180;
-  const dLng = ((location2.lng - location1.lng) * Math.PI) / 180;
+  const dLat = ((location2.locationY - location1.lat) * Math.PI) / 180;
+  const dLng = ((location2.locationX - location1.lng) * Math.PI) / 180;
 
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((location1.lat * Math.PI) / 180) *
-      Math.cos((location2.lat * Math.PI) / 180) *
+      Math.cos((location2.locationY * Math.PI) / 180) *
       Math.sin(dLng / 2) *
       Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -22,7 +22,6 @@ function calculateDistance(location1, location2) {
 export const getStudyLocationList = createAsyncThunk(
   "category/getStudyLocationList",
   async (category, thunkAPI) => {
-    console.log("category : ", category);
     const data = await getAllStudyLocation(category);
     return data;
   },
