@@ -90,6 +90,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
           thImg: popupImg,
           title: location.title,
           location: location.location,
+          content: location.content,
           memberNickname: location.memberNickname,
           memberEmail: location.memberEmail,
           memberPhone: location.memberPhone,
