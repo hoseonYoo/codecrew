@@ -52,6 +52,23 @@ const useCustomMap = () => {
     return marker;
   };
 
+  // 지도 클릭시 마커 생성
+  const createMapClickMarker = (latlng) => {
+    console.log("mapClickMarker latlng: ", latlng);
+    const markerPosition = latlng;
+    const markerImage = new kakao.maps.MarkerImage(
+      "assets/imgs/icon/ic_map_active.svg",
+      new kakao.maps.Size(50, 50),
+      { offset: new kakao.maps.Point(25, 25) },
+    );
+    const marker = new kakao.maps.Marker({
+      position: markerPosition,
+      image: markerImage,
+    });
+
+    return marker;
+  };
+
   // 클러스터 마커 생성
   const clustererMarkers = (changePopup) => {
     const markers = studyLocationList.map((location) => {
@@ -97,6 +114,11 @@ const useCustomMap = () => {
     return markers;
   };
 
-  return { myLocation, myLocationMarker, clustererMarkers };
+  return {
+    myLocation,
+    myLocationMarker,
+    clustererMarkers,
+    createMapClickMarker,
+  };
 };
 export default useCustomMap;

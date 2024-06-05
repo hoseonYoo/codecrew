@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getStudyLocationList } from "../../slices/categorySlice";
-import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCustomMap from "../../hooks/useCustomMap";
-
-const host = API_SERVER_HOST;
 
 const { kakao } = window;
 
-const FinalKakaoMap = ({ changePopup, popupInit }) => {
+const FinalKakaoMap = ({ overlayState, changePopup, popupInit }) => {
   const [map, setMap] = useState();
   const [cluster, setCluster] = useState();
-  const { myLocation, myLocationMarker, clustererMarkers } = useCustomMap();
+  const {
+    myLocation,
+    myLocationMarker,
+    clustererMarkers,
+    createMapClickMarker,
+  } = useCustomMap();
+  let mapClickMarker = null;
 
   const dispatch = useDispatch();
 
@@ -25,6 +28,28 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   const moveToMyLocation = () => {
     const moveLatLon = new kakao.maps.LatLng(myLocation.lat, myLocation.lng);
     map.setCenter(moveLatLon);
+  };
+
+  // 지도 클릭시 실행될 함수
+  const mapClickedFunc = (mouseEvent) => {
+    if (overlayState === false) {
+      if (mapClickMarker != null) {
+        mapClickMarker.setMap(null);
+      }
+      mapClickMarker = createMapClickMarker(mouseEvent.latLng);
+      mapClickMarker.setMap(map);
+      map.panTo(mouseEvent.latLng);
+      // 현재 화면 height px값 가져오기
+      const height = window.innerHeight;
+      console.log("height : ", height);
+      //Todo 마커 움직이는 높이 조절 필요
+      setTimeout(() => {
+        map.panBy(0, height / 8);
+      }, 500); // 500ms 후에 실행
+      map.setDraggable(false);
+      map.setZoomable(false);
+      overlayState = true;
+    }
   };
 
   // 현위치 가져오면 마커 띄우기
@@ -84,12 +109,22 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
       const options = {
         center: new kakao.maps.LatLng(myLocation.lat, myLocation.lng),
         level: 3,
+        disableDoubleClickZoom: true,
       };
-      const map1 = new kakao.maps.Map(container, options);
-
-      setMap(map1);
+      setMap(new kakao.maps.Map(container, options));
+      // 지도 클릭시 실행될 함수
     }
   }, [myLocation]);
+
+  // map 상태가 업데이트될 때마다 이벤트 리스너 추가
+  useEffect(() => {
+    if (map) {
+      // 지도 클릭시 실행될 함수
+      kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
+        mapClickedFunc(mouseEvent);
+      });
+    }
+  }, [map]);
 
   return (
     <>

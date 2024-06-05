@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
-import { API_SERVER_HOST } from "../api/memberAPI";
 import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
 import useHandleDelete from "../hooks/useHandleDelete";
 import useCustomMove from "../hooks/useCustomMove";
-
-const host = API_SERVER_HOST;
 
 const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
@@ -25,6 +22,7 @@ const MainPage = () => {
   const handleParticipate = useHandleParticipate();
   // 삭제하기
   const handleDelete = useHandleDelete();
+  let overlayState = false;
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -87,7 +85,11 @@ const MainPage = () => {
     <BasicLayout className="MainPageSet">
       {/*<div id="map" className="Map"></div>*/}
       {/*<NewKakaoMap />*/}
-      <FinalKakaoMap changePopup={changePopup} popupInit={popupInit} />
+      <FinalKakaoMap
+        overlayState={overlayState}
+        changePopup={changePopup}
+        popupInit={popupInit}
+      />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
