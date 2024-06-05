@@ -24,7 +24,7 @@ export const getOne = async (id) => {
 // API 스터디 수정 요청
 export const modifyStudy = async (id, study) => {
   console.log(`${host}/modify/${id}`);
-  const response = await axios.put(`${host}/modify/${id}`, study);
+  const response = await jwtAxios.put(`${host}/modify/${id}`, study);
   return response.data;
 };
 

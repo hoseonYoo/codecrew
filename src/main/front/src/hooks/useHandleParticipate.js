@@ -12,18 +12,26 @@ const useHandleParticipate = () => {
   const { moveToLogin } = useCustomMove();
 
   const handleParticipate = async (studyId) => {
+    // 사용자가 로그인 상태인지 확인
     if (userEmail) {
-      try {
-        const response = await jwtAxios.post(`${host}/api/study/${studyId}/participate`, {
-          email: userEmail,
-        });
-        console.log(response.data);
-        alert("스터디 참가신청이 완료되었습니다.");
-      } catch (error) {
-        console.error(error);
-        alert("스터디 참가신청이 실패하였습니다.");
+      // 참가신청 전에 사용자에게 확인을 요청하는 팝업
+      const confirmParticipate = window.confirm("스터디 참가신청을 하시겠습니까?");
+
+      // 사용자가 '확인'을 클릭한 경우에만 참가신청 로직을 실행
+      if (confirmParticipate) {
+        try {
+          const response = await jwtAxios.post(`${host}/api/study/${studyId}/participate`, {
+            email: userEmail,
+          });
+          console.log(response.data);
+          alert("스터디 참가신청이 완료되었습니다.");
+        } catch (error) {
+          console.error(error);
+          alert("스터디 참가신청이 실패하였습니다.");
+        }
       }
     } else {
+      // 사용자가 로그인 상태가 아닌 경우 로그인 페이지로 이동
       moveToLogin();
     }
   };

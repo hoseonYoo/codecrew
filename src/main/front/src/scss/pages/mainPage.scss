@@ -67,6 +67,7 @@ div.stPopupWrap{
   box-shadow: 0px -6px 18px 0px  rgba(0,0,0,0.1);
 }
 img.stPopupClose{
+  cursor: pointer;
   position: absolute;
   right: 0;
   top: 0;
@@ -85,25 +86,36 @@ div.stPopupImg{
   height: 64px;
   background-color: #dcdcdc;
   border-radius: 64px;
-  margin-right: 20px;
+  margin-right: 8px;
   // 이미지 적용 시 위치값
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-div.stPopupTitle{
-  width: calc(100% - 138px);
+div.stPopupTitle {
+  width: calc(100% - 180px);
   text-align: left;
   margin-top: 8px;
-  h3{
+  overflow: hidden;
+  display: block;
+  h3, p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  h3 {
     font-weight: 500;
     font-size: 18px;
   }
-  p{
+
+  p {
     font-size: 14px;
-    color:#828282;
+    color: #828282;
   }
 }
+
 div.stPopupBtn{
   width:80px;
   button{

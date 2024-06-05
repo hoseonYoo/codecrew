@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @Slf4j
@@ -69,7 +70,6 @@ public class StudyController {
         if (userEmail == null || userEmail.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "이메일이 제공되지 않았습니다."));
         }
-
         try {
             // 스터디 참가 로직 구현
             boolean result = studyService.participate(id, userEmail);
@@ -83,6 +83,16 @@ public class StudyController {
         }
     }
 
+    // 스터디 시작
+    @PutMapping("/{id}/start")
+    public ResponseEntity<?> startStudy(@PathVariable("id") Long id) {
+            boolean result = studyService.startStudy(id);
+            if (result){
+                return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));
+            }
+    }
 
 
 
