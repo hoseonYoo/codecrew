@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getStudyLocationList } from "../../slices/categorySlice";
-import { API_SERVER_HOST } from "../../api/studyAPI";
+import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCustomMap from "../../hooks/useCustomMap";
 
 const host = API_SERVER_HOST;

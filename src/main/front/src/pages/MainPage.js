@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
@@ -14,7 +14,13 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage } = useCustomMove();
+  const {
+    moveToLogin,
+    moveToMypage,
+    moveToAddPage,
+    moveToModifyPage,
+    moveToReadPage,
+  } = useCustomMove();
   // 참가하기
   const handleParticipate = useHandleParticipate();
   // 삭제하기
@@ -119,16 +125,29 @@ const MainPage = () => {
             />
             {/* 컨텐츠 */}
             <div className="stPopupContentTop">
-              <div className="stPopupImg" onClick={() => moveToReadPage(study.id)} style={{ backgroundImage: `url(${study.thImg})`, cursor: "pointer" }}></div>
+              <div
+                className="stPopupImg"
+                onClick={() => moveToReadPage(study.id)}
+                style={{
+                  backgroundImage: `url(${study.thImg})`,
+                  cursor: "pointer",
+                }}
+              ></div>
               <div className="stPopupTitle">
-                <h3 onClick={() => moveToReadPage(study.id)} style={{ cursor: "pointer" }}>
+                <h3
+                  onClick={() => moveToReadPage(study.id)}
+                  style={{ cursor: "pointer" }}
+                >
                   {study.title}
                 </h3>
                 <p
                   onClick={() => {
-                    const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
+                    const confirmOpen =
+                      window.confirm("카카오지도를 여시겠습니까?");
                     if (confirmOpen) {
-                      const encodedLocation = encodeURIComponent(study.location);
+                      const encodedLocation = encodeURIComponent(
+                        study.location,
+                      );
                       const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
                       window.open(kakaoMapUrl, "_blank");
                     }
@@ -154,16 +173,25 @@ const MainPage = () => {
                       연락하기
                     </button>
 
-                    <button className="btnSmallBlack" onClick={handleShareClick}>
+                    <button
+                      className="btnSmallBlack"
+                      onClick={handleShareClick}
+                    >
                       공유하기
                     </button>
                   </>
                 ) : (
                   <>
-                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(study.id)}>
+                    <button
+                      className="btnSmallPoint"
+                      onClick={() => moveToModifyPage(study.id)}
+                    >
                       수정하기
                     </button>
-                    <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                    <button
+                      className="btnSmallBlack"
+                      onClick={() => handleDelete(study.id, study.memberEmail)}
+                    >
                       삭제하기
                     </button>
                   </>
@@ -185,7 +213,8 @@ const MainPage = () => {
               <div>
                 <h4>참여인원 : </h4>
                 <p>
-                  {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
+                  {(study.studyMemberList ? study.studyMemberList.length : 0) +
+                    1}
                   <span>/</span>
                   {study.maxPeople}
                 </p>
@@ -193,7 +222,10 @@ const MainPage = () => {
             </div>
             <div className="stPopupContentButton">
               {!userEmail || userEmail !== studyUserEmail ? (
-                <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+                <button
+                  className="btnLargePoint"
+                  onClick={() => handleParticipate(study.id)}
+                >
                   스터디참가
                 </button>
               ) : (

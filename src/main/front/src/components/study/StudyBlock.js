@@ -1,6 +1,6 @@
 import React from "react";
 import "../../scss/partials/StudyBlock.scss";
-import { API_SERVER_HOST } from "../../api/studyAPI";
+import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCustomMove from "../../hooks/useCustomMove";
 const StudyBlock = ({ studyLocation }) => {
   const host = API_SERVER_HOST;

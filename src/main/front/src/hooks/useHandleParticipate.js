@@ -1,7 +1,7 @@
 // useHandleParticipate.js
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 import useCustomMove from "../hooks/useCustomMove";
 
 const useHandleParticipate = () => {
@@ -14,9 +14,12 @@ const useHandleParticipate = () => {
   const handleParticipate = async (studyId) => {
     if (userEmail) {
       try {
-        const response = await jwtAxios.post(`${host}/api/study/${studyId}/participate`, {
-          email: userEmail,
-        });
+        const response = await jwtAxios.post(
+          `${host}/api/study/${studyId}/participate`,
+          {
+            email: userEmail,
+          },
+        );
         console.log(response.data);
         alert("스터디 참가신청이 완료되었습니다.");
       } catch (error) {
