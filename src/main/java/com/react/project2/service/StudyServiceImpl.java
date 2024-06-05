@@ -97,10 +97,36 @@ public class StudyServiceImpl implements StudyService {
         return StudyDTO;
     }
 
+    // 스터디 수정
     @Override
     public void modifyStudy(StudyDTO studyDTO) {
+        // ID를 사용하여 기존 스터디 엔티티를 조회합니다.
+        Study study = studyRepository.findById(studyDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
 
+        // DTO에서 받은 정보로 엔티티의 필드를 업데이트합니다.
+        study.setThImg(studyDTO.getThImg());
+        study.setTitle(studyDTO.getTitle());
+        study.setContent(studyDTO.getContent());
+
+        // 여기에 Member 객체를 조회하고 설정하는 로직을 추가합니다.
+        Member member = memberRepository.findByEmail(studyDTO.getMemberEmail())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        study.setMember(member);
+
+        study.setLocation(studyDTO.getLocation());
+        study.setStudyDate(studyDTO.getStudyDate());
+        study.setStudyDeadlineDate(studyDTO.getStudyDeadlineDate());
+        study.setLocationX(studyDTO.getLocationX());
+        study.setLocationY(studyDTO.getLocationY());
+        study.setMaxPeople(studyDTO.getMaxPeople());
+        study.setCategory(studyDTO.getCategory());
+
+        // 변경사항을 저장합니다.
+        studyRepository.save(study);
     }
+
+
 
     @Override
     public boolean delete(Long id) {

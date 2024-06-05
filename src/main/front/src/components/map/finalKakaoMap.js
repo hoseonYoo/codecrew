@@ -17,9 +17,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
 
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
-  const studyLocationList = useSelector(
-    (state) => state.categorySlice.studyLocationList,
-  );
+  const studyLocationList = useSelector((state) => state.categorySlice.studyLocationList);
 
   // 내 위치로 이동
   const moveToMyLocation = () => {
@@ -30,7 +28,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   // 현위치 가져오면 마커 띄우기
   useEffect(() => {
     if (map && myLocation.get) {
-      console.log("현위치 마커 생성");
+      // console.log("현위치 마커 생성");
       const marker = myLocationMarker();
       marker.setMap(map);
     }
@@ -39,14 +37,14 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   // 카테고리 필터링데이터 가져오기
   useEffect(() => {
     dispatch(getStudyLocationList(categoryFilter)).then(() => {
-      console.log("studyLocationList 가져오기");
+      // console.log("studyLocationList 가져오기");
     });
   }, [categoryFilter]);
 
   // 마커 클러스터 생성
   useEffect(() => {
     if (map && studyLocationList.length > 0) {
-      console.log("클러스터 생성");
+      // console.log("클러스터 생성");
 
       // 현재 지도의 중심 좌표를 저장합니다.
       const currentCenter = map.getCenter();
@@ -64,7 +62,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
       // 마커 클러스터에 기존 마커 지우기
       if (cluster != undefined) cluster.clear();
 
-      console.log("클러스터에 마커 추가");
+      // console.log("클러스터에 마커 추가");
 
       // 클러스터에 마커 추가
       newCluster.addMarkers(markers);
@@ -79,7 +77,7 @@ const FinalKakaoMap = ({ changePopup, popupInit }) => {
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {
     if (myLocation) {
-      console.log("myLocation : ", myLocation);
+      // console.log("myLocation : ", myLocation);
       const container = document.getElementById("map");
       const options = {
         center: new kakao.maps.LatLng(myLocation.lat, myLocation.lng),

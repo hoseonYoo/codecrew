@@ -6,6 +6,7 @@ import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
 import useHandleDelete from "../hooks/useHandleDelete";
+import useHandleStart from "../hooks/useHandleStart";
 import useCustomMove from "../hooks/useCustomMove";
 
 const host = API_SERVER_HOST;
@@ -19,6 +20,15 @@ const MainPage = () => {
   const handleParticipate = useHandleParticipate();
   // 삭제하기
   const handleDelete = useHandleDelete();
+  // 시작하기
+  const hadleStart = useHandleStart();
+  // 스터디탈퇴하기
+  const [isParticipated, setIsParticipated] = useState(false);
+  const checkParticipation = () => {
+    // 서버에 참가신청 여부를 확인하는 요청을 보내고 결과에 따라 상태를 업데이트합니다.
+    // 여기서는 예시로 항상 true를 설정하고 있습니다.
+    setIsParticipated(true);
+  };
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -79,8 +89,6 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      {/*<div id="map" className="Map"></div>*/}
-      {/*<NewKakaoMap />*/}
       <FinalKakaoMap changePopup={changePopup} popupInit={popupInit} />
 
       <div className="bottomMainBtnWrap">
@@ -105,7 +113,6 @@ const MainPage = () => {
         </div>
 
         {/* 토스트팝업 */}
-        {/* popupActive <- 클래스 추가시 팝업 노출 */}
         {popup ? (
           <div className="stPopupWrap popupActive">
             {/* 닫기버튼 */}
@@ -193,11 +200,24 @@ const MainPage = () => {
             </div>
             <div className="stPopupContentButton">
               {!userEmail || userEmail !== studyUserEmail ? (
-                <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
-                  스터디참가
-                </button>
+                <>
+                  {isParticipated ? (
+                    <button className="btnLargePoint">참가완료</button>
+                  ) : (
+                    <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+                      스터디참가
+                    </button>
+                  )}
+                </>
               ) : (
-                <button className="btnLargePoint">스터디시작</button>
+                <button
+                  className="btnLargePoint"
+                  onClick={() => {
+                    hadleStart(study);
+                  }}
+                >
+                  스터디시작
+                </button>
               )}
             </div>
           </div>
