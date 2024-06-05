@@ -21,6 +21,7 @@ const useHandleDelete = () => {
           console.log(response.data);
           alert("스터디 모임이 삭제되었습니다.");
           navigate("/"); // 메인 페이지로 리다이렉트
+          return "success";
         } catch (error) {
           console.error(error);
           alert("삭제 중 오류가 발생했습니다.");

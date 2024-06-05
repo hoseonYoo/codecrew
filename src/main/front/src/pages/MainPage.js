@@ -24,7 +24,7 @@ const MainPage = () => {
   const handleDelete = useHandleDelete();
   const [overlayState, setOverlayState] = useState(false);
   const changeOverlayState = () => {
-    setOverlayState(true);
+    setOverlayState(!overlayState);
   };
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
@@ -196,7 +196,14 @@ const MainPage = () => {
                     </button>
                     <button
                       className="btnSmallBlack"
-                      onClick={() => handleDelete(study.id, study.memberEmail)}
+                      onClick={() => {
+                        if (
+                          handleDelete(study.id, study.memberEmail) ===
+                          "success"
+                        ) {
+                          setPopup(false);
+                        }
+                      }}
                     >
                       삭제하기
                     </button>
@@ -277,7 +284,7 @@ const MainPage = () => {
               <button
                 className="btnLargePoint"
                 onClick={() => {
-                  setOverlayState(false);
+                  changeOverlayState();
                 }}
               >
                 아니요

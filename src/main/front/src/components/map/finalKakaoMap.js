@@ -11,7 +11,7 @@ const FinalKakaoMap = ({
   changePopup,
   popupInit,
 }) => {
-  const [map, setMap] = useState();
+  const [map, setMap] = useState(null);
   const [cluster, setCluster] = useState();
   const {
     myLocation,
@@ -55,14 +55,16 @@ const FinalKakaoMap = ({
       map.setZoomable(false);
       dbclickCheck = true;
       changeOverlayState();
-    } else {
-      if (mapClickMarker != null) {
-        mapClickMarker.setMap(null);
-      }
-      map.setDraggable(true);
-      map.setZoomable(true);
-      dbclickCheck = false;
     }
+  };
+
+  const resetClickMarker = () => {
+    if (mapClickMarker != null) {
+      mapClickMarker.setMap(null);
+    }
+    map.setDraggable(true);
+    map.setZoomable(true);
+    dbclickCheck = false;
   };
 
   // 현위치 가져오면 마커 띄우기
@@ -117,17 +119,42 @@ const FinalKakaoMap = ({
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {
     if (myLocation) {
-      console.log("myLocation : ", myLocation);
-      const container = document.getElementById("map");
-      const options = {
-        center: new kakao.maps.LatLng(myLocation.lat, myLocation.lng),
-        level: 3,
-        disableDoubleClickZoom: true,
-      };
-      setMap(new kakao.maps.Map(container, options));
+      let lat = myLocation.lat;
+      let lng = myLocation.lng;
+      let mapLevel = 3;
+      renderMap(lat, lng, mapLevel);
       // 지도 클릭시 실행될 함수
     }
   }, [myLocation]);
+
+  // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
+  useEffect(() => {
+    if (!overlayState) {
+      let lat = myLocation.lat;
+      let lng = myLocation.lng;
+      let mapLevel = 3;
+      if (map != null) {
+        const mapCenter = map.getCenter();
+        console.log("mapCenter : ", mapCenter);
+        lat = mapCenter.getLat();
+        lng = mapCenter.getLng();
+        mapLevel = map.getLevel();
+      }
+      renderMap(lat, lng, mapLevel);
+      // 지도 클릭시 실행될 함수
+    }
+  }, [overlayState]);
+
+  const renderMap = (lat, lng, mapLevel) => {
+    console.log("myLocation : ", myLocation);
+    const container = document.getElementById("map");
+    const options = {
+      center: new kakao.maps.LatLng(lat, lng),
+      level: mapLevel,
+      disableDoubleClickZoom: true,
+    };
+    setMap(new kakao.maps.Map(container, options));
+  };
 
   // map 상태가 업데이트될 때마다 이벤트 리스너 추가
   useEffect(() => {
