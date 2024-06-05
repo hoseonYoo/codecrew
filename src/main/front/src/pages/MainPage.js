@@ -5,6 +5,7 @@ import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
 import useHandleDelete from "../hooks/useHandleDelete";
+import useHandleStart from "../hooks/useHandleStart";
 import useCustomMove from "../hooks/useCustomMove";
 
 const MainPage = () => {
@@ -25,6 +26,31 @@ const MainPage = () => {
   const [overlayState, setOverlayState] = useState(false);
   const changeOverlayState = () => {
     setOverlayState(!overlayState);
+  };
+  // 시작하기
+  const hadleStart = useHandleStart();
+
+  const startStudy = (study) => {
+    hadleStart(study)
+      .then((result) => {
+        if (result === "SUCCESS") {
+          setPopup(false); // 성공 시 팝업을 닫습니다.
+        }
+      })
+      .catch((reason) => {
+        if (reason === "FAILURE") {
+          // 실패 처리
+        } else if (reason === "CANCELLED") {
+          // 사용자가 취소한 경우 처리
+        }
+      });
+  };
+  // 스터디탈퇴하기
+  const [isParticipated, setIsParticipated] = useState(false);
+  const checkParticipation = () => {
+    // 서버에 참가신청 여부를 확인하는 요청을 보내고 결과에 따라 상태를 업데이트합니다.
+    // 여기서는 예시로 항상 true를 설정하고 있습니다.
+    setIsParticipated(true);
   };
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
@@ -86,8 +112,6 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      {/*<div id="map" className="Map"></div>*/}
-      {/*<NewKakaoMap />*/}
       <FinalKakaoMap
         overlayState={overlayState}
         changeOverlayState={changeOverlayState}
@@ -117,7 +141,6 @@ const MainPage = () => {
         </div>
 
         {/* 토스트팝업 */}
-        {/* popupActive <- 클래스 추가시 팝업 노출 */}
         {popup ? (
           <div className="stPopupWrap popupActive">
             {/* 닫기버튼 */}
@@ -197,12 +220,8 @@ const MainPage = () => {
                     <button
                       className="btnSmallBlack"
                       onClick={() => {
-                        if (
-                          handleDelete(study.id, study.memberEmail) ===
-                          "success"
-                        ) {
-                          setPopup(false);
-                        }
+                        handleDelete(study.id, study.memberEmail);
+                        setPopup(false); // 버튼 클릭 시 바로 팝업을 닫습니다.
                       }}
                     >
                       삭제하기
@@ -235,14 +254,24 @@ const MainPage = () => {
             </div>
             <div className="stPopupContentButton">
               {!userEmail || userEmail !== studyUserEmail ? (
+                <>
+                  {isParticipated ? (
+                    <button className="btnLargePoint">참가완료</button>
+                  ) : (
+                    <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+                      스터디참가
+                    </button>
+                  )}
+                </>
+              ) : (
                 <button
                   className="btnLargePoint"
-                  onClick={() => handleParticipate(study.id)}
+                  onClick={() => {
+                    startStudy(study);
+                  }}
                 >
-                  스터디참가
+                  스터디시작
                 </button>
-              ) : (
-                <button className="btnLargePoint">스터디시작</button>
               )}
             </div>
           </div>

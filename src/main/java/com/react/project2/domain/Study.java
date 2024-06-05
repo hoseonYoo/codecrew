@@ -72,14 +72,64 @@ public class Study {
     @Builder.Default
     private List<StudyMember> studyMemberList = new ArrayList<>();
 
+    // 개별필드에서 사용하기 위한 용도
+    public void setThImg(String thImg) {
+        this.thImg = thImg;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public void setMember(Member member){
+        this.member = member;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setLocationX(double locationX) {
+        this.locationX = locationX;
+    }
+
+    public void setLocationY(double locationY) {
+        this.locationY = locationY;
+    }
+
+    public void setStudyDate(LocalDateTime studyDate) {
+        this.studyDate = studyDate;
+    }
+
+    public void setStudyDeadlineDate(LocalDateTime studyDeadlineDate) {
+        this.studyDeadlineDate = studyDeadlineDate;
+    }
+
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+
     // 스터디 참가자를 추가하는 메소드
     public void addStudyMember(StudyMember member) {
         this.studyMemberList.add(member);
     }
-
-    // 스터디 삭제 메소드
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public boolean getIsConfirmed() {
+        return isConfirmed;
+    }
+    public void setIsConfirmed(boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
     }
 
 

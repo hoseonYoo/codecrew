@@ -23,7 +23,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findAllByCategory(Category category);
 
     // 현재 날짜보다 Deadline이 더 늦고 isConfirmed이 false인 스터디 전체 조회
-    @Query("select s from Study s where s.studyDeadlineDate > current_date and s.isConfirmed = false")
+    @Query("select s from Study s where s.studyDeadlineDate > current_date and s.isConfirmed = false and s.disabled = false")
     List<Study> findAllCategory();
 
 
