@@ -34,13 +34,13 @@ const MainPage = () => {
   const popupInit = {
     id: "",
     thImg: "",
-    title: "프로젝트 모임",
-    location: "서울 서대문구 신촌로 83",
-    memberNickname: "김유저",
-    memberEmail: "dbghtjs112@naver.com",
+    title: "",
+    location: "",
+    memberNickname: "",
+    memberEmail: "",
     memberPhone: "",
-    studyDate: "2024.05.22",
-    maxPeople: "1/10",
+    studyDate: "",
+    maxPeople: "",
   };
   const [popup, setPopup] = useState(false);
   const [popupData, setPopupData] = useState(popupInit);
