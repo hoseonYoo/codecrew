@@ -63,25 +63,7 @@ const ReadPage = () => {
     });
   };
 
-  // handleParticipate 참가하기 구현
-  // const handleParticipate = async () => {
-  //   if (userEmail) {
-  //     try {
-  //       // 백엔드 서버에 참가 요청을 보냄
-  //       const response = await jwtAxios.post(`${host}/api/study/${id}/participate`, {
-  //         email: userEmail,
-  //       });
-  //       // 성공적으로 참가 처리되었을 때의 로직
-  //       console.log(response.data);
-  //       alert("스터디 참가신청이 완료되었습니다.");
-  //     } catch (error) {
-  //       // 에러 처리 로직
-  //       console.error(error);
-  //     }
-  //   } else {
-  //     moveToLogin();
-  //   }
-  // };
+
 
   return (
     <BasicLayoutPage headerTitle="스터디">
