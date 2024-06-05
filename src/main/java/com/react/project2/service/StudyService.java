@@ -33,6 +33,9 @@ public interface StudyService {
     // 스터디 참가신청
     boolean participate(Long id, String userEmail);
 
+    // 스터디 참가자 조회
+
+
     // 마커용 스터디 카테고리별 전체 조회
     List<StudyDTO> getStudyMarkerByCategory(String category);
 

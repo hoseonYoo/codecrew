@@ -3,12 +3,14 @@ import "../../scss/pages/StudyReadPage.scss";
 import "../../components/study/StudyMemberBlock";
 import React, { useEffect } from "react";
 import { API_SERVER_HOST } from "../../api/studyAPI";
+import useHandleParticipate from "../../hooks/useHandleParticipate";
+import useHandleDelete from "../../hooks/useHandleDelete";
 import useCustomMove from "../../hooks/useCustomMove";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import jwtAxios from "../../util/jwtUtil";
 
 const host = API_SERVER_HOST;
 
@@ -26,17 +28,16 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } =
-    useMemberProfile(studyUserEmail);
-
-  // const studyUserEmail = study.memberEmail;
-  // console.log(studyUserEmail);
-  // const { member, imgSrc } = useMemberProfile(userEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
   // 클릭 이동관련
-  const { moveToProfilePage } = useCustomMove();
-  const { moveToModifyPage } = useCustomMove();
-  const { moveToLogin } = useCustomMove();
+  const { moveToProfilePage, moveToModifyPage, moveToLogin } = useCustomMove();
+
+  // 참가하기
+  const handleParticipate = useHandleParticipate();
+
+  // 삭제하기
+  const handleDelete = useHandleDelete();
 
   // 카카오 공유하기
   useEffect(() => {
@@ -48,7 +49,7 @@ const ReadPage = () => {
 
   // 공유하기 버튼
   const handleShareClick = () => {
-    /* window.Kakao.Share.sendDefault({
+    window.Kakao.Link.sendDefault({
       objectType: "feed",
       content: {
         title: study.title,
@@ -59,84 +60,21 @@ const ReadPage = () => {
           webUrl: window.location.href,
         },
       },
-    });*/
-    window.Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: study.title,
-        description: study.content,
-        imageUrl: imgStudySrc,
-        link: {
-          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-          mobileWebUrl: window.location.href,
-          webUrl: window.location.href,
-        },
-      },
-      social: {
-        likeCount: 286,
-        commentCount: 45,
-        sharedCount: 845,
-      },
-      /*buttons: [
-        {
-          title: '웹으로 보기',
-          link: {
-            mobileWebUrl: 'https://developers.kakao.com',
-            webUrl: 'https://developers.kakao.com',
-          },
-        },
-        {
-          title: '앱으로 보기',
-          link: {
-            mobileWebUrl: 'https://developers.kakao.com',
-            webUrl: 'https://developers.kakao.com',
-          },
-        },
-      ],*/
     });
   };
 
-  // handleParticipate 참가하기 구현
-  const handleParticipate = async () => {
-    if (userEmail) {
-      try {
-        // 백엔드 서버에 참가 요청을 보냄
-        const response = await axios.post(
-          `${host}/api/study/${id}/participate`,
-          {
-            email: userEmail,
-          },
-        );
-        // 성공적으로 참가 처리되었을 때의 로직
-        console.log(response.data);
-        alert("스터디 참가신청이 완료되었습니다.");
-      } catch (error) {
-        // 에러 처리 로직
-        console.error(error);
-      }
-    } else {
-      moveToLogin();
-    }
-  };
+
 
   return (
     <BasicLayoutPage headerTitle="스터디">
       <div>
         <div className="ReadContent">
-          <div
-            className="ReadImg"
-            style={
-              imgStudySrc !== ""
-                ? { backgroundImage: `url(${imgStudySrc})` }
-                : null
-            }
-          ></div>
+          <div className="ReadImg" style={imgStudySrc !== "" ? { backgroundImage: `url(${imgStudySrc})` } : null}></div>
           <div className="ReadTitle">
             <h3>{study.title}</h3>
             <p
               onClick={() => {
-                const confirmOpen =
-                  window.confirm("카카오지도를 여시겠습니까?");
+                const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
                 if (confirmOpen) {
                   const encodedLocation = encodeURIComponent(study.location);
                   const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
@@ -152,12 +90,7 @@ const ReadPage = () => {
           <div className="ReadBtn">
             {!userEmail || userEmail !== studyUserEmail ? (
               <>
-                <button
-                  className="btnSmallPoint"
-                  onClick={() =>
-                    (window.location.href = `tel:${study.memberPhone}`)
-                  }
-                >
+                <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
                   연락하기
                 </button>
                 <button className="btnSmallBlack" onClick={handleShareClick}>
@@ -166,13 +99,12 @@ const ReadPage = () => {
               </>
             ) : (
               <>
-                <button
-                  className="btnSmallPoint"
-                  onClick={() => moveToModifyPage(id)}
-                >
+                <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
                   수정하기
                 </button>
-                <button className="btnSmallBlack">삭제하기</button>
+                <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                  삭제하기
+                </button>
               </>
             )}
           </div>
@@ -210,14 +142,7 @@ const ReadPage = () => {
           {/* 생성자 디폴트 */}
           <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
             {/* <div className="studyMemberBlockImg"></div> */}
-            <div
-              className="studyMemberBlockImg"
-              style={
-                studyMemberImgSrc
-                  ? { backgroundImage: `url(${studyMemberImgSrc})` }
-                  : null
-              }
-            ></div>
+            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null}></div>
             <div className="studyMemberBlockTitle">
               <h3>{study.memberNickname}</h3>
               <p>{study.memberEmail}</p>
@@ -232,7 +157,7 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">
           {!userEmail || userEmail !== studyUserEmail ? (
-            <button className="btnLargePoint" onClick={handleParticipate}>
+            <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
               스터디참가
             </button>
           ) : (
