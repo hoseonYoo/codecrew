@@ -125,7 +125,12 @@ public class Study {
     public void addStudyMember(StudyMember member) {
         this.studyMemberList.add(member);
     }
-
+    public boolean getIsConfirmed() {
+        return isConfirmed;
+    }
+    public void setIsConfirmed(boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
+    }
 
 
 

@@ -7,7 +7,6 @@ import com.react.project2.domain.StudyMember;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
-import com.react.project2.dto.StudyMarkerDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,8 +123,7 @@ public class StudyServiceImpl implements StudyService {
         studyRepository.save(study);
     }
 
-
-
+    // 스터디 삭제
     @Override
     public boolean delete(Long id) {
         Optional<Study> studyOptional = studyRepository.findById(id);
@@ -140,6 +136,7 @@ public class StudyServiceImpl implements StudyService {
         return false;
     }
 
+    // 스터디 참가
     @Override
     public boolean participate(Long id, String userEmail) {
         // 스터디 엔티티 조회
@@ -170,6 +167,19 @@ public class StudyServiceImpl implements StudyService {
         // 변경사항 저장
         studyRepository.save(study);
         return true;
+    }
+
+    // 스터디 시작
+    @Override
+    public boolean startStudy(Long id) {
+        Optional<Study> studyOptional = studyRepository.findById(id);
+        if (studyOptional.isPresent()) {
+            Study study = studyOptional.get();
+            study.setIsConfirmed(true);
+            studyRepository.save(study);
+            return true;
+        }
+        return false;
     }
 
 

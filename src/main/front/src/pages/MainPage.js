@@ -22,6 +22,22 @@ const MainPage = () => {
   const handleDelete = useHandleDelete();
   // 시작하기
   const hadleStart = useHandleStart();
+
+  const startStudy = (study) => {
+    hadleStart(study)
+      .then((result) => {
+        if (result === "SUCCESS") {
+          setPopup(false); // 성공 시 팝업을 닫습니다.
+        }
+      })
+      .catch((reason) => {
+        if (reason === "FAILURE") {
+          // 실패 처리
+        } else if (reason === "CANCELLED") {
+          // 사용자가 취소한 경우 처리
+        }
+      });
+  };
   // 스터디탈퇴하기
   const [isParticipated, setIsParticipated] = useState(false);
   const checkParticipation = () => {
@@ -170,7 +186,13 @@ const MainPage = () => {
                     <button className="btnSmallPoint" onClick={() => moveToModifyPage(study.id)}>
                       수정하기
                     </button>
-                    <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                    <button
+                      className="btnSmallBlack"
+                      onClick={() => {
+                        handleDelete(study.id, study.memberEmail);
+                        setPopup(false); // 버튼 클릭 시 바로 팝업을 닫습니다.
+                      }}
+                    >
                       삭제하기
                     </button>
                   </>
@@ -213,7 +235,7 @@ const MainPage = () => {
                 <button
                   className="btnLargePoint"
                   onClick={() => {
-                    hadleStart(study);
+                    startStudy(study);
                   }}
                 >
                   스터디시작

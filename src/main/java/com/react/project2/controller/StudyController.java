@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @Slf4j
@@ -69,7 +70,6 @@ public class StudyController {
         if (userEmail == null || userEmail.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "이메일이 제공되지 않았습니다."));
         }
-
         try {
             // 스터디 참가 로직 구현
             boolean result = studyService.participate(id, userEmail);
@@ -86,26 +86,14 @@ public class StudyController {
     // 스터디 시작
     @PutMapping("/{id}/start")
     public ResponseEntity<?> startStudy(@PathVariable("id") Long id) {
-        try {
-            StudyDTO studyDTO = studyService.get(id);
-            if (studyDTO == null) {
-                log.info("시작할 스터디를 찾을 수 없습니다.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "시작할 스터디를 찾을 수 없습니다."));
+            boolean result = studyService.startStudy(id);
+            if (result){
+                return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));
             }
-
-            // 스터디 객체에 isConfirmed 속성을 true로 설정
-            studyDTO.setIsConfirmed(true);
-            studyService.modifyStudy(studyDTO);
-
-            // todo 참가자에게 알림 보내기
-
-            return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
-        } catch (Exception e) {
-            // 예외 발생 시 에러 메시지 반환
-            log.info("스터디 시작 처리 중 오류가 발생했습니다.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));
-        }
     }
+
 
 
     // ----------- //
