@@ -22,7 +22,10 @@ const MainPage = () => {
   const handleParticipate = useHandleParticipate();
   // 삭제하기
   const handleDelete = useHandleDelete();
-  let overlayState = false;
+  const [overlayState, setOverlayState] = useState(false);
+  const changeOverlayState = () => {
+    setOverlayState(true);
+  };
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -87,6 +90,7 @@ const MainPage = () => {
       {/*<NewKakaoMap />*/}
       <FinalKakaoMap
         overlayState={overlayState}
+        changeOverlayState={changeOverlayState}
         changePopup={changePopup}
         popupInit={popupInit}
       />
@@ -233,6 +237,51 @@ const MainPage = () => {
               ) : (
                 <button className="btnLargePoint">스터디시작</button>
               )}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {/* 토스트팝업 */}
+        {/* popupActive <- 클래스 추가시 팝업 노출 */}
+        {overlayState ? (
+          <div className="stPopupWrap popupActive">
+            {/* 닫기버튼 */}
+            <img
+              className="stPopupClose"
+              onClick={() => {
+                setOverlayState(false);
+              }}
+              src="/assets/imgs/icon/ic_popup_cl.svg"
+              alt="닫기버튼"
+            />
+            {/* 컨텐츠 */}
+            <div className="stPopupContentBottom">
+              <p>여기에서 스터디 추가?</p>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+            </div>
+            <div className="stPopupContentButton">
+              <button
+                className="btnLargePoint"
+                onClick={() => {
+                  console.log(overlayState);
+                }}
+              >
+                예
+              </button>
+              <button
+                className="btnLargePoint"
+                onClick={() => {
+                  setOverlayState(false);
+                }}
+              >
+                아니요
+              </button>
             </div>
           </div>
         ) : (

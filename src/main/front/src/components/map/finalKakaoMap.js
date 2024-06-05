@@ -5,7 +5,12 @@ import useCustomMap from "../../hooks/useCustomMap";
 
 const { kakao } = window;
 
-const FinalKakaoMap = ({ overlayState, changePopup, popupInit }) => {
+const FinalKakaoMap = ({
+  overlayState,
+  changeOverlayState,
+  changePopup,
+  popupInit,
+}) => {
   const [map, setMap] = useState();
   const [cluster, setCluster] = useState();
   const {
@@ -15,6 +20,7 @@ const FinalKakaoMap = ({ overlayState, changePopup, popupInit }) => {
     createMapClickMarker,
   } = useCustomMap();
   let mapClickMarker = null;
+  let dbclickCheck = false;
 
   const dispatch = useDispatch();
 
@@ -32,10 +38,9 @@ const FinalKakaoMap = ({ overlayState, changePopup, popupInit }) => {
 
   // 지도 클릭시 실행될 함수
   const mapClickedFunc = (mouseEvent) => {
-    if (overlayState === false) {
-      if (mapClickMarker != null) {
-        mapClickMarker.setMap(null);
-      }
+    console.log("mapClickedFunc 실행");
+    console.log("overlayState : ", overlayState);
+    if (dbclickCheck === false) {
       mapClickMarker = createMapClickMarker(mouseEvent.latLng);
       mapClickMarker.setMap(map);
       map.panTo(mouseEvent.latLng);
@@ -48,7 +53,15 @@ const FinalKakaoMap = ({ overlayState, changePopup, popupInit }) => {
       }, 500); // 500ms 후에 실행
       map.setDraggable(false);
       map.setZoomable(false);
-      overlayState = true;
+      dbclickCheck = true;
+      changeOverlayState();
+    } else {
+      if (mapClickMarker != null) {
+        mapClickMarker.setMap(null);
+      }
+      map.setDraggable(true);
+      map.setZoomable(true);
+      dbclickCheck = false;
     }
   };
 
