@@ -4,8 +4,9 @@ import "../scss/pages/mainPage.scss";
 import { API_SERVER_HOST } from "../api/studyAPI";
 import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
+import useHandleParticipate from "../hooks/useHandleParticipate";
+import useHandleDelete from "../hooks/useHandleDelete";
 import useCustomMove from "../hooks/useCustomMove";
-import axios from "axios";
 
 const host = API_SERVER_HOST;
 
@@ -14,6 +15,10 @@ const MainPage = () => {
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
   const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage } = useCustomMove();
+  // 참가하기
+  const handleParticipate = useHandleParticipate();
+  // 삭제하기
+  const handleDelete = useHandleDelete();
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -37,21 +42,16 @@ const MainPage = () => {
     maxPeople: "1/10",
   };
   const [popup, setPopup] = useState(false);
-  const [popupData, setPopupData] = useState(popupInit);
+  const [study, setStudy] = useState(popupInit);
+  //popupData -> study로 명칭 변경
   const changePopup = (data) => {
-    setPopupData(data);
+    setStudy(data);
     setPopup(true);
   };
-  // 확인후 삭제
-  useEffect(() => {
-    console.log("popup:", popup);
-    console.log("popupData:", popupData);
-  }, [popup, popupData]);
-  // 확인후 삭제
 
   // 본인 작성글 체크용
   const userEmail = loginState.email;
-  const studyUserEmail = popupData.memberEmail;
+  const studyUserEmail = study.memberEmail;
 
   // 카카오 공유하기
   useEffect(() => {
@@ -66,35 +66,15 @@ const MainPage = () => {
     window.Kakao.Link.sendDefault({
       objectType: "feed",
       content: {
-        title: popupData.title,
-        description: popupData.content,
-        imageUrl: popupData.thImg,
+        title: study.title,
+        description: study.content,
+        imageUrl: study.thImg,
         link: {
           mobileWebUrl: window.location.href,
           webUrl: window.location.href,
         },
       },
     });
-  };
-
-  // handleParticipate 참가하기 구현
-  const handleParticipate = async () => {
-    if (userEmail) {
-      try {
-        // 백엔드 서버에 참가 요청을 보냄
-        const response = await axios.post(`${host}/api/study/${popupData.id}/participate`, {
-          email: userEmail,
-        });
-        // 성공적으로 참가 처리되었을 때의 로직
-        console.log(response.data);
-        alert("스터디 참가신청이 완료되었습니다.");
-      } catch (error) {
-        // 에러 처리 로직
-        console.error(error);
-      }
-    } else {
-      moveToLogin();
-    }
   };
 
   return (
@@ -118,6 +98,9 @@ const MainPage = () => {
             }}
           >
             MY
+            <div className="MyNoticeCount">
+              <span>1</span>
+            </div>
           </button>
         </div>
 
@@ -136,23 +119,23 @@ const MainPage = () => {
             />
             {/* 컨텐츠 */}
             <div className="stPopupContentTop">
-              <div className="stPopupImg" onClick={() => moveToReadPage(popupData.id)} style={{ backgroundImage: `url(${popupData.thImg})`, cursor: "pointer" }}></div>
+              <div className="stPopupImg" onClick={() => moveToReadPage(study.id)} style={{ backgroundImage: `url(${study.thImg})`, cursor: "pointer" }}></div>
               <div className="stPopupTitle">
-                <h3 onClick={() => moveToReadPage(popupData.id)} style={{ cursor: "pointer" }}>
-                  {popupData.title}
+                <h3 onClick={() => moveToReadPage(study.id)} style={{ cursor: "pointer" }}>
+                  {study.title}
                 </h3>
                 <p
                   onClick={() => {
                     const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
                     if (confirmOpen) {
-                      const encodedLocation = encodeURIComponent(popupData.location);
+                      const encodedLocation = encodeURIComponent(study.location);
                       const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
                       window.open(kakaoMapUrl, "_blank");
                     }
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  {popupData.location}
+                  {study.location}
                 </p>
               </div>
               <div className="stPopupBtn">
@@ -161,8 +144,8 @@ const MainPage = () => {
                     <button
                       className="btnSmallPoint"
                       onClick={() => {
-                        if (popupData.memberPhone) {
-                          window.location.href = `tel:${popupData.memberPhone}`;
+                        if (study.memberPhone) {
+                          window.location.href = `tel:${study.memberPhone}`;
                         } else {
                           alert("크루가 연락처를 공개하지 않았습니다.");
                         }
@@ -177,10 +160,12 @@ const MainPage = () => {
                   </>
                 ) : (
                   <>
-                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(popupData.id)}>
+                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(study.id)}>
                       수정하기
                     </button>
-                    <button className="btnSmallBlack">삭제하기</button>
+                    <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                      삭제하기
+                    </button>
                   </>
                 )}
               </div>
@@ -189,26 +174,26 @@ const MainPage = () => {
               <div>
                 <h4>작성자 : </h4>
                 <div>
-                  <p>{popupData.memberNickname}</p>
-                  <p className="contentEmail">{popupData.memberEmail}</p>
+                  <p>{study.memberNickname}</p>
+                  <p className="contentEmail">{study.memberEmail}</p>
                 </div>
               </div>
               <div>
                 <h4>참여일자 : </h4>
-                <p>{popupData.studyDate}</p>
+                <p>{study.studyDate}</p>
               </div>
               <div>
                 <h4>참여인원 : </h4>
                 <p>
-                  {(popupData.studyMemberList ? popupData.studyMemberList.length : 0) + 1}
+                  {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
                   <span>/</span>
-                  {popupData.maxPeople}
+                  {study.maxPeople}
                 </p>
               </div>
             </div>
             <div className="stPopupContentButton">
               {!userEmail || userEmail !== studyUserEmail ? (
-                <button className="btnLargePoint" onClick={handleParticipate}>
+                <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
                   스터디참가
                 </button>
               ) : (

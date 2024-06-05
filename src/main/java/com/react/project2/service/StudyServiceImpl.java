@@ -127,13 +127,13 @@ public class StudyServiceImpl implements StudyService {
         // 이미 참가신청을 했는지 확인
         if (study.getStudyMemberList().stream().anyMatch(m -> m.getEmail().equals(userEmail))) {
             log.info("이미 참가신청을 한 사용자입니다.");
-            return false;
+            throw new IllegalStateException("이미 참가신청이 완료되었습니다.");
         }
 
         // 참가인원이 최대인원을 초과하지 않았는지 확인
         if (study.getStudyMemberList().size() >= study.getMaxPeople()) {
             log.info("참가인원이 이미 최대입니다.");
-            return false;
+            throw new IllegalStateException("참가인원이 이미 최대입니다.");
         }
 
         // 참가신청 로직
@@ -145,6 +145,7 @@ public class StudyServiceImpl implements StudyService {
         studyRepository.save(study);
         return true;
     }
+
 
 
     private StudyDTO entityToDTO(Study study){
@@ -164,6 +165,7 @@ public class StudyServiceImpl implements StudyService {
                 .studyDate(study.getStudyDate())
                 .maxPeople(study.getMaxPeople())
                 .category(study.getCategory())
+                .studyMemberList(study.getStudyMemberList())
                 .build();
         return studyDTO;
     }
@@ -209,6 +211,7 @@ public class StudyServiceImpl implements StudyService {
                 .studyDate(studyDTO.getStudyDate())
                 .maxPeople(studyDTO.getMaxPeople())
                 .category(studyDTO.getCategory())
+                .studyMemberList(studyDTO.getStudyMemberList())
                 .build();
         return study;
     }

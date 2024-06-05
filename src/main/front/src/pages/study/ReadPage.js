@@ -3,12 +3,14 @@ import "../../scss/pages/StudyReadPage.scss";
 import "../../components/study/StudyMemberBlock";
 import React, { useEffect } from "react";
 import { API_SERVER_HOST } from "../../api/studyAPI";
+import useHandleParticipate from "../../hooks/useHandleParticipate";
+import useHandleDelete from "../../hooks/useHandleDelete";
 import useCustomMove from "../../hooks/useCustomMove";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import jwtAxios from "../../util/jwtUtil";
 
 const host = API_SERVER_HOST;
 
@@ -28,14 +30,14 @@ const ReadPage = () => {
   // 스터디 생성자의 회원 정보 가져오기
   const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
-  // const studyUserEmail = study.memberEmail;
-  // console.log(studyUserEmail);
-  // const { member, imgSrc } = useMemberProfile(userEmail);
-
   // 클릭 이동관련
-  const { moveToProfilePage } = useCustomMove();
-  const { moveToModifyPage } = useCustomMove();
-  const { moveToLogin } = useCustomMove();
+  const { moveToProfilePage, moveToModifyPage, moveToLogin } = useCustomMove();
+
+  // 참가하기
+  const handleParticipate = useHandleParticipate();
+
+  // 삭제하기
+  const handleDelete = useHandleDelete();
 
   // 카카오 공유하기
   useEffect(() => {
@@ -62,24 +64,24 @@ const ReadPage = () => {
   };
 
   // handleParticipate 참가하기 구현
-  const handleParticipate = async () => {
-    if (userEmail) {
-      try {
-        // 백엔드 서버에 참가 요청을 보냄
-        const response = await axios.post(`${host}/api/study/${id}/participate`, {
-          email: userEmail,
-        });
-        // 성공적으로 참가 처리되었을 때의 로직
-        console.log(response.data);
-        alert("스터디 참가신청이 완료되었습니다.");
-      } catch (error) {
-        // 에러 처리 로직
-        console.error(error);
-      }
-    } else {
-      moveToLogin();
-    }
-  };
+  // const handleParticipate = async () => {
+  //   if (userEmail) {
+  //     try {
+  //       // 백엔드 서버에 참가 요청을 보냄
+  //       const response = await jwtAxios.post(`${host}/api/study/${id}/participate`, {
+  //         email: userEmail,
+  //       });
+  //       // 성공적으로 참가 처리되었을 때의 로직
+  //       console.log(response.data);
+  //       alert("스터디 참가신청이 완료되었습니다.");
+  //     } catch (error) {
+  //       // 에러 처리 로직
+  //       console.error(error);
+  //     }
+  //   } else {
+  //     moveToLogin();
+  //   }
+  // };
 
   return (
     <BasicLayoutPage headerTitle="스터디">
@@ -118,7 +120,9 @@ const ReadPage = () => {
                 <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
                   수정하기
                 </button>
-                <button className="btnSmallBlack">삭제하기</button>
+                <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                  삭제하기
+                </button>
               </>
             )}
           </div>
@@ -171,7 +175,7 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">
           {!userEmail || userEmail !== studyUserEmail ? (
-            <button className="btnLargePoint" onClick={handleParticipate}>
+            <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
               스터디참가
             </button>
           ) : (
