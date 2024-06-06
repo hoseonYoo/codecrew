@@ -118,6 +118,7 @@ const FinalKakaoMap = ({
 
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {
+    console.log("myLocation 후 렌더링");
     if (myLocation) {
       let lat = myLocation.lat;
       let lng = myLocation.lng;
@@ -129,6 +130,7 @@ const FinalKakaoMap = ({
 
   // 지도 렌더링 (내 위치 기준, 현위치 모르면 기본 위치)
   useEffect(() => {
+    console.log("overlayState 변경후 렌더링");
     if (!overlayState) {
       let lat = myLocation.lat;
       let lng = myLocation.lng;
@@ -145,8 +147,15 @@ const FinalKakaoMap = ({
     }
   }, [overlayState]);
 
+  // 처음 페이지 로딩시 실행될 기능들 + 지도 렌더링
+  useEffect(() => {
+
+
+
+  }, []);
+
   const renderMap = (lat, lng, mapLevel) => {
-    console.log("myLocation : ", myLocation);
+    console.log("실제 지도 렌더링");
     const container = document.getElementById("map");
     const options = {
       center: new kakao.maps.LatLng(lat, lng),
