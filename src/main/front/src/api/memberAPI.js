@@ -1,9 +1,10 @@
 import axios from "axios";
 
 // export const API_SERVER_HOST = "http://192.168.0.244:8080";
-export const API_SERVER_HOST = "http://172.30.1.48:8080";
+// export const API_SERVER_HOST = "http://172.30.1.48:8080";
 // export const API_SERVER_HOST = "http://192.168.0.246:8080";
-// export const API_SERVER_HOST = "http://localhost:8080";
+// TODO API 서버 주소
+export const API_SERVER_HOST = "http://localhost:8080";
 
 const host = `${API_SERVER_HOST}/api/member`;
 

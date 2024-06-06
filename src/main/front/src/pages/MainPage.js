@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import "../scss/pages/mainPage.scss";
 import FinalKakaoMap from "../components/map/finalKakaoMap";
+import KakaoMap from "../components/map/KakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
 import useHandleDelete from "../hooks/useHandleDelete";
@@ -112,11 +113,17 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      <FinalKakaoMap
+      {/*<FinalKakaoMap
         overlayState={overlayState}
         changeOverlayState={changeOverlayState}
         changePopup={changePopup}
         popupInit={popupInit}
+      />*/}
+      <KakaoMap
+          overlayState={overlayState}
+          changeOverlayState={changeOverlayState}
+          changePopup={changePopup}
+          popupInit={popupInit}
       />
 
       <div className="bottomMainBtnWrap">

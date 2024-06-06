@@ -10,6 +10,7 @@ const useCustomMap = () => {
     lat: 37.57163048751097,
     lng: 126.97591715920376,
     get: false,
+    isLoaded: false,
   });
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
@@ -23,10 +24,20 @@ const useCustomMap = () => {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
           get: true,
+          isLoaded: true,
         });
       });
+      console.log("Geolocation is supported by this browser.");
     } else {
       console.log("Geolocation is not supported by this browser.");
+      setMyLocation(
+        {
+          lat: 37.57163048751097,
+          lng: 126.97591715920376,
+          get: false,
+          isLoaded: true,
+        },
+      )
     }
   }, []);
 

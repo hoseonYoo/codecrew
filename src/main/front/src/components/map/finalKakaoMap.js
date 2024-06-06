@@ -147,12 +147,6 @@ const FinalKakaoMap = ({
     }
   }, [overlayState]);
 
-  // 처음 페이지 로딩시 실행될 기능들 + 지도 렌더링
-  useEffect(() => {
-
-
-
-  }, []);
 
   const renderMap = (lat, lng, mapLevel) => {
     console.log("실제 지도 렌더링");
