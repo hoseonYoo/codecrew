@@ -10,7 +10,7 @@ import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import jwtAxios from "../../util/jwtUtil";
+import StudyMemberBlock from "../../components/study/StudyMemberBlock";
 
 const host = API_SERVER_HOST;
 
@@ -62,8 +62,6 @@ const ReadPage = () => {
       },
     });
   };
-
-
 
   return (
     <BasicLayoutPage headerTitle="스터디">
@@ -141,7 +139,6 @@ const ReadPage = () => {
           <h2>참가자 리스트</h2>
           {/* 생성자 디폴트 */}
           <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
-            {/* <div className="studyMemberBlockImg"></div> */}
             <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null}></div>
             <div className="studyMemberBlockTitle">
               <h3>{study.memberNickname}</h3>
@@ -151,7 +148,7 @@ const ReadPage = () => {
           </div>
           {/* 생성자 디폴트 */}
           {/* 참가자 리스트 - 컴포넌트 */}
-          {/* <StudyMemberBlock /> */}
+          {study.studyMemberList && study.studyMemberList.map((member, index) => <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} />)}
         </div>
 
         {/* 기본 */}

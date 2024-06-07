@@ -36,6 +36,7 @@ public interface StudyService {
     // 스터디 시작
     boolean startStudy(Long id);
 
+
     // 스터디 참가자 조회
 
 

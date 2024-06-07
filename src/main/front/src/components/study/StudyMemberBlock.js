@@ -1,26 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../scss/partials/StudyMemberBlock.scss";
-const StudyMemberBlock = () => {
-  // 쿠키에서 유저 이메일을 가져옵니다.
-  // const userEmailFromCookie = Cookies.get("userEmail");
+import useMemberProfile from "../../hooks/useMemberProfile";
 
-  // 쿠키의 이메일과 페이지의 이메일이 일치하는지 확인합니다.
-  // const isEmailMatch = userEmailFromCookie === emailOnPage;
+const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail }) => {
+  const { member, imgSrc } = useMemberProfile(email);
 
   return (
-    // 이동 추가
     <div className="studyMemberBlockWrap">
-      <div className="studyMemberBlockImg"></div>
+      {/* 이미지가 있을 경우 배경 이미지로 설정 */}
+      <div className="studyMemberBlockImg" style={imgSrc ? { backgroundImage: `url(${imgSrc})` } : null}></div>
       <div className="studyMemberBlockTitle">
-        <h3>김조은</h3>
-        <p>dbghtjs112@naver.com</p>
+        {/* 멤버의 닉네임과 이메일을 동적으로 렌더링 */}
+        <h3>{member.nickname}</h3>
+        <p>{member.email}</p>
       </div>
       <div className="studyMemberBlockBtn">
-        {/* 관리자 페이지 */}
-        {/* <button className="btnSmallPoint">수락</button>
-        <button className="btnSmallBlack">거절</button> */}
+        {/* userEmail과 studyUserEmail이 일치할 경우에만 버튼을 노출 */}
+        {currentUserEmail === studyCreatorEmail && (
+          <>
+            <button className="btnSmallPoint">수락</button>
+            <button className="btnSmallBlack">거절</button>
+          </>
+        )}
       </div>
     </div>
   );
 };
+
 export default StudyMemberBlock;
