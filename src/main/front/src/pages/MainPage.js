@@ -18,7 +18,7 @@ const MainPage = () => {
     moveToAddPage,
     moveToModifyPage,
     moveToReadPage,
-      moveToAddPageWithData
+    moveToAddPageWithData,
   } = useCustomMove();
   // 참가하기
   const handleParticipate = useHandleParticipate();
@@ -29,11 +29,11 @@ const MainPage = () => {
     lat: 0,
     lng: 0,
   });
-  const changeOverlayState = (lat,lng) => {
+  const changeOverlayState = (lat, lng, check) => {
     setOverlayState({
-        overlayState: !overlayState.overlayState,
-        lat: lat,
-        lng: lng,
+      overlayState: check,
+      lat: lat,
+      lng: lng,
     });
   };
   // 시작하기
@@ -121,12 +121,11 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-
       <KakaoMap
-          overlayState={overlayState}
-          changeOverlayState={changeOverlayState}
-          changePopup={changePopup}
-          popupInit={popupInit}
+        overlayState={overlayState}
+        changeOverlayState={changeOverlayState}
+        changePopup={changePopup}
+        popupInit={popupInit}
       />
 
       <div className="bottomMainBtnWrap">
@@ -268,7 +267,10 @@ const MainPage = () => {
                   {isParticipated ? (
                     <button className="btnLargePoint">참가완료</button>
                   ) : (
-                    <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+                    <button
+                      className="btnLargePoint"
+                      onClick={() => handleParticipate(study.id)}
+                    >
                       스터디참가
                     </button>
                   )}
@@ -296,7 +298,7 @@ const MainPage = () => {
             <img
               className="stPopupClose"
               onClick={() => {
-                setOverlayState(false);
+                changeOverlayState(0, 0, false);
               }}
               src="/assets/imgs/icon/ic_popup_cl.svg"
               alt="닫기버튼"
@@ -315,7 +317,7 @@ const MainPage = () => {
               <button
                 className="btnLargePoint"
                 onClick={() => {
-                  moveToAddPageWithData(overlayState.lat,overlayState.lng);
+                  moveToAddPageWithData(overlayState.lat, overlayState.lng);
                 }}
               >
                 예
@@ -323,7 +325,7 @@ const MainPage = () => {
               <button
                 className="btnLargePoint"
                 onClick={() => {
-                  changeOverlayState();
+                  changeOverlayState(0, 0, false);
                 }}
               >
                 아니요
