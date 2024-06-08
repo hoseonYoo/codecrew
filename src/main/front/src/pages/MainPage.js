@@ -18,14 +18,23 @@ const MainPage = () => {
     moveToAddPage,
     moveToModifyPage,
     moveToReadPage,
+      moveToAddPageWithData
   } = useCustomMove();
   // 참가하기
   const handleParticipate = useHandleParticipate();
   // 삭제하기
   const handleDelete = useHandleDelete();
-  const [overlayState, setOverlayState] = useState(false);
-  const changeOverlayState = () => {
-    setOverlayState(!overlayState);
+  const [overlayState, setOverlayState] = useState({
+    overlayState: false,
+    lat: 0,
+    lng: 0,
+  });
+  const changeOverlayState = (lat,lng) => {
+    setOverlayState({
+        overlayState: !overlayState.overlayState,
+        lat: lat,
+        lng: lng,
+    });
   };
   // 시작하기
   const hadleStart = useHandleStart();
@@ -281,7 +290,7 @@ const MainPage = () => {
         )}
         {/* 토스트팝업 */}
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
-        {overlayState ? (
+        {overlayState.overlayState ? (
           <div className="stPopupWrap popupActive">
             {/* 닫기버튼 */}
             <img
@@ -306,7 +315,7 @@ const MainPage = () => {
               <button
                 className="btnLargePoint"
                 onClick={() => {
-                  console.log(overlayState);
+                  moveToAddPageWithData(overlayState.lat,overlayState.lng);
                 }}
               >
                 예

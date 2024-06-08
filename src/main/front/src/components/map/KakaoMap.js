@@ -33,7 +33,8 @@ const KakaoMap = ({
     const [renderCheck, setRenderCheck] = useState(false);
     const [map, setMap] = useState(null);
     const [cluster, setCluster] = useState();
-
+    // 현재 로그인 된 회원의 이메일 가져오기
+    const loginState = useSelector((state) => state.loginSlice);
 
     // 내 위치로 이동
     const moveToMyLocation = () => {
@@ -47,6 +48,8 @@ const KakaoMap = ({
             console.log("mapClickedFunc 실행");
 
             let newMapClickMarker = createMapClickMarker(mouseEvent.latLng);
+            console.log("mouseEvent.latLng.getLat() : ", mouseEvent.latLng.getLat());
+            console.log("mouseEvent.latLng.getLng() : ", mouseEvent.latLng.getLng());
             newMapClickMarker.setMap(map);
             setMapClickMarker(newMapClickMarker);
             map.panTo(mouseEvent.latLng);
@@ -59,7 +62,7 @@ const KakaoMap = ({
             }, 500); // 500ms 후에 실행
             map.setDraggable(false);
             map.setZoomable(false);
-                changeOverlayState();
+                changeOverlayState(mouseEvent.latLng.getLat(), mouseEvent.latLng.getLng());
 
     };
 
@@ -104,10 +107,13 @@ const KakaoMap = ({
         if (map!==null){
             console.log("지도 렌더링 후 실행")
 
-            // 지도 더블 클릭 이벤트 등록
-            kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
-                mapClickedFunc(mouseEvent);
-            });
+            // 로그인 시에만
+            if(loginState.email){
+                // 지도 더블 클릭 이벤트 등록
+                kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
+                    mapClickedFunc(mouseEvent);
+                });
+            }
 
             if(nowMarker!==null){
                 console.log("현위치 마커 지도에 추가")
@@ -152,7 +158,7 @@ const KakaoMap = ({
 
     // 클릭 마커 지우기
     useEffect(() => {
-        if (!overlayState&&map!=null) {
+        if (!overlayState.overlayState&&map!=null) {
             console.log("overlayState 변경됨");
             console.log(mapClickMarker)
             if (mapClickMarker != null) {
