@@ -1,4 +1,3 @@
-// useHandleParticipate.js
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
 import { API_SERVER_HOST } from "../api/memberAPI";
@@ -9,7 +8,7 @@ const useHandleParticipate = () => {
   const userEmail = loginState.email;
   const host = API_SERVER_HOST;
   // 페이지 이동을 위한 함수들
-  const { moveToLogin } = useCustomMove();
+  const { moveToLogin, moveToReadPage } = useCustomMove();
 
   const handleParticipate = async (studyId) => {
     // 사용자가 로그인 상태인지 확인
@@ -24,6 +23,7 @@ const useHandleParticipate = () => {
             email: userEmail,
           });
           console.log(response.data);
+          moveToReadPage(studyId);
           alert("스터디 참가신청이 완료되었습니다.");
         } catch (error) {
           console.error(error);

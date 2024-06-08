@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @Slf4j
@@ -80,6 +79,27 @@ public class StudyController {
         } catch (Exception e) {
             // 그 외 예외 발생 시 에러 메시지 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 참가신청 처리 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 스터디 참가 취소
+    @PostMapping("/{id}/cancelParticipation")
+    public ResponseEntity<?> participationCancel(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        String userEmail = payload.get("email");
+        if (userEmail == null || userEmail.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "이메일이 제공되지 않았습니다."));
+        }
+        try {
+            // 스터디 참가 취소 로직 구현
+            boolean result = studyService.participationCancel(id, userEmail);
+            if (result) {
+                return ResponseEntity.ok().body(Map.of("message", "스터디 참가 취소가 완료되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "참가 취소할 스터디를 찾을 수 없습니다."));
+            }
+        } catch (Exception e) {
+            // 그 외 예외 발생 시 에러 메시지 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 참가 취소 처리 중 오류가 발생했습니다."));
         }
     }
 
