@@ -33,8 +33,12 @@ public interface StudyService {
     // 스터디 참가신청
     boolean participate(Long id, String userEmail);
 
+    // 스터디 참가취소
+    boolean participationCancel(Long id, String userEmail);
+
     // 스터디 시작
     boolean startStudy(Long id);
+
 
     // 스터디 참가자 조회
 

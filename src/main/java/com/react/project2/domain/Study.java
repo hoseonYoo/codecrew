@@ -125,12 +125,19 @@ public class Study {
     public void addStudyMember(StudyMember member) {
         this.studyMemberList.add(member);
     }
+    // 스터디 참가자를 제거하는 메소드
+    public boolean removeStudyMember(String userEmail) {
+        return studyMemberList.removeIf(member -> member.getEmail().equals(userEmail));
+    }
+    // 스터디 시작하는 메소드
     public boolean getIsConfirmed() {
         return isConfirmed;
     }
     public void setIsConfirmed(boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
     }
+
+
 
 
 

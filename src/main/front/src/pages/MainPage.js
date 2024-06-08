@@ -5,6 +5,7 @@ import { API_SERVER_HOST } from "../api/studyAPI";
 import FinalKakaoMap from "../components/map/finalKakaoMap";
 import { useSelector } from "react-redux";
 import useHandleParticipate from "../hooks/useHandleParticipate";
+import useHandleParticipateCancel from "../hooks/useHandleParticipateCancel";
 import useHandleDelete from "../hooks/useHandleDelete";
 import useHandleStart from "../hooks/useHandleStart";
 import useCustomMove from "../hooks/useCustomMove";
@@ -23,28 +24,8 @@ const MainPage = () => {
   // 시작하기
   const hadleStart = useHandleStart();
 
-  const startStudy = (study) => {
-    hadleStart(study)
-      .then((result) => {
-        if (result === "SUCCESS") {
-          setPopup(false); // 성공 시 팝업을 닫습니다.
-        }
-      })
-      .catch((reason) => {
-        if (reason === "FAILURE") {
-          // 실패 처리
-        } else if (reason === "CANCELLED") {
-          // 사용자가 취소한 경우 처리
-        }
-      });
-  };
-  // 스터디탈퇴하기
-  const [isParticipated, setIsParticipated] = useState(false);
-  const checkParticipation = () => {
-    // 서버에 참가신청 여부를 확인하는 요청을 보내고 결과에 따라 상태를 업데이트합니다.
-    // 여기서는 예시로 항상 true를 설정하고 있습니다.
-    setIsParticipated(true);
-  };
+  // 참가취소(탈퇴)
+  const handleParticipateCancel = useHandleParticipateCancel();
 
   // my 아이콘 클릭시 로그인 여부에 따라 마이페이지로 이동
   const handleLogin = (moveFunction) => {
@@ -66,6 +47,7 @@ const MainPage = () => {
     memberPhone: "",
     studyDate: "",
     maxPeople: "",
+    studyMemberList: [],
   };
   const [popup, setPopup] = useState(false);
   const [study, setStudy] = useState(popupInit);
@@ -78,6 +60,8 @@ const MainPage = () => {
   // 본인 작성글 체크용
   const userEmail = loginState.email;
   const studyUserEmail = study.memberEmail;
+  // 참가자 리스트 로그인 사용자 확인용
+  const isCurrentUserAMember = study.studyMemberList && study.studyMemberList.some((member) => member.email === userEmail);
 
   // 카카오 공유하기
   useEffect(() => {
@@ -223,7 +207,7 @@ const MainPage = () => {
             <div className="stPopupContentButton">
               {!userEmail || userEmail !== studyUserEmail ? (
                 <>
-                  {isParticipated ? (
+                  {isCurrentUserAMember ? (
                     <button className="btnLargePoint">참가완료</button>
                   ) : (
                     <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
@@ -235,7 +219,7 @@ const MainPage = () => {
                 <button
                   className="btnLargePoint"
                   onClick={() => {
-                    startStudy(study);
+                    hadleStart(study);
                   }}
                 >
                   스터디시작
