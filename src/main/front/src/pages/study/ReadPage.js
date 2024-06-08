@@ -4,6 +4,7 @@ import "../../components/study/StudyMemberBlock";
 import React, { useEffect } from "react";
 import { API_SERVER_HOST } from "../../api/studyAPI";
 import useHandleParticipate from "../../hooks/useHandleParticipate";
+import useHandleParticipateCancel from "../../hooks/useHandleParticipateCancel";
 import useHandleDelete from "../../hooks/useHandleDelete";
 import useCustomMove from "../../hooks/useCustomMove";
 import useStudyData from "../../hooks/useStudyData";
@@ -30,11 +31,17 @@ const ReadPage = () => {
   // 스터디 생성자의 회원 정보 가져오기
   const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
+  // 참가자 리스트 로그인 사용자 확인용
+  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
+
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage, moveToLogin } = useCustomMove();
 
   // 참가하기
   const handleParticipate = useHandleParticipate();
+
+  // 참가취소(탈퇴)
+  const handleParticipateCancel = useHandleParticipateCancel();
 
   // 삭제하기
   const handleDelete = useHandleDelete();
@@ -153,13 +160,17 @@ const ReadPage = () => {
 
         {/* 기본 */}
         <div className="StudyJoinBtn">
-          {!userEmail || userEmail !== studyUserEmail ? (
+          {!userEmail || (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
             <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
               스터디참가
             </button>
-          ) : (
-            <button className="btnLargePoint">스터디시작</button>
+          ) : null}
+          {userEmail && userEmail !== studyUserEmail && isCurrentUserAMember && (
+            <button className="btnLargeBlack" onClick={() => handleParticipateCancel(study.id)}>
+              스터디탈퇴
+            </button>
           )}
+          {userEmail === studyUserEmail && <button className="btnLargePoint">스터디시작</button>}
         </div>
       </div>
     </BasicLayoutPage>

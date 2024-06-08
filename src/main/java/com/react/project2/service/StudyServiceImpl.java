@@ -169,6 +169,34 @@ public class StudyServiceImpl implements StudyService {
         return true;
     }
 
+    // 스터디 참가취소
+    @Override
+    public boolean participationCancel(Long id, String userEmail) {
+        // 스터디 엔티티 조회
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        // 사용자 엔티티 조회
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        // 참가자 목록에서 사용자 제거
+        boolean isRemoved = study.getStudyMemberList().removeIf(m -> m.getEmail().equals(userEmail));
+
+        if (!isRemoved) {
+            // 사용자가 참가자 목록에 없는 경우
+            log.info("해당 사용자는 참가자 목록에 없습니다.");
+            return false;
+        }
+
+        // 변경사항 저장
+        studyRepository.save(study);
+        return true;
+    }
+
+
+
+
     // 스터디 시작
     @Override
     public boolean startStudy(Long id) {

@@ -4,7 +4,8 @@
 button{
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; 
   color: #fff;
-  cursor:pointer
+  cursor:pointer;
+  transition: 0.2s;
 }
 
 /* BUTTON - STYLE */
@@ -15,11 +16,14 @@ button.btnMain{
 }
 
 button.btnLargePoint{
-  background-color: #007BFF;
+  background-color: #3395FF;
   font-size:14px;
   height: 52px;
   line-height: 52px;
   border-radius: 12px;
+}
+button.btnLargePoint:hover{
+  background-color: #007BFF;
 }
 
 button.btnLargeBlack{
@@ -29,14 +33,20 @@ button.btnLargeBlack{
   line-height: 52px;
   border-radius: 12px;
 }
+button.btnLargeBlack:hover{
+  background-color: #000;
+}
 
 button.btnMediumPoint{
-  background-color: #007BFF;
+  background-color: #3395FF;
   font-size:12px;
   height:44px;
   padding:0px 10px;
   line-height: 44px;
   border-radius: 12px;
+}
+button.btnMediumPoint:hover{
+  background-color: #007BFF;
 }
 
 button.btnMediumBlack{
@@ -47,14 +57,20 @@ button.btnMediumBlack{
   line-height: 44px;
   border-radius: 12px;
 }
+button.btnMediumBlack:hover{
+  background-color: #000;
+}
 
 button.btnSmallPoint{
-  background-color: #007BFF;
+  background-color: #3395FF;
   font-size:12px;
   height:24px;
   padding:0px 10px;
   line-height: 24px;
   border-radius: 8px;
+}
+button.btnSmallPoint:hover{
+  background-color: #007BFF;
 }
 
 button.btnSmallBlack{
@@ -65,6 +81,9 @@ button.btnSmallBlack{
   line-height: 24px;
   border-radius: 8px;
 }
+button.btnSmallBlack:hover{
+  background-color: #000;
+}
 
 button.btnSmallGrey{
   background-color: #dcdcdc;
@@ -73,6 +92,9 @@ button.btnSmallGrey{
   padding:0px 10px;
   line-height: 24px;
   border-radius: 8px;
+}
+button.btnSmallGrey:hover{
+  background-color: #999;
 }
 
 /* BUTTON - POSITION */
