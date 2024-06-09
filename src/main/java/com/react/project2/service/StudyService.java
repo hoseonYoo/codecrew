@@ -37,6 +37,7 @@ public interface StudyService {
     boolean participationCancel(Long id, String userEmail);
 
     // 스터디 참가 승인
+    boolean acceptJoin(Long id, String memberEmail);
 
     // 스터디 참가 거절
     boolean declineJoin(Long id, String memberEmail);

@@ -50,6 +50,7 @@ public class StudyMember {
     public void setEmail(String email) {
         this.email = email;
     }
+    public void setChecked(boolean checked){ this.checked = checked; }
 
 
 }
