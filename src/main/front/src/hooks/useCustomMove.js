@@ -37,8 +37,8 @@ const useCustomMove = () => {
   const moveToModifyPage = (id) => {
     navigate(`/list/modify/${id}`);
   };
-  const moveToProfilePage = () => {
-    navigate("/list/profile");
+  const moveToProfilePage = (email) => {
+    navigate(`/list/profile/${email}`);
   };
 
   // TODO 함수 작성 후 return 추가

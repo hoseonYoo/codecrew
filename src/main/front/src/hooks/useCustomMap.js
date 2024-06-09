@@ -61,6 +61,7 @@ const useCustomMap = () => {
         memberPhone: location.memberPhone,
         studyDate: location.studyDate,
         maxPeople: location.maxPeople,
+        studyMemberList: location.studyMemberList,
         clickable: true,
       };
 

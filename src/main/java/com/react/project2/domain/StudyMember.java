@@ -32,7 +32,7 @@ public class StudyMember {
     private String boardWriter; // 게시판 작성자
 
     private String boardWriterProfileImg; // 게시판 작성자 프로필 이미지
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

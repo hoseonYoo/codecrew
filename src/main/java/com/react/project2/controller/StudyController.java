@@ -106,12 +106,12 @@ public class StudyController {
     // 스터디 시작
     @PutMapping("/{id}/start")
     public ResponseEntity<?> startStudy(@PathVariable("id") Long id) {
-            boolean result = studyService.startStudy(id);
-            if (result){
-                return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));
-            }
+        boolean result = studyService.startStudy(id);
+        if (result){
+            return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));
+        }
     }
 
 
