@@ -3,11 +3,18 @@ import "../../scss/partials/StudyMemberBlock.scss";
 import useCustomMove from "../../hooks/useCustomMove";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
+import useHandleJoinAccept from "../../hooks/\buseHandleJoinAccept";
 
 const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId }) => {
   const { member, imgSrc } = useMemberProfile(email);
   const { moveToProfilePage } = useCustomMove();
-  const { handleJoinDecline } = useHandleJoinDecline(); // 훅을 여기서 호출
+  const { handleJoinDecline } = useHandleJoinDecline();
+  const { handleJoinAccept } = useHandleJoinAccept();
+
+  // 수락 버튼 클릭 핸들러
+  const onAcceptClick = () => {
+    handleJoinAccept(studyId, member.email);
+  };
 
   // 거절 버튼 클릭 핸들러
   const onDeclineClick = () => {
@@ -27,8 +34,9 @@ const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId 
         {/* userEmail과 studyUserEmail이 일치할 경우에만 버튼을 노출 */}
         {currentUserEmail === studyCreatorEmail && (
           <>
-            <button className="btnSmallPoint">수락</button>
-            {/* onClick 핸들러에 onDeclineClick 함수를 연결 */}
+            <button className="btnSmallPoint" onClick={onAcceptClick}>
+              수락
+            </button>
             <button className="btnSmallBlack" onClick={onDeclineClick}>
               거절
             </button>

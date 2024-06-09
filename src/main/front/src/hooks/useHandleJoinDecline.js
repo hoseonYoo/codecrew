@@ -8,7 +8,6 @@ const useHandleJoinDecline = () => {
   const host = API_SERVER_HOST;
 
   const handleJoinDecline = async (studyId, memberEmail) => {
-    // 사용자가 로그인 상태인지 확인
     if (userEmail) {
       const confirmCancel = window.confirm(`"${memberEmail}"님의 참가를 거절하시겠습니까?`);
       if (confirmCancel) {
