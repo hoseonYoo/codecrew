@@ -163,7 +163,9 @@ const ReadPage = () => {
           {/* 생성자 디폴트 */}
           {/* 참가자 리스트 - 컴포넌트 */}
           {study.studyMemberList &&
-            study.studyMemberList.map((member, index) => <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} />)}
+            study.studyMemberList.map((member, index) => (
+              <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} studyMemberList={study.studyMemberList} />
+            ))}
         </div>
 
         {/* 기본 */}

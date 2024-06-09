@@ -5,11 +5,14 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
 import useHandleJoinAccept from "../../hooks/\buseHandleJoinAccept";
 
-const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId }) => {
+const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId, studyMemberList }) => {
   const { member, imgSrc } = useMemberProfile(email);
   const { moveToProfilePage } = useCustomMove();
   const { handleJoinDecline } = useHandleJoinDecline();
   const { handleJoinAccept } = useHandleJoinAccept();
+
+  // 현재 멤버의 참가 상태 확인
+  const isMemberChecked = studyMemberList.some((memberItem) => memberItem.email === member.email && memberItem.checked);
 
   // 수락 버튼 클릭 핸들러
   const onAcceptClick = () => {
@@ -31,8 +34,8 @@ const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId 
         <p onClick={() => (window.location.href = `mailto:${member.email}`)}>{member.email}</p>
       </div>
       <div className="studyMemberBlockBtn">
-        {/* userEmail과 studyUserEmail이 일치할 경우에만 버튼을 노출 */}
-        {currentUserEmail === studyCreatorEmail && (
+        {/* userEmail과 studyUserEmail이 일치하고 멤버의 참가 상태가 확인되지 않았을 경우에만 수락/거절 버튼을 노출 */}
+        {currentUserEmail === studyCreatorEmail && !isMemberChecked && (
           <>
             <button className="btnSmallPoint" onClick={onAcceptClick}>
               수락
@@ -41,6 +44,12 @@ const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId 
               거절
             </button>
           </>
+        )}
+        {/* 멤버의 참가 상태가 확인되었을 경우 참가완료 버튼을 노출 */}
+        {isMemberChecked && (
+          <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
+            참가완료
+          </button>
         )}
       </div>
     </div>
