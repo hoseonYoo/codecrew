@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -125,6 +126,7 @@ public class Study {
     public void addStudyMember(StudyMember member) {
         this.studyMemberList.add(member);
     }
+
     // 스터디 참가자를 제거하는 메소드
     public boolean removeStudyMember(String userEmail) {
         return studyMemberList.removeIf(member -> member.getEmail().equals(userEmail));
@@ -136,10 +138,5 @@ public class Study {
     public void setIsConfirmed(boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
     }
-
-
-
-
-
 
 }

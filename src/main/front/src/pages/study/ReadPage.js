@@ -1,6 +1,5 @@
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
-import "../../components/study/StudyMemberBlock";
 import React, { useEffect } from "react";
 import { API_SERVER_HOST } from "../../api/studyAPI";
 import useHandleParticipate from "../../hooks/useHandleParticipate";
@@ -163,7 +162,8 @@ const ReadPage = () => {
           </div>
           {/* 생성자 디폴트 */}
           {/* 참가자 리스트 - 컴포넌트 */}
-          {study.studyMemberList && study.studyMemberList.map((member, index) => <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} />)}
+          {study.studyMemberList &&
+            study.studyMemberList.map((member, index) => <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} />)}
         </div>
 
         {/* 기본 */}

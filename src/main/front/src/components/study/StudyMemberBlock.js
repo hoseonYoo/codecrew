@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../../scss/partials/StudyMemberBlock.scss";
 import useCustomMove from "../../hooks/useCustomMove";
 import useMemberProfile from "../../hooks/useMemberProfile";
+import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
 
-const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail }) => {
+const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId }) => {
   const { member, imgSrc } = useMemberProfile(email);
-  // 클릭 이동관련
   const { moveToProfilePage } = useCustomMove();
+  const { handleJoinDecline } = useHandleJoinDecline(); // 훅을 여기서 호출
+
+  // 거절 버튼 클릭 핸들러
+  const onDeclineClick = () => {
+    handleJoinDecline(studyId, member.email);
+  };
 
   return (
     <div className="studyMemberBlockWrap">
@@ -22,7 +28,10 @@ const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail }) => {
         {currentUserEmail === studyCreatorEmail && (
           <>
             <button className="btnSmallPoint">수락</button>
-            <button className="btnSmallBlack">거절</button>
+            {/* onClick 핸들러에 onDeclineClick 함수를 연결 */}
+            <button className="btnSmallBlack" onClick={onDeclineClick}>
+              거절
+            </button>
           </>
         )}
       </div>
