@@ -96,6 +96,23 @@ div.ReadStudyUser{
     border-bottom: 0.5px solid #dcdcdc;
   }
 }
+div.ReadUserCheck{
+  width: 100%;
+  height: 32px;
+  display: block;
+  position: relative;
+  h2{
+    width: 100%;
+    height:32px;
+    line-height: 32px;
+  }
+  p{
+    display: block;
+    position: absolute;
+    top:-6px;
+    right: calc(-100% + 30px);
+  }
+}
 
 div.StudyJoinBtn{
   position: fixed;

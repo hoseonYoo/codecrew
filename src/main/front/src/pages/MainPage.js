@@ -206,9 +206,18 @@ const MainPage = () => {
                 <p>{study.studyDate}</p>
               </div>
               <div>
-                <h4>참여인원 : </h4>
-                <p>
-                  {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
+                <h4>참여확정 : </h4>
+                <p
+                  style={{
+                    color:
+                      (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 > study.maxPeople
+                        ? "#FF3333"
+                        : (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 === study.maxPeople
+                        ? "#007BFF"
+                        : "inherit", // 기본 색상
+                  }}
+                >
+                  {(study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1}
                   <span>/</span>
                   {study.maxPeople}
                 </p>

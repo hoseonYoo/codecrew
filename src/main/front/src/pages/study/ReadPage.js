@@ -135,9 +135,18 @@ const ReadPage = () => {
             <p>{study.studyDate}</p>
           </div>
           <div className="ReadText">
-            <h3>참여인원 : </h3>
-            <p>
-              {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
+            <h3>참여확정 : </h3>
+            <p
+              style={{
+                color:
+                  (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 > study.maxPeople
+                    ? "#FF3333"
+                    : (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 === study.maxPeople
+                    ? "#007BFF"
+                    : "inherit", // 기본 색상
+              }}
+            >
+              {(study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1}
               <span>/</span>
               {study.maxPeople}
             </p>
@@ -150,7 +159,23 @@ const ReadPage = () => {
         </div>
 
         <div className="ReadStudyText">
-          <h2>참가자 리스트</h2>
+          <div className="ReadUserCheck">
+            <h2>참가자 리스트</h2>
+            <p
+              style={{
+                color:
+                  (study.studyMemberList ? study.studyMemberList.length : 0) + 1 > study.maxPeople
+                    ? "#FF3333"
+                    : (study.studyMemberList ? study.studyMemberList.length : 0) + 1 === study.maxPeople
+                    ? "#007BFF"
+                    : "inherit", // 기본 색상
+              }}
+            >
+              {(study.studyMemberList ? study.studyMemberList.length : 0) + 1}
+              <span>/</span>
+              {study.maxPeople}
+            </p>
+          </div>
           {/* 생성자 디폴트 */}
           <div className="studyMemberBlockWrap">
             <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null} onClick={() => moveToProfilePage(study.memberEmail)}></div>
