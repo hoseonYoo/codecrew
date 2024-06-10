@@ -13,15 +13,7 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const {
-    moveToLogin,
-    moveToMypage,
-    moveToAddPage,
-    moveToModifyPage,
-    moveToReadPage,
-    moveToProfilePage,
-    moveToAddPageWithData,
-  } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage, moveToProfilePage, moveToAddPageWithData } = useCustomMove();
   // 참가하기
   const handleParticipate = useHandleParticipate();
   // 삭제하기
@@ -38,6 +30,7 @@ const MainPage = () => {
       lng: lng,
     });
   };
+
   // 시작하기
   const hadleStart = useHandleStart();
 
@@ -114,12 +107,7 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      <KakaoMap
-        overlayState={overlayState}
-        changeOverlayState={changeOverlayState}
-        changePopup={changePopup}
-        popupInit={popupInit}
-      />
+      <KakaoMap overlayState={overlayState} changeOverlayState={changeOverlayState} changePopup={changePopup} popupInit={popupInit} />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
@@ -217,7 +205,7 @@ const MainPage = () => {
               <div>
                 <h4>작성자 : </h4>
                 <div>
-                  <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000" }}>
+                  <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", fontWeight: "600" }}>
                     {study.memberNickname}
                   </p>
                   <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
@@ -274,43 +262,45 @@ const MainPage = () => {
         {/* 토스트팝업 */}
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
         {overlayState.overlayState ? (
-          <div className="stPopupWrap popupActive">
-            {/* 닫기버튼 */}
-            <img
-              className="stPopupClose"
-              onClick={() => {
-                changeOverlayState(0, 0, false);
-              }}
-              src="/assets/imgs/icon/ic_popup_cl.svg"
-              alt="닫기버튼"
-            />
-            {/* 컨텐츠 */}
-            <div className="stPopupContentBottom">
-              <p>여기에서 스터디 추가?</p>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-            </div>
-            <div className="stPopupContentButton">
-              <button
-                className="btnLargePoint"
-                onClick={() => {
-                  moveToAddPageWithData(overlayState.lat, overlayState.lng);
-                }}
-              >
-                예
-              </button>
-              <button
-                className="btnLargePoint"
+          <div
+            className="addPopupWrap"
+            onClick={() => {
+              changeOverlayState(0, 0, false);
+            }}
+          >
+            <div className="stPopupWrap popupActive">
+              {/* 닫기버튼 */}
+              <img
+                className="stPopupClose"
                 onClick={() => {
                   changeOverlayState(0, 0, false);
                 }}
-              >
-                아니요
-              </button>
+                src="/assets/imgs/icon/ic_popup_cl.svg"
+                alt="닫기버튼"
+              />
+              {/* 컨텐츠 */}
+              <div className="stPopupContentBottom">
+                <h3 className="addPopuph3">🧑🏻‍💻 스터디 추가</h3>
+                <p className="addPopupp">해당 위치에 스터디를 추가하시겠습니까?</p>
+              </div>
+              <div className="stPopupContentButton addPopupBtn">
+                <button
+                  className="btnLargePoint"
+                  onClick={() => {
+                    moveToAddPageWithData(overlayState.lat, overlayState.lng);
+                  }}
+                >
+                  예
+                </button>
+                <button
+                  className="btnLargePointLine"
+                  onClick={() => {
+                    changeOverlayState(0, 0, false);
+                  }}
+                >
+                  아니요
+                </button>
+              </div>
             </div>
           </div>
         ) : (
