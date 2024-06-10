@@ -13,12 +13,7 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const {
-    moveToLogin,
-    moveToMypage,
-    moveToAddPage,
-    moveToModifyPage,
-    moveToReadPage,
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage, moveToProfilePage
     moveToAddPageWithData,
   } = useCustomMove();
   // 참가하기
@@ -65,8 +60,19 @@ const MainPage = () => {
     maxPeople: "",
     studyMemberList: [],
   };
+  const userEmail = loginState.email;
   const [popup, setPopup] = useState(false);
   const [study, setStudy] = useState(popupInit);
+  const [isCurrentUserAMember, setIsCurrentUserAMember] = useState(false);
+  // study 상태가 변경될 때마다 실행됩니다.
+  useEffect(() => {
+    if (popup && study && study.studyMemberList) {
+      const isMember = study.studyMemberList.some((member) => member.email === userEmail);
+      console.log("set!");
+      setIsCurrentUserAMember(isMember);
+    }
+  }, [study, userEmail, popup]);
+
   //popupData -> study로 명칭 변경
   const changePopup = (data) => {
     setStudy(data);
@@ -74,10 +80,7 @@ const MainPage = () => {
   };
 
   // 본인 작성글 체크용
-  const userEmail = loginState.email;
   const studyUserEmail = study.memberEmail;
-  // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList && study.studyMemberList.some((member) => member.email === userEmail);
 
   // // 카카오 공유하기
   // useEffect(() => {
@@ -227,8 +230,10 @@ const MainPage = () => {
               <div>
                 <h4>작성자 : </h4>
                 <div>
-                  <p>{study.memberNickname}</p>
-                  <p className="contentEmail">{study.memberEmail}</p>
+                  <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000" }}>
+                    {study.memberNickname}
+                  </p>
+                  <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
                 </div>
               </div>
               <div>
@@ -246,20 +251,17 @@ const MainPage = () => {
               </div>
             </div>
             <div className="stPopupContentButton">
-              {!userEmail || userEmail !== studyUserEmail ? (
-                <>
-                  {isCurrentUserAMember ? (
-                    <button className="btnLargePoint">참가완료</button>
-                  ) : (
-                    <button
-                      className="btnLargePoint"
-                      onClick={() => handleParticipate(study.id)}
-                    >
-                      스터디참가
-                    </button>
-                  )}
-                </>
-              ) : (
+              {!userEmail || (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
+                <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+                  스터디참가
+                </button>
+              ) : null}
+              {userEmail && userEmail !== studyUserEmail && isCurrentUserAMember && (
+                <button className="btnLargeBlack" onClick={() => handleParticipateCancel(study.id)}>
+                  스터디탈퇴
+                </button>
+              )}
+              {userEmail === studyUserEmail && (
                 <button
                   className="btnLargePoint"
                   onClick={() => {

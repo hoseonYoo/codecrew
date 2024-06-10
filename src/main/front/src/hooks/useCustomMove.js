@@ -41,8 +41,8 @@ const useCustomMove = () => {
   const moveToModifyPage = (id) => {
     navigate(`/list/modify/${id}`);
   };
-  const moveToProfilePage = () => {
-    navigate("/list/profile");
+  const moveToProfilePage = (email) => {
+    navigate(`/list/profile/${email}`);
   };
 
 

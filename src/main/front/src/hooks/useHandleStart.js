@@ -24,7 +24,8 @@ const useHandleStart = () => {
             reject("FAILURE");
           });
       } else {
-        reject("CANCELLED");
+        console.log("스터디 취소");
+        resolve("CANCELLED");
       }
     });
   }, []);
