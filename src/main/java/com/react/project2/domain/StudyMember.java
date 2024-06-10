@@ -1,6 +1,8 @@
 package com.react.project2.domain;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +25,10 @@ public class StudyMember {
 
     private boolean checked; // 확인 여부
 
-
-
     // 대기, 수락, 거절, 탈퇴, 출석, 미출석
-
-    private String category; // 카테고리
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private MemberStatus status = MemberStatus.HOLD;
 
 
     @Override

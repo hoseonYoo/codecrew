@@ -3,8 +3,8 @@ import "../../scss/partials/StudyBlock.scss";
 import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCustomMove from "../../hooks/useCustomMove";
 import { useSelector } from "react-redux";
-import useHandleParticipate from "../../hooks/useHandleParticipate";
-import useHandleStart from "../../hooks/useHandleStart";
+import useHandleStudyMember from "../../hooks/useHandleStudyMember";
+import useHandleStudy from "../../hooks/useHandleStudy";
 
 // StudyBlock 컴포넌트 정의
 const StudyBlock = ({ studyLocation }) => {
@@ -21,9 +21,10 @@ const StudyBlock = ({ studyLocation }) => {
   const studyUserEmail = studyLocation.memberEmail;
 
   // 스터디 참가 처리를 위한 커스텀 훅 사용
-  const handleParticipate = useHandleParticipate();
+  const { handleParticipate } = useHandleStudyMember();
+
   // 스터디 시작 처리를 위한 커스텀 훅 사용
-  const handleStart = useHandleStart();
+  const handleStart = useHandleStudy();
 
   // 이미지 URL 생성 함수
   const getImageUrl = () => {

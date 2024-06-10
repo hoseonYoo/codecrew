@@ -2,8 +2,7 @@ import React from "react";
 import "../../scss/partials/StudyMemberBlock.scss";
 import useCustomMove from "../../hooks/useCustomMove";
 import useMemberProfile from "../../hooks/useMemberProfile";
-import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
-import useHandleJoinAccept from "../../hooks/useHandleJoinAccept";
+import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 
 // StudyMemberBlock 컴포넌트 정의
 const StudyMemberBlock = ({
@@ -17,10 +16,9 @@ const StudyMemberBlock = ({
   const { member, imgSrc } = useMemberProfile(email);
   // 페이지 이동 관련 커스텀 훅 사용
   const { moveToProfilePage } = useCustomMove();
-  // 스터디 참가 거절 처리를 위한 커스텀 훅 사용
-  const { handleJoinDecline } = useHandleJoinDecline();
-  // 스터디 참가 수락 처리를 위한 커스텀 훅 사용
-  const { handleJoinAccept } = useHandleJoinAccept();
+
+  // 스터디 참가 수락,거절 처리를 위한 커스텀 훅 사용
+  const { handleJoinDecline, handleJoinAccept } = useHandleStudyMember();
 
   // 현재 멤버의 참가 상태 확인
   const isMemberChecked = studyMemberList.some(
