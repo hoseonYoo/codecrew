@@ -5,13 +5,20 @@ import useCustomMap from "../../hooks/useCustomMap";
 
 const { kakao } = window;
 
-const KakaoMap = ({ overlayState, changeOverlayState, changePopup, popupInit }) => {
+const KakaoMap = ({ overlayState, changeOverlayState, changePopup }) => {
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
-  const studyLocationList = useSelector((state) => state.categorySlice.studyLocationList);
+  const studyLocationList = useSelector(
+    (state) => state.categorySlice.studyLocationList,
+  );
   const dispatch = useDispatch();
 
-  const { myLocation, myLocationMarker, clustererMarkers, createMapClickMarker } = useCustomMap();
+  const {
+    myLocation,
+    myLocationMarker,
+    clustererMarkers,
+    createMapClickMarker,
+  } = useCustomMap();
 
   const [nowMarker, setNowMarker] = useState(null);
   const [mapClickMarker, setMapClickMarker] = useState(null);
@@ -49,7 +56,11 @@ const KakaoMap = ({ overlayState, changeOverlayState, changePopup, popupInit }) 
       // }, 500); // 500ms 후에 실행
       map.setDraggable(false);
       map.setZoomable(false);
-      changeOverlayState(mouseEvent.latLng.getLat(), mouseEvent.latLng.getLng(), true);
+      changeOverlayState(
+        mouseEvent.latLng.getLat(),
+        mouseEvent.latLng.getLng(),
+        true,
+      );
       kakao.maps.event.removeListener(map, "dblclick", mapClickedFunc);
     }
   };
