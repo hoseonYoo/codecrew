@@ -1,11 +1,11 @@
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
-import "../../components/study/StudyMemberBlock";
 import React, { useEffect } from "react";
 import { API_SERVER_HOST } from "../../api/studyAPI";
 import useHandleParticipate from "../../hooks/useHandleParticipate";
 import useHandleParticipateCancel from "../../hooks/useHandleParticipateCancel";
 import useHandleDelete from "../../hooks/useHandleDelete";
+import useHandleStart from "../../hooks/useHandleStart";
 import useCustomMove from "../../hooks/useCustomMove";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
@@ -45,6 +45,9 @@ const ReadPage = () => {
 
   // 삭제하기
   const handleDelete = useHandleDelete();
+
+  // 시작하기
+  const hadleStart = useHandleStart();
 
   // 카카오 공유하기
   useEffect(() => {
@@ -119,8 +122,12 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>작성자 : </h3>
             <div>
-              <p>{study.memberNickname}</p>
-              <p>{study.memberEmail}</p>
+              <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}>
+                {study.memberNickname}
+              </p>
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)} style={{ cursor: "pointer" }}>
+                {study.memberEmail}
+              </p>
             </div>
           </div>
           <div className="ReadText">
@@ -145,17 +152,20 @@ const ReadPage = () => {
         <div className="ReadStudyText">
           <h2>참가자 리스트</h2>
           {/* 생성자 디폴트 */}
-          <div className="studyMemberBlockWrap" onClick={moveToProfilePage}>
-            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null}></div>
+          <div className="studyMemberBlockWrap">
+            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null} onClick={() => moveToProfilePage(study.memberEmail)}></div>
             <div className="studyMemberBlockTitle">
-              <h3>{study.memberNickname}</h3>
-              <p>{study.memberEmail}</p>
+              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
             </div>
             <div className="studyMemberBlockBtn"></div>
           </div>
           {/* 생성자 디폴트 */}
           {/* 참가자 리스트 - 컴포넌트 */}
-          {study.studyMemberList && study.studyMemberList.map((member, index) => <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} />)}
+          {study.studyMemberList &&
+            study.studyMemberList.map((member, index) => (
+              <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} studyMemberList={study.studyMemberList} />
+            ))}
         </div>
 
         {/* 기본 */}
@@ -170,7 +180,16 @@ const ReadPage = () => {
               스터디탈퇴
             </button>
           )}
-          {userEmail === studyUserEmail && <button className="btnLargePoint">스터디시작</button>}
+          {userEmail === studyUserEmail && (
+            <button
+              className="btnLargePoint"
+              onClick={() => {
+                hadleStart(study);
+              }}
+            >
+              스터디시작
+            </button>
+          )}
         </div>
       </div>
     </BasicLayoutPage>
