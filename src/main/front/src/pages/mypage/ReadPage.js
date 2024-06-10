@@ -80,6 +80,9 @@ const ReadPage = () => {
                     ) : null}
                   </React.Fragment>
                 ))}
+              {member.favoriteList.length === 0 ? (
+                <p>설정한 관심스택이 없습니다.</p>
+              ) : null}
             </div>
           </div>
           <div className="MyReadText">
