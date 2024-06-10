@@ -34,27 +34,30 @@ const AddPage = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
+      let roadAddress = "";
       if (lat > 0 && lng > 0) {
         const geocoder = new kakao.maps.services.Geocoder();
         const result = await new Promise((resolve, reject) => {
           geocoder.coord2Address(lng, lat, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
+              console.log(result);
+              if (result[0].road_address === null) {
+                roadAddress = result[0].address.address_name;
+              } else {
+                roadAddress = result[0].road_address.address_name;
+              }
+              setStudy((prevStudy) => ({
+                ...prevStudy,
+                location: roadAddress,
+                locationX: lat,
+                locationY: lng,
+              }));
               resolve(result);
-              console.log("주소값");
             } else {
               reject(status);
             }
           });
         });
-
-        let roadAddress = result[0].road_address.address_name;
-        console.log(roadAddress);
-        setStudy((prevStudy) => ({
-          ...prevStudy,
-          location: roadAddress,
-          locationX: lat,
-          locationY: lng,
-        }));
       }
     };
 

@@ -5,58 +5,80 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
 import useHandleJoinAccept from "../../hooks/useHandleJoinAccept";
 
-const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId, studyMemberList }) => {
+// StudyMemberBlock 컴포넌트 정의
+const StudyMemberBlock = ({
+  email,
+  currentUserEmail,
+  studyCreatorEmail,
+  studyId,
+  studyMemberList,
+}) => {
+  // 멤버 프로필 정보와 이미지 URL을 가져오는 커스텀 훅 사용
   const { member, imgSrc } = useMemberProfile(email);
+  // 페이지 이동 관련 커스텀 훅 사용
   const { moveToProfilePage } = useCustomMove();
+  // 스터디 참가 거절 처리를 위한 커스텀 훅 사용
   const { handleJoinDecline } = useHandleJoinDecline();
+  // 스터디 참가 수락 처리를 위한 커스텀 훅 사용
   const { handleJoinAccept } = useHandleJoinAccept();
 
   // 현재 멤버의 참가 상태 확인
-  const isMemberChecked = studyMemberList.some((memberItem) => memberItem.email === member.email && memberItem.checked);
+  const isMemberChecked = studyMemberList.some(
+    (memberItem) => memberItem.email === member.email && memberItem.checked,
+  );
 
   // 수락 버튼 클릭 핸들러
   const onAcceptClick = () => {
     handleJoinAccept(studyId, member.email);
   };
-
   // 거절 버튼 클릭 핸들러
   const onDeclineClick = () => {
     handleJoinDecline(studyId, member.email);
   };
 
+  // 버튼 렌더링 함수
+  const renderButton = () => {
+    if (currentUserEmail === studyCreatorEmail && !isMemberChecked) {
+      return (
+        <>
+          <button className="btnSmallPoint" onClick={onAcceptClick}>
+            수락
+          </button>
+          <button className="btnSmallBlack" onClick={onDeclineClick}>
+            거절
+          </button>
+        </>
+      );
+    } else if (isMemberChecked) {
+      return (
+        <button
+          className="btnSmallGrey"
+          style={{ marginTop: "16px", cursor: "default" }}
+        >
+          참가완료
+        </button>
+      );
+    }
+    return null;
+  };
+
+  // 컴포넌트 렌더링
   return (
     <div className="studyMemberBlockWrap">
-      {/* 이미지가 있을 경우 배경 이미지로 설정 */}
-      <div className="studyMemberBlockImg" style={imgSrc ? { backgroundImage: `url(${imgSrc})` } : null} onClick={() => moveToProfilePage(member.email)}></div>
+      <div
+        className="studyMemberBlockImg"
+        style={imgSrc ? { backgroundImage: `url(${imgSrc})` } : null}
+        onClick={() => moveToProfilePage(member.email)}
+      ></div>
       <div className="studyMemberBlockTitle">
-        {/* 멤버의 닉네임과 이메일을 동적으로 렌더링 */}
-        <h3 onClick={() => moveToProfilePage(member.email)}>{member.nickname}</h3>
-        <p onClick={() => (window.location.href = `mailto:${member.email}`)}>{member.email}</p>
+        <h3 onClick={() => moveToProfilePage(member.email)}>
+          {member.nickname}
+        </h3>
+        <p onClick={() => (window.location.href = `mailto:${member.email}`)}>
+          {member.email}
+        </p>
       </div>
-      <div className="studyMemberBlockBtn">
-        {/* userEmail과 studyUserEmail이 일치하고 멤버의 참가 상태가 확인되지 않았을 경우에만 수락/거절 버튼을 노출 */}
-        {currentUserEmail !== studyCreatorEmail && !isMemberChecked && (
-          <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
-            수락대기
-          </button>
-        )}
-        {currentUserEmail === studyCreatorEmail && !isMemberChecked && (
-          <>
-            <button className="btnSmallPoint" onClick={onAcceptClick}>
-              수락
-            </button>
-            <button className="btnSmallBlack" onClick={onDeclineClick}>
-              거절
-            </button>
-          </>
-        )}
-        {/* 멤버의 참가 상태가 확인되었을 경우 참가완료 버튼을 노출 */}
-        {isMemberChecked && (
-          <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
-            참가완료
-          </button>
-        )}
-      </div>
+      <div className="studyMemberBlockBtn">{renderButton()}</div>
     </div>
   );
 };
