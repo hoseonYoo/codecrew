@@ -2,7 +2,7 @@ import React from "react";
 import "../../scss/pages/MyReadPage.scss";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import useMemberProfile from "../../hooks/useMemberProfile";
-import { API_SERVER_HOST } from "../../api/studyAPI";
+import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCategories from "../../hooks/useCategories";
 import { useParams } from "react-router-dom";
 
@@ -19,7 +19,10 @@ const ProfilePage = () => {
     <BasicLayoutPage headerTitle="프로필">
       <div>
         <div className="MyBlockWrap">
-          <div className="MyReadImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div>
+          <div
+            className="MyReadImg"
+            style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}
+          ></div>
           <div className="MyReadTitle">
             <h3>{member.nickname}</h3>
             <p>{member.email}</p>
@@ -32,12 +35,22 @@ const ProfilePage = () => {
             <h3>관심스택 : </h3>
             <div>
               {Object.entries(categories).length > 0 &&
-                Object.entries(categories).map(([key, value], index) => <React.Fragment key={index}>{member.favoriteList.includes(key) ? <span>{value} </span> : null}</React.Fragment>)}
+                Object.entries(categories).map(([key, value], index) => (
+                  <React.Fragment key={index}>
+                    {member.favoriteList.includes(key) ? (
+                      <span>{value} </span>
+                    ) : null}
+                  </React.Fragment>
+                ))}
             </div>
           </div>
           <div className="MyReadText">
             <h3>링 크 : </h3>
-            {member.memberLink ? <p>{member.memberLink}</p> : <p>등록한 링크가 없습니다.</p>}
+            {member.memberLink ? (
+              <p>{member.memberLink}</p>
+            ) : (
+              <p>등록한 링크가 없습니다.</p>
+            )}
           </div>
           <div className="MyReadText">
             <h3>모임횟수 : </h3>
@@ -48,7 +61,11 @@ const ProfilePage = () => {
         </div>
         <div className="MyReadUserText">
           <h2>사용자 소개</h2>
-          {member.introduction ? <p>{member.introduction}</p> : <p>사용자 소개가 없습니다.</p>}
+          {member.introduction ? (
+            <p>{member.introduction}</p>
+          ) : (
+            <p>사용자 소개가 없습니다.</p>
+          )}
         </div>
       </div>
     </BasicLayoutPage>

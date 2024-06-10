@@ -31,6 +31,10 @@ const useCustomMove = () => {
   const moveToAddPage = () => {
     navigate("/list/add");
   };
+
+  const moveToAddPageWithData = (lat, lng) => {
+    navigate(`/list/add/${lat}/${lng}`);
+  };
   const moveToReadPage = (id) => {
     navigate(`/list/${id}`);
   };
@@ -41,7 +45,8 @@ const useCustomMove = () => {
     navigate(`/list/profile/${email}`);
   };
 
+
   // TODO 함수 작성 후 return 추가
-  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage, moveToProfilePage, moveToModifyPage, moveToReadPage };
+  return { moveToLogin, moveToMypage, moveToModify, moveToMain, moveToAddPage, moveToProfilePage, moveToModifyPage, moveToReadPage, moveToAddPageWithData }
 };
 export default useCustomMove;

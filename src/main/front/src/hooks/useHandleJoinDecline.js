@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 
 const useHandleJoinDecline = () => {
   const loginState = useSelector((state) => state.loginSlice);
@@ -9,12 +9,17 @@ const useHandleJoinDecline = () => {
 
   const handleJoinDecline = async (studyId, memberEmail) => {
     if (userEmail) {
-      const confirmCancel = window.confirm(`"${memberEmail}"님의 참가를 거절하시겠습니까?`);
+      const confirmCancel = window.confirm(
+        `"${memberEmail}"님의 참가를 거절하시겠습니까?`,
+      );
       if (confirmCancel) {
         try {
-          const response = await jwtAxios.post(`${host}/api/study/${studyId}/declineJoin`, {
-            email: memberEmail,
-          });
+          const response = await jwtAxios.post(
+            `${host}/api/study/${studyId}/declineJoin`,
+            {
+              email: memberEmail,
+            },
+          );
           console.log(response.data);
         } catch (error) {
           console.error(error);
