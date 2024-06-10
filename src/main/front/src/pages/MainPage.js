@@ -13,15 +13,7 @@ const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   // 페이지 이동을 위한 함수들
-  const {
-    moveToLogin,
-    moveToMypage,
-    moveToAddPage,
-    moveToModifyPage,
-    moveToReadPage,
-    moveToProfilePage,
-    moveToAddPageWithData,
-  } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToModifyPage, moveToReadPage, moveToProfilePage, moveToAddPageWithData } = useCustomMove();
   // 참가하기
   const handleParticipate = useHandleParticipate();
   // 삭제하기
@@ -38,6 +30,7 @@ const MainPage = () => {
       lng: lng,
     });
   };
+
   // 시작하기
   const hadleStart = useHandleStart();
 
@@ -73,9 +66,7 @@ const MainPage = () => {
   // study 상태가 변경될 때마다 실행됩니다.
   useEffect(() => {
     if (popup && study && study.studyMemberList) {
-      const isMember = study.studyMemberList.some(
-        (member) => member.email === userEmail,
-      );
+      const isMember = study.studyMemberList.some((member) => member.email === userEmail);
       console.log("set!");
       setIsCurrentUserAMember(isMember);
     }
@@ -116,12 +107,7 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      <KakaoMap
-        overlayState={overlayState}
-        changeOverlayState={changeOverlayState}
-        changePopup={changePopup}
-        popupInit={popupInit}
-      />
+      <KakaoMap overlayState={overlayState} changeOverlayState={changeOverlayState} changePopup={changePopup} popupInit={popupInit} />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
@@ -158,29 +144,16 @@ const MainPage = () => {
             />
             {/* 컨텐츠 */}
             <div className="stPopupContentTop">
-              <div
-                className="stPopupImg"
-                onClick={() => moveToReadPage(study.id)}
-                style={{
-                  backgroundImage: `url(${study.thImg})`,
-                  cursor: "pointer",
-                }}
-              ></div>
+              <div className="stPopupImg" onClick={() => moveToReadPage(study.id)} style={{ backgroundImage: `url(${study.thImg})`, cursor: "pointer" }}></div>
               <div className="stPopupTitle">
-                <h3
-                  onClick={() => moveToReadPage(study.id)}
-                  style={{ cursor: "pointer" }}
-                >
+                <h3 onClick={() => moveToReadPage(study.id)} style={{ cursor: "pointer" }}>
                   {study.title}
                 </h3>
                 <p
                   onClick={() => {
-                    const confirmOpen =
-                      window.confirm("카카오지도를 여시겠습니까?");
+                    const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
                     if (confirmOpen) {
-                      const encodedLocation = encodeURIComponent(
-                        study.location,
-                      );
+                      const encodedLocation = encodeURIComponent(study.location);
                       const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
                       window.open(kakaoMapUrl, "_blank");
                     }
@@ -206,19 +179,13 @@ const MainPage = () => {
                       연락하기
                     </button>
 
-                    <button
-                      className="btnSmallBlack"
-                      onClick={handleShareClick}
-                    >
+                    <button className="btnSmallBlack" onClick={handleShareClick}>
                       공유하기
                     </button>
                   </>
                 ) : (
                   <>
-                    <button
-                      className="btnSmallPoint"
-                      onClick={() => moveToModifyPage(study.id)}
-                    >
+                    <button className="btnSmallPoint" onClick={() => moveToModifyPage(study.id)}>
                       수정하기
                     </button>
                     <button
@@ -238,19 +205,10 @@ const MainPage = () => {
               <div>
                 <h4>작성자 : </h4>
                 <div>
-                  <p
-                    onClick={() => moveToProfilePage(study.memberEmail)}
-                    style={{ fontSize: "15px", color: "#000" }}
-                  >
+                  <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", fontWeight: "600" }}>
                     {study.memberNickname}
                   </p>
-                  <p
-                    onClick={() =>
-                      (window.location.href = `mailto:${study.memberEmail}`)
-                    }
-                  >
-                    {study.memberEmail}
-                  </p>
+                  <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
                 </div>
               </div>
               <div>
@@ -258,35 +216,34 @@ const MainPage = () => {
                 <p>{study.studyDate}</p>
               </div>
               <div>
-                <h4>참여인원 : </h4>
-                <p>
-                  {(study.studyMemberList ? study.studyMemberList.length : 0) +
-                    1}
+                <h4>참여확정 : </h4>
+                <p
+                  style={{
+                    color:
+                      (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 > study.maxPeople
+                        ? "#FF3333"
+                        : (study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1 === study.maxPeople
+                        ? "#007BFF"
+                        : "inherit", // 기본 색상
+                  }}
+                >
+                  {(study.studyMemberList ? study.studyMemberList.filter((member) => member.checked).length : 0) + 1}
                   <span>/</span>
                   {study.maxPeople}
                 </p>
               </div>
             </div>
             <div className="stPopupContentButton">
-              {!userEmail ||
-              (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
-                <button
-                  className="btnLargePoint"
-                  onClick={() => handleParticipate(study.id)}
-                >
+              {!userEmail || (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
+                <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
                   스터디참가
                 </button>
               ) : null}
-              {userEmail &&
-                userEmail !== studyUserEmail &&
-                isCurrentUserAMember && (
-                  <button
-                    className="btnLargeBlack"
-                    onClick={() => handleParticipateCancel(study.id)}
-                  >
-                    스터디탈퇴
-                  </button>
-                )}
+              {userEmail && userEmail !== studyUserEmail && isCurrentUserAMember && (
+                <button className="btnLargeBlack" onClick={() => handleParticipateCancel(study.id)}>
+                  스터디탈퇴
+                </button>
+              )}
               {userEmail === studyUserEmail && (
                 <button
                   className="btnLargePoint"
@@ -305,43 +262,45 @@ const MainPage = () => {
         {/* 토스트팝업 */}
         {/* popupActive <- 클래스 추가시 팝업 노출 */}
         {overlayState.overlayState ? (
-          <div className="stPopupWrap popupActive">
-            {/* 닫기버튼 */}
-            <img
-              className="stPopupClose"
-              onClick={() => {
-                changeOverlayState(0, 0, false);
-              }}
-              src="/assets/imgs/icon/ic_popup_cl.svg"
-              alt="닫기버튼"
-            />
-            {/* 컨텐츠 */}
-            <div className="stPopupContentBottom">
-              <p>여기에서 스터디 추가?</p>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-            </div>
-            <div className="stPopupContentButton">
-              <button
-                className="btnLargePoint"
-                onClick={() => {
-                  moveToAddPageWithData(overlayState.lat, overlayState.lng);
-                }}
-              >
-                예
-              </button>
-              <button
-                className="btnLargePoint"
+          <div
+            className="addPopupWrap"
+            onClick={() => {
+              changeOverlayState(0, 0, false);
+            }}
+          >
+            <div className="stPopupWrap popupActive">
+              {/* 닫기버튼 */}
+              <img
+                className="stPopupClose"
                 onClick={() => {
                   changeOverlayState(0, 0, false);
                 }}
-              >
-                아니요
-              </button>
+                src="/assets/imgs/icon/ic_popup_cl.svg"
+                alt="닫기버튼"
+              />
+              {/* 컨텐츠 */}
+              <div className="stPopupContentBottom">
+                <h3 className="addPopuph3">🧑🏻‍💻 스터디 추가</h3>
+                <p className="addPopupp">해당 위치에 스터디를 추가하시겠습니까?</p>
+              </div>
+              <div className="stPopupContentButton addPopupBtn">
+                <button
+                  className="btnLargePoint"
+                  onClick={() => {
+                    moveToAddPageWithData(overlayState.lat, overlayState.lng);
+                  }}
+                >
+                  예
+                </button>
+                <button
+                  className="btnLargePointLine"
+                  onClick={() => {
+                    changeOverlayState(0, 0, false);
+                  }}
+                >
+                  아니요
+                </button>
+              </div>
             </div>
           </div>
         ) : (
