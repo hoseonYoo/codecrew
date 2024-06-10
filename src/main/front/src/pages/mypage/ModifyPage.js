@@ -103,7 +103,6 @@ const ModifyPage = () => {
 
   // 입력값 예외 처리후 실제 회원 정보 실제 저장 하는 함수
   const saveModify = async () => {
-    // TODO 분기 처리
     if (!imgSrc.includes(member.profileImg)) {
       member.profileImg = await saveFile();
     }
