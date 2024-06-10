@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 import useCustomMove from "../hooks/useCustomMove";
 
 const useHandleParticipateCancel = () => {
@@ -19,9 +19,12 @@ const useHandleParticipateCancel = () => {
       // 사용자가 '확인'을 클릭한 경우에만 참가 취소 로직을 실행
       if (confirmCancel) {
         try {
-          const response = await jwtAxios.post(`${host}/api/study/${studyId}/cancelParticipation`, {
-            email: userEmail,
-          });
+          const response = await jwtAxios.post(
+            `${host}/api/study/${studyId}/cancelParticipation`,
+            {
+              email: userEmail,
+            },
+          );
           console.log(response.data);
           alert("스터디 참가 취소가 완료되었습니다.");
           moveToMain();

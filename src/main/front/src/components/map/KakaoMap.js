@@ -66,6 +66,7 @@ const KakaoMap = ({
         mouseEvent.latLng.getLng(),
         true,
       );
+      kakao.maps.event.removeListener(map, "dblclick", mapClickedFunc);
     }
   };
 
@@ -113,9 +114,10 @@ const KakaoMap = ({
       // 로그인 시에만
       if (loginState.email) {
         // 지도 더블 클릭 이벤트 등록
-        kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
-          mapClickedFunc(mouseEvent);
-        });
+        /*kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
+            mapClickedFunc(mouseEvent);
+          });*/
+        kakao.maps.event.addListener(map, "dblclick", mapClickedFunc);
       }
 
       if (nowMarker !== null) {
@@ -166,13 +168,14 @@ const KakaoMap = ({
 
   const resetMarker = () => {
     if (!overlayState.overlayState && map != null) {
-      console.log("overlayState 변경됨");
+      console.log("overlayState가 false일때 실행됨", overlayState.overlayState);
       console.log(mapClickMarker);
       if (mapClickMarker != null) {
         mapClickMarker.setMap(null);
       }
       map.setDraggable(true);
       map.setZoomable(true);
+      kakao.maps.event.addListener(map, "dblclick", mapClickedFunc);
     }
   };
 
@@ -204,4 +207,5 @@ const KakaoMap = ({
     </>
   );
 };
+
 export default KakaoMap;
