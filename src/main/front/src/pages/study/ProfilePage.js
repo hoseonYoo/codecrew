@@ -74,7 +74,7 @@ const ProfilePage = () => {
         <div className="MyReadUserText">
           <h2>사용자 링크</h2>
           {member.memberLink ? (
-            <p style={{ color: "#555", cursor: "pointer" }} onClick={() => window.open(member.memberLink, "_blank")}>
+            <p style={{ color: "#555", cursor: "pointer" }} onClick={() => window.open(`https://${member.memberLink}`, "_blank")}>
               {member.memberLink}
             </p>
           ) : (
