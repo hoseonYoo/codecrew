@@ -1,7 +1,6 @@
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
 import React, { useEffect } from "react";
-import { API_SERVER_HOST } from "../../api/studyAPI";
 import useHandleParticipate from "../../hooks/useHandleParticipate";
 import useHandleParticipateCancel from "../../hooks/useHandleParticipateCancel";
 import useHandleDelete from "../../hooks/useHandleDelete";
@@ -12,8 +11,6 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import StudyMemberBlock from "../../components/study/StudyMemberBlock";
-
-const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const { id } = useParams();
@@ -29,10 +26,13 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } =
+    useMemberProfile(studyUserEmail);
 
   // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
+  const isCurrentUserAMember = study.studyMemberList.some(
+    (member) => member.email === userEmail,
+  );
 
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage, moveToLogin } = useCustomMove();
@@ -77,12 +77,20 @@ const ReadPage = () => {
     <BasicLayoutPage headerTitle="스터디">
       <div>
         <div className="ReadContent">
-          <div className="ReadImg" style={imgStudySrc !== "" ? { backgroundImage: `url(${imgStudySrc})` } : null}></div>
+          <div
+            className="ReadImg"
+            style={
+              imgStudySrc !== ""
+                ? { backgroundImage: `url(${imgStudySrc})` }
+                : null
+            }
+          ></div>
           <div className="ReadTitle">
             <h3>{study.title}</h3>
             <p
               onClick={() => {
-                const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");
+                const confirmOpen =
+                  window.confirm("카카오지도를 여시겠습니까?");
                 if (confirmOpen) {
                   const encodedLocation = encodeURIComponent(study.location);
                   const kakaoMapUrl = `https://map.kakao.com/?q=${encodedLocation}`;
@@ -98,7 +106,12 @@ const ReadPage = () => {
           <div className="ReadBtn">
             {!userEmail || userEmail !== studyUserEmail ? (
               <>
-                <button className="btnSmallPoint" onClick={() => (window.location.href = `tel:${study.memberPhone}`)}>
+                <button
+                  className="btnSmallPoint"
+                  onClick={() =>
+                    (window.location.href = `tel:${study.memberPhone}`)
+                  }
+                >
                   연락하기
                 </button>
                 <button className="btnSmallBlack" onClick={handleShareClick}>
@@ -107,10 +120,16 @@ const ReadPage = () => {
               </>
             ) : (
               <>
-                <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
+                <button
+                  className="btnSmallPoint"
+                  onClick={() => moveToModifyPage(id)}
+                >
                   수정하기
                 </button>
-                <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
+                <button
+                  className="btnSmallBlack"
+                  onClick={() => handleDelete(study.id, study.memberEmail)}
+                >
                   삭제하기
                 </button>
               </>
@@ -122,10 +141,18 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>작성자 : </h3>
             <div>
-              <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}>
+              <p
+                onClick={() => moveToProfilePage(study.memberEmail)}
+                style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}
+              >
                 {study.memberNickname}
               </p>
-              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)} style={{ cursor: "pointer" }}>
+              <p
+                onClick={() =>
+                  (window.location.href = `mailto:${study.memberEmail}`)
+                }
+                style={{ cursor: "pointer" }}
+              >
                 {study.memberEmail}
               </p>
             </div>
@@ -153,10 +180,26 @@ const ReadPage = () => {
           <h2>참가자 리스트</h2>
           {/* 생성자 디폴트 */}
           <div className="studyMemberBlockWrap">
-            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null} onClick={() => moveToProfilePage(study.memberEmail)}></div>
+            <div
+              className="studyMemberBlockImg"
+              style={
+                studyMemberImgSrc
+                  ? { backgroundImage: `url(${studyMemberImgSrc})` }
+                  : null
+              }
+              onClick={() => moveToProfilePage(study.memberEmail)}
+            ></div>
             <div className="studyMemberBlockTitle">
-              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
-              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
+              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>
+                {study.memberNickname}
+              </h3>
+              <p
+                onClick={() =>
+                  (window.location.href = `mailto:${study.memberEmail}`)
+                }
+              >
+                {study.memberEmail}
+              </p>
             </div>
             <div className="studyMemberBlockBtn"></div>
           </div>
@@ -164,22 +207,38 @@ const ReadPage = () => {
           {/* 참가자 리스트 - 컴포넌트 */}
           {study.studyMemberList &&
             study.studyMemberList.map((member, index) => (
-              <StudyMemberBlock key={index} email={member.email} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} studyMemberList={study.studyMemberList} />
+              <StudyMemberBlock
+                key={index}
+                email={member.email}
+                currentUserEmail={userEmail}
+                studyCreatorEmail={studyUserEmail}
+                studyId={study.id}
+                studyMemberList={study.studyMemberList}
+              />
             ))}
         </div>
 
         {/* 기본 */}
         <div className="StudyJoinBtn">
-          {!userEmail || (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
-            <button className="btnLargePoint" onClick={() => handleParticipate(study.id)}>
+          {!userEmail ||
+          (userEmail !== studyUserEmail && !isCurrentUserAMember) ? (
+            <button
+              className="btnLargePoint"
+              onClick={() => handleParticipate(study.id)}
+            >
               스터디참가
             </button>
           ) : null}
-          {userEmail && userEmail !== studyUserEmail && isCurrentUserAMember && (
-            <button className="btnLargeBlack" onClick={() => handleParticipateCancel(study.id)}>
-              스터디탈퇴
-            </button>
-          )}
+          {userEmail &&
+            userEmail !== studyUserEmail &&
+            isCurrentUserAMember && (
+              <button
+                className="btnLargeBlack"
+                onClick={() => handleParticipateCancel(study.id)}
+              >
+                스터디탈퇴
+              </button>
+            )}
           {userEmail === studyUserEmail && (
             <button
               className="btnLargePoint"

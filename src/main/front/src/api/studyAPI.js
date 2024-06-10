@@ -1,9 +1,6 @@
 import axios from "axios";
 import jwtAxios from "../util/jwtUtil";
-
-// export const API_SERVER_HOST = "http://192.168.0.244:8080";
-// export const API_SERVER_HOST = "http://192.168.219.177:8080";
-export const API_SERVER_HOST = "http://localhost:8080";
+import { API_SERVER_HOST } from "./memberAPI";
 
 const host = `${API_SERVER_HOST}/api/study`;
 

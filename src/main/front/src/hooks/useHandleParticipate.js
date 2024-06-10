@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 import useCustomMove from "../hooks/useCustomMove";
 
 const useHandleParticipate = () => {

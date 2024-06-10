@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 
 // useHandleStart.js
 const useHandleStart = () => {

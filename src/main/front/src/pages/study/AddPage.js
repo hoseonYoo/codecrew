@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { postAdd } from "../../api/studyAPI";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
@@ -9,6 +9,8 @@ import useCategories from "../../hooks/useCategories";
 import useProfileImage from "../../hooks/useProfileImage";
 import useCharacterCheck from "../../hooks/useCharactercheck";
 import useCustomMove from "../../hooks/useCustomMove";
+import { useParams } from "react-router-dom";
+
 const { kakao } = window;
 
 const host = API_SERVER_HOST;
@@ -28,6 +30,37 @@ const initState = {
   studyMemberList: [],
 };
 const AddPage = () => {
+  const { lat, lng } = useParams();
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (lat > 0 && lng > 0) {
+        const geocoder = new kakao.maps.services.Geocoder();
+        const result = await new Promise((resolve, reject) => {
+          geocoder.coord2Address(lng, lat, function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              resolve(result);
+              console.log("주소값");
+            } else {
+              reject(status);
+            }
+          });
+        });
+
+        let roadAddress = result[0].road_address.address_name;
+        console.log(roadAddress);
+        setStudy((prevStudy) => ({
+          ...prevStudy,
+          location: roadAddress,
+          locationX: lat,
+          locationY: lng,
+        }));
+      }
+    };
+
+    fetchAddress();
+  }, []);
+
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
   // 현재 로그인 된 회원의 이메일 가져오기
@@ -191,7 +224,10 @@ const AddPage = () => {
       <BasicLayoutPage headerTitle="스터디추가">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+            <div
+              className="StudyAddImg"
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            >
               <label htmlFor="fileInput">
                 추가
                 <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -209,11 +245,26 @@ const AddPage = () => {
                 onChange={handleChangeStudy}
               />
             </div>
-            <div onClick={handleAddressSearchClick}>
+            <div
+              // onClick={handleAddressSearchClick}
+              onClick={lat ? () => {} : handleAddressSearchClick}
+            >
               <h3>주소</h3>
-              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+              <input
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
 
-              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
+              <img
+                className="AdressSearch"
+                src={
+                  process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"
+                }
+                alt="searchIcon"
+              />
             </div>
             <div>
               <h3>참여날짜</h3>
@@ -224,12 +275,18 @@ const AddPage = () => {
                 placeholder="참여일을 입력해주세요."
                 onChange={handleChangeStudy}
                 min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
+                max={new Date(new Date().getTime() + 12096e5)
+                  .toISOString()
+                  .substring(0, 16)}
               />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -239,7 +296,11 @@ const AddPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (

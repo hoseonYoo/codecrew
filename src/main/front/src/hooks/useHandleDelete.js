@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "../api/studyAPI";
+import { API_SERVER_HOST } from "../api/memberAPI";
 
 const useHandleDelete = () => {
   const navigate = useNavigate();
@@ -15,10 +15,13 @@ const useHandleDelete = () => {
       const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
       if (confirmDelete) {
         try {
-          const response = await jwtAxios.delete(`${host}/api/study/${studyId}`);
+          const response = await jwtAxios.delete(
+            `${host}/api/study/${studyId}`,
+          );
           console.log(response.data);
           alert("스터디 모임이 삭제되었습니다.");
           navigate("/"); // 메인 페이지로 리다이렉트
+          return "success";
         } catch (error) {
           console.error(error);
           alert("삭제 중 오류가 발생했습니다.");
