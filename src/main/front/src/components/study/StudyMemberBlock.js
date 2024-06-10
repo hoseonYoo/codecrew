@@ -3,7 +3,7 @@ import "../../scss/partials/StudyMemberBlock.scss";
 import useCustomMove from "../../hooks/useCustomMove";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import useHandleJoinDecline from "../../hooks/useHandleJoinDecline";
-import useHandleJoinAccept from "../../hooks/\buseHandleJoinAccept";
+import useHandleJoinAccept from "../../hooks/useHandleJoinAccept";
 
 const StudyMemberBlock = ({ email, currentUserEmail, studyCreatorEmail, studyId, studyMemberList }) => {
   const { member, imgSrc } = useMemberProfile(email);
