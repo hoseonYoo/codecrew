@@ -24,7 +24,7 @@ const useHandleParticipate = () => {
           });
           console.log(response.data);
           moveToReadPage(studyId);
-          alert("스터디 참가신청이 완료되었습니다.");
+          alert("참가신청이 완료되었습니다. 크루가 수락 후 참가완료상태로 변경됩니다.");
         } catch (error) {
           console.error(error);
           alert("스터디 참가신청이 실패하였습니다.");

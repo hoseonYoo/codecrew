@@ -57,6 +57,7 @@ const MainPage = () => {
     memberPhone: "",
     studyDate: "",
     maxPeople: "",
+    isConfirmed: "",
     studyMemberList: [],
   };
   const userEmail = loginState.email;
@@ -112,6 +113,7 @@ const MainPage = () => {
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
           <button
+            className="btnLargePoint"
             onClick={() => {
               handleLogin(moveToAddPage);
             }}
