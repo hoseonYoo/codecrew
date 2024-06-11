@@ -91,8 +91,9 @@ const ReadPage = () => {
             {Object.entries(categories).length > 0 &&
               Object.entries(categories).map(([key, value], index) => (
                 <React.Fragment key={index}>
-                  <input id={key} type="checkbox" checked={member.favoriteList.includes(key)} />
-                  <label htmlFor={key}>{value}</label>
+                  <div id={key} className={member.favoriteList.includes(key) ? "checkCate" : ""}>
+                    {value}
+                  </div>
                 </React.Fragment>
               ))}
           </div>
