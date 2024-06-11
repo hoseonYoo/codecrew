@@ -3,6 +3,7 @@ package com.react.project2.controller;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
+import com.react.project2.repository.NoticeRepository;
 import com.react.project2.repository.StudyRepository;
 import com.react.project2.service.StudyService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class StudyController {
     private final StudyService studyService;
     private final StudyRepository studyRepository;
+    private final NoticeRepository noticeRepository;
 
     // 스터디 등록
     @PostMapping("/")
