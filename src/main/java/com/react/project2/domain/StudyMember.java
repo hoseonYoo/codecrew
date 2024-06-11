@@ -23,8 +23,6 @@ public class StudyMember {
 
     private LocalDateTime createdDate; // 생성 날짜
 
-    private boolean checked; // 확인 여부
-
     // 대기, 수락, 거절, 탈퇴, 출석, 미출석
     @Enumerated(EnumType.STRING)
     @Builder.Default
@@ -48,7 +46,10 @@ public class StudyMember {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setChecked(boolean checked){ this.checked = checked; }
+
+    public void setStatus(MemberStatus status) {
+        this.status = status;
+    }
 
 
 }

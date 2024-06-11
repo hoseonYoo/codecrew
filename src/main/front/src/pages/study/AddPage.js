@@ -182,7 +182,7 @@ const AddPage = () => {
     formData.append("memberEmail", userEmail);
     formData.append("location", study.location);
     formData.append("strStudyDate", study.studyDate);
-    formData.append("maxPeople", parseInt(study.maxPeople));
+    formData.append("maxPeople", parseInt(study.maxPeople) - 1);
     formData.append("category", study.category);
     formData.append("locationX", study.locationX);
     formData.append("locationY", study.locationY);
@@ -245,7 +245,10 @@ const AddPage = () => {
       <BasicLayoutPage headerTitle="스터디추가">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
+            <div
+              className="StudyAddImg"
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            >
               <label htmlFor="fileInput">
                 추가
                 <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -263,16 +266,37 @@ const AddPage = () => {
                 onKeyDown={checkSpecialCharacters}
                 onChange={handleTitleChange}
               />
-              <span style={{ color: "#dcdcdc", fontSize: "12px", textAlign: "right", display: "block" }}>{titleLength} / 24</span>
+              <span
+                style={{
+                  color: "#dcdcdc",
+                  fontSize: "12px",
+                  textAlign: "right",
+                  display: "block",
+                }}
+              >
+                {titleLength} / 24
+              </span>
             </div>
             <div
               // onClick={handleAddressSearchClick}
               onClick={lat ? () => {} : handleAddressSearchClick}
             >
               <h3>주소</h3>
-              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+              <input
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
 
-              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
+              <img
+                className="AdressSearch"
+                src={
+                  process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"
+                }
+                alt="searchIcon"
+              />
             </div>
             <div>
               <h3>참여날짜</h3>
@@ -283,12 +307,18 @@ const AddPage = () => {
                 placeholder="참여일을 입력해주세요."
                 onChange={handleChangeStudy}
                 min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
+                max={new Date(new Date().getTime() + 12096e5)
+                  .toISOString()
+                  .substring(0, 16)}
               />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -298,7 +328,11 @@ const AddPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (
@@ -321,7 +355,16 @@ const AddPage = () => {
                 onKeyUp={checkSpecialCharacters}
                 onKeyDown={checkSpecialCharacters}
               ></textarea>
-              <span style={{ color: "#dcdcdc", fontSize: "12px", textAlign: "right", display: "block" }}>{contentLength} / 200</span>
+              <span
+                style={{
+                  color: "#dcdcdc",
+                  fontSize: "12px",
+                  textAlign: "right",
+                  display: "block",
+                }}
+              >
+                {contentLength} / 200
+              </span>
             </div>
           </div>
           <div className="bottomBtnWrap">

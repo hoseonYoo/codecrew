@@ -154,7 +154,7 @@ const KakaoMap = ({ overlayState, changeOverlayState, changePopup }) => {
       // 클러스터가 변경된 후에 이전에 저장한 중심 좌표를 다시 지도의 중심으로 설정합니다.
       map.setCenter(currentCenter);
     }
-  }, [map, categoryFilter]);
+  }, [map, studyLocationList, categoryFilter]);
 
   // 클릭 마커 지우기
   useEffect(() => {
