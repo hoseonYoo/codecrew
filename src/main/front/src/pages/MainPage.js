@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BasicLayout from "../layouts/BasicLayout";
+import BasicLayout from "../layouts/BasicLayoutMain";
 import "../scss/pages/mainPage.scss";
 import KakaoMap from "../components/map/KakaoMap";
 import { useSelector } from "react-redux";
