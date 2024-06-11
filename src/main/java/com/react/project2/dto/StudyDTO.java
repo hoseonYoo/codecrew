@@ -46,8 +46,13 @@ public class StudyDTO {
     private List<StudyMember> studyMemberList;
 
     public void changeStudyDate(String strStudyDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
+    }
+    public void changeStudyDateWithOutT(String strStudyDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
     }
+
 
 }
