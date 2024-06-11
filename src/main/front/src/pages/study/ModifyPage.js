@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { postAdd } from "../../api/studyAPI";
+import { modifyStudy, postAdd } from "../../api/studyAPI";
 import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/AddPage.scss";
 import { API_SERVER_HOST } from "../../api/memberAPI";
@@ -27,7 +27,10 @@ const ModifyPage = () => {
   }, [studyDate]); // 의존성 배열에 studySetting을 넣어줍니다.
 
   // 사진 수정용 CustomHook 사용하기
-  const { imgSrc, handleFileChange, saveFile } = useProfileImage(studyDateImg, studyDate.studyDateImg);
+  const { imgSrc, handleFileChange, saveFile } = useProfileImage(
+    studyDateImg,
+    studyDate.studyDateImg,
+  );
 
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
@@ -145,7 +148,7 @@ const ModifyPage = () => {
     console.log(formData);
 
     // 여기에 서버로 데이터를 전송하는 코드를 추가합니다.
-    postAdd(formData).then((data) => {
+    modifyStudy(formData).then((data) => {
       console.log("postAdd result : ", data);
       alert("수정완료");
       moveToReadPage(id);
@@ -183,7 +186,12 @@ const ModifyPage = () => {
       <BasicLayoutPage headerTitle="스터디수정">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}>
+            <div
+              className="StudyAddImg"
+              style={
+                imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null
+              }
+            >
               <label htmlFor="fileInput">
                 편집
                 <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -203,9 +211,21 @@ const ModifyPage = () => {
             </div>
             <div onClick={handleAddressSearchClick}>
               <h3>주소</h3>
-              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+              <input
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
 
-              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
+              <img
+                className="AdressSearch"
+                src={
+                  process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"
+                }
+                alt="searchIcon"
+              />
             </div>
             <div>
               <h3>참여날짜</h3>
@@ -216,12 +236,18 @@ const ModifyPage = () => {
                 placeholder="참여일을 입력해주세요."
                 onChange={handleChangeStudy}
                 min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
+                max={new Date(new Date().getTime() + 12096e5)
+                  .toISOString()
+                  .substring(0, 16)}
               />
             </div>
             <div>
               <h3>참여인원</h3>
-              <select name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -231,7 +257,11 @@ const ModifyPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (

@@ -5,7 +5,12 @@ import useCustomMap from "../../hooks/useCustomMap";
 
 const { kakao } = window;
 
-const KakaoMap = ({ overlayState, changeOverlayState, changePopup }) => {
+const KakaoMap = ({
+  overlayState,
+  changeOverlayState,
+  changePopup,
+  refresh,
+}) => {
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
   const studyLocationList = useSelector(
@@ -92,7 +97,7 @@ const KakaoMap = ({ overlayState, changeOverlayState, changePopup }) => {
     dispatch(getStudyLocationList(categoryFilter)).then(() => {
       console.log("studyLocationList 가져오기");
     });
-  }, [categoryFilter]);
+  }, [categoryFilter, refresh]);
 
   // 현재위치 체크 및 studyLocationList가져오면 지도 렌더링 가능
   useEffect(() => {

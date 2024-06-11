@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notice {
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long noticeId; // 알림키
-        private String title; // 제목
-        @Builder.Default
-        private LocalDateTime createdDate = LocalDateTime.now(); // 생성 날짜
-        private String studyId; // 게시판 ID
-        private String studyWriter; // 게시판 작성자
-        @Enumerated(EnumType.STRING)
-        private NoticeType noticeType; // 공지 유형
+    private boolean isCreator; // 생성자 여부
+    @Builder.Default
+    private LocalDateTime createdDate = LocalDateTime.now(); // 생성 날짜
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Study study; // 스터디
+    @Enumerated(EnumType.STRING)
+    private NoticeType noticeType; // 공지 유형
+
 }
+
+
+

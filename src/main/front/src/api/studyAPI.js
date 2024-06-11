@@ -20,13 +20,9 @@ export const getOne = async (id) => {
 };
 
 // API 스터디 수정 요청
-export const modifyStudy = async (id, study) => {
-  console.log(`${host}/modify/${id}`);
-  const response = await jwtAxios.put(`${host}/modify/${id}`, study);
+export const modifyStudy = async (study) => {
+  console.log(`${host}/modify`);
+  const header = { headers: { "Content-Type": "multipart/form-data" } };
+  const response = await jwtAxios.put(`${host}/modify`, study, header);
   return response.data;
-};
-
-// API 스터디 목록조회 요청
-export const getList = async (pageParam) => {
-  const { page, size } = page;
 };

@@ -117,5 +117,14 @@ public class Member {
         this.favoriteList = favoriteList;
     }
 
+    // 알림 리스트 변경
+    public void addNotice(Study study, boolean isCreator, NoticeType noticeType) {
+        this.noticeList.add(Notice.builder()
+                .study(study)
+                .noticeType(noticeType)
+                .isCreator(isCreator)
+                .build());
+    }
+
 
 }
