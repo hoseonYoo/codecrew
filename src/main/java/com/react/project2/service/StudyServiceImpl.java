@@ -1,9 +1,6 @@
 package com.react.project2.service;
 
-import com.react.project2.domain.Category;
-import com.react.project2.domain.Member;
-import com.react.project2.domain.Study;
-import com.react.project2.domain.StudyMember;
+import com.react.project2.domain.*;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
@@ -147,16 +144,16 @@ public class StudyServiceImpl implements StudyService {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
-        // 이미 참가신청을 했는지 확인
+        // 스터디 멤버 리스트에 사용자가 이미 있는지 확인
         if (study.getStudyMemberList().stream().anyMatch(m -> m.getEmail().equals(userEmail))) {
             log.info("이미 참가신청을 한 사용자입니다.");
             throw new IllegalStateException("이미 참가신청이 완료되었습니다.");
         }
 
         // 참가인원이 최대인원을 초과하지 않았는지 확인
-        if (study.getStudyMemberList().size() >= study.getMaxPeople()) {
-            log.info("참가인원이 이미 최대입니다.");
-            throw new IllegalStateException("참가인원이 이미 최대입니다.");
+        if (study.getStudyMemberList().stream().filter(m -> m.getStatus() == MemberStatus.ACCEPT).count() >= study.getMaxPeople()) {
+            log.info("확정인원이 이미 최대입니다.");
+            throw new IllegalStateException("확정인원이 이미 최대입니다.");
         }
 
         // 참가신청 로직
@@ -180,14 +177,11 @@ public class StudyServiceImpl implements StudyService {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
-        // 참가자 목록에서 사용자 제거
-        boolean isRemoved = study.getStudyMemberList().removeIf(m -> m.getEmail().equals(userEmail));
-
-        if (!isRemoved) {
-            // 사용자가 참가자 목록에 없는 경우
-            log.info("해당 사용자는 참가자 목록에 없습니다.");
-            return false;
-        }
+        // 참가자 목록에서 사용자 status를 변경
+       study.getStudyMemberList().stream()
+                .filter(m -> m.getEmail().equals(userEmail))
+                .findFirst()
+                .ifPresent(m -> m.setStatus(MemberStatus.WITHDRAW));
 
         // 변경사항 저장
         studyRepository.save(study);
@@ -202,14 +196,12 @@ public class StudyServiceImpl implements StudyService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
 
         // 참가자 목록에서 참가 수락
-        boolean isAccepted = study.acceptJoin(id, memberEmail);
+        boolean b = study.acceptJoin(memberEmail);
 
-        // 변경사항 저장
-        if (isAccepted) {
-            studyRepository.save(study);
-        }
+        // 변경사항 수정
+        studyRepository.save(study);
 
-        return isAccepted;
+        return b;
     }
 
 
@@ -220,18 +212,12 @@ public class StudyServiceImpl implements StudyService {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
 
-        // 스터디 참가자 목록에서 멤버 제거
-        boolean isRemoved = study.removeStudyMember(memberEmail);
-
-        if (!isRemoved) {
-            // 멤버가 참가자 목록에 없는 경우
-            log.info("해당 멤버는 참가자 목록에 없습니다.");
-            return false;
-        }
+        // 참가자 목록에서 참가 거절
+        boolean b = study.declineJoin(memberEmail);
 
         // 변경사항 저장
         studyRepository.save(study);
-        return true;
+        return b;
     }
 
 

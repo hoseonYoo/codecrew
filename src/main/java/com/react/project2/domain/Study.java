@@ -128,19 +128,25 @@ public class Study {
     }
 
     // 스터디 참가 수락
-    public boolean acceptJoin(Long id, String memberEmail) {
+    public boolean acceptJoin(String memberEmail) {
         StudyMember memberToAccept = this.studyMemberList.stream()
                 .filter(member -> member.getEmail().equals(memberEmail))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자가 참가자 목록에 없습니다."));
 
-        memberToAccept.setChecked(true);
+        memberToAccept.setStatus(MemberStatus.ACCEPT);
         return true;
     }
 
-    // 스터디 참가자를 제거하는 메소드
-    public boolean removeStudyMember(String userEmail) {
-        return studyMemberList.removeIf(member -> member.getEmail().equals(userEmail));
+    // 스터디 참가자를 거절하는 메소드
+    public boolean declineJoin(String memberEmail) {
+        StudyMember memberToDecline = this.studyMemberList.stream()
+                .filter(member -> member.getEmail().equals(memberEmail))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자가 참가자 목록에 없습니다."));
+
+        memberToDecline.setStatus(MemberStatus.DECLINE);
+        return true;
     }
     // 스터디 시작하는 메소드
     public boolean getIsConfirmed() {
