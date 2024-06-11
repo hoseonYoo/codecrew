@@ -111,7 +111,13 @@ const ReadPage = () => {
         <>
           <button
             className="btnSmallPoint"
-            onClick={() => (window.location.href = `tel:${study.memberPhone}`)}
+            onClick={() => {
+              if (study.memberPhone) {
+                window.location.href = `tel:${study.memberPhone}`;
+              } else {
+                alert("크루가 연락처를 공개하지 않았습니다.");
+              }
+            }}
           >
             연락하기
           </button>
