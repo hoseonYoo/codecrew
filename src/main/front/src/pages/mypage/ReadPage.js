@@ -133,6 +133,9 @@ const ReadPage = () => {
             <span>{myStudyJoinCount} 건</span>
           </Link>
         </div>
+      </div>
+      <div className="MyReadUserMenu">
+        <h2>개인/보안</h2>
         <div onClick={handleClickLogout} className="MenuWrap">
           <Link>
             <h3>🔑 로그아웃</h3>
@@ -142,7 +145,7 @@ const ReadPage = () => {
         <div className="MenuWrap">
           <Link>
             <h3>🗑️ 회원탈퇴</h3>
-            <span>(고객정보가 모두 삭제됩니다.)</span>
+            <span></span>
           </Link>
         </div>
       </div>
