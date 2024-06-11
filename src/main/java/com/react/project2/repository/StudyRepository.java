@@ -35,6 +35,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("select s from Study s where s.id = :id")
     Optional<Study> selectOneById(@Param("id")Long id);
 
+
     // 스터디 목록 조회
     @Query("select s from Study s where s.disabled=false")
     Page<Object[]> selectList(Pageable pageable);
@@ -46,6 +47,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     // 마이페이지 요청
     @Query("SELECT COUNT(s) FROM Study s WHERE s.member.email = :email")
-    int countStudy(String email);
+    int countStudy(@Param("email") String email);
+    @Query("SELECT COUNT(s) FROM Study s JOIN s.studyMemberList members WHERE members.email = :email")
+    int countJoinStudy(@Param("email") String email);
+
 
 }

@@ -3,6 +3,7 @@ package com.react.project2.controller;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
+import com.react.project2.repository.NoticeRepository;
 import com.react.project2.repository.StudyRepository;
 import com.react.project2.service.StudyService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class StudyController {
     private final StudyService studyService;
     private final StudyRepository studyRepository;
+    private final NoticeRepository noticeRepository;
 
     // 스터디 등록
     @PostMapping("/")
@@ -163,9 +165,22 @@ public class StudyController {
     // 마이페이지 요청
     @GetMapping("/countmy")
     public ResponseEntity<?> countMyStudies(@RequestParam String email) {
+        log.info("testCount------");
         try {
             // 사용자 이메일로 스터디 개수 조회
             int count = studyRepository.countStudy(email);
+            return ResponseEntity.ok().body(Map.of("count", count));
+        } catch (Exception e) {
+            // 예외 발생 시 에러 메시지 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 개수를 조회하는 중 오류가 발생했습니다."));
+        }
+    }
+    @GetMapping("/countmyJoin")
+    public ResponseEntity<?> countMyJoinStudies(@RequestParam String email) {
+        log.info("testCount------");
+        try {
+            // 사용자 이메일로 스터디 개수 조회
+            int count = studyRepository.countJoinStudy(email);
             return ResponseEntity.ok().body(Map.of("count", count));
         } catch (Exception e) {
             // 예외 발생 시 에러 메시지 반환
