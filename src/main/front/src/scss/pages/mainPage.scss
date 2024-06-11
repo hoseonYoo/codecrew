@@ -211,3 +211,43 @@ div.addPopupBtn{
     width: calc(50% - 8px);
   }
 }
+
+// 코치마크
+div.CoMarkWrap{
+  width: 100vw;
+  max-width: 500px;
+  height: 100vh;
+  display: block;
+  top: 0;
+  margin: 0 auto;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9999999;
+  position: relative;
+  div.CoMarkContent{
+    width: 100%;
+  }
+  div.CoMarkContent:nth-child(1){
+    width: 100%;
+    padding-top: 68px;
+    text-align: right;
+    img{
+      margin-right: 20px;
+      cursor: pointer;
+    }
+  }
+  div.CoMarkContent:nth-child(2){
+    position: absolute;
+    top: 10%;
+    img{width: 100%; max-width: 400px;}
+  }
+  div.CoMarkContent:nth-child(3){
+    position: absolute;
+    top: 30%;
+    img{width: 100%; max-width: 400px;}
+  }
+  div.CoMarkContent:nth-child(4){
+    position: absolute;
+    bottom: 0;
+    img{width: 100%; max-width: 400px;}
+  }
+}

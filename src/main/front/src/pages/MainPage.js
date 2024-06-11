@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import useCustomMove from "../hooks/useCustomMove";
 import NewStudyPopup from "../components/mainPage/NewStudyPopup";
 import StudyDetailPopup from "../components/mainPage/StudyDetailPopup";
+import CoMarkPopup from "../components/mainPage/CoMarkPopup";
 
 const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
@@ -46,11 +47,7 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      <KakaoMap
-        overlayState={overlayState}
-        changeOverlayState={changeOverlayState}
-        changePopup={changePopup}
-      />
+      <KakaoMap overlayState={overlayState} changeOverlayState={changeOverlayState} changePopup={changePopup} />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
@@ -73,22 +70,13 @@ const MainPage = () => {
             </div>
           </button>
         </div>
+        {/* 코치마크 팝업 */}
+        <CoMarkPopup />
 
         {/* 스터디 상세 정보 토스트팝업 */}
-        {popup ? (
-          <StudyDetailPopup study={study} popup={popup} setPopup={setPopup} />
-        ) : (
-          <></>
-        )}
+        {popup ? <StudyDetailPopup study={study} popup={popup} setPopup={setPopup} /> : <></>}
         {/* 지도 클릭 해서 스터디 추가 토스트팝업 */}
-        {overlayState.overlayState ? (
-          <NewStudyPopup
-            overlayState={overlayState}
-            changeOverlayState={changeOverlayState}
-          />
-        ) : (
-          <></>
-        )}
+        {overlayState.overlayState ? <NewStudyPopup overlayState={overlayState} changeOverlayState={changeOverlayState} /> : <></>}
         <div className="stPopupWrap"></div>
       </div>
     </BasicLayout>
