@@ -146,6 +146,9 @@ const ReadPage = () => {
           </Link>
         </div>
       </div>
+      <div className="myFooter">
+        <span>Copyright © 2024 Codecrew. All rights reserved.</span>
+      </div>
     </BasicLayoutPage>
   );
 };

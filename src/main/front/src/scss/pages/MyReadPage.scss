@@ -163,3 +163,17 @@ div.MenuWrap{
     }
   }
 }
+
+div.myFooter{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  text-align: center;
+  margin-top: 48px;
+  margin-bottom: 48px;
+  span{
+    display: block;
+    width: 100%;
+    font-size: 11px;
+    color:#dcdcdc;
+  }
+}
