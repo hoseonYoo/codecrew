@@ -46,16 +46,8 @@ public class StudyDTO {
     private List<StudyMember> studyMemberList;
 
     public void changeStudyDate(String strStudyDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.studyDate = LocalDateTime.parse(strStudyDate, formatter);
-    }
-    // isConfirmed 속성에 대한 getter와 setter 메소드
-    public boolean getIsConfirmed() {
-        return isConfirmed;
-    }
-
-    public void setIsConfirmed(boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
     }
 
 }

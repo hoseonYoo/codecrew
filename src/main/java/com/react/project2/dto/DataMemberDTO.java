@@ -2,6 +2,7 @@ package com.react.project2.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.react.project2.domain.Category;
+import com.react.project2.domain.Member;
 import com.react.project2.domain.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +38,7 @@ public class DataMemberDTO {
     private LocalDateTime disabledDate;
     private String role;
     private boolean isNew;
+
+
+
 }

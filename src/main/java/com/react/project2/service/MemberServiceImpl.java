@@ -56,11 +56,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Override
     public DataMemberDTO getMember(String email) {
         Member findMember = memberRepository.getMemberWithFavoriteList(email);
         // Member Entity -> DataMemberDTO
         DataMemberDTO dataMemberDTO = modelMapper.map(findMember, DataMemberDTO.class);
         return dataMemberDTO;
+    }
+
+    public Member getMemberEntity(String email) {
+        Member findMember = memberRepository.getMemberWithFavoriteList(email);
+        return findMember;
     }
 
     @Override
