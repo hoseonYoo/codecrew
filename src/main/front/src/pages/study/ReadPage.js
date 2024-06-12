@@ -39,7 +39,7 @@ const ReadPage = () => {
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage } = useCustomMove();
 
-  const { handleParticipate, handleParticipateCancel } = useHandleStudyMember();
+  const { handleParticipate, handleParticipateCancel, handleArrive } = useHandleStudyMember();
   const { handleStart, handleDelete } = useHandleStudy();
 
   // 날짜 체크관련
@@ -64,16 +64,29 @@ const ReadPage = () => {
         </button>
       );
     } else if (userEmail === studyUserEmail && study.confirmed) {
-      return (
-        <button
-          className="btnLargeBlack"
-          onClick={() => {
-            alert("스터디당일에만 수정가능합니다.");
-          }}
-        >
-          출석관리
-        </button>
-      );
+      if (!isToday(study.studyDate)) {
+        return (
+          <button
+            className="btnLargeGrey"
+            onClick={() => {
+              alert("스터디당일에만 수정가능합니다.");
+            }}
+          >
+            출석관리
+          </button>
+        );
+      } else {
+        return (
+          <button
+            className="btnLargePoint"
+            onClick={() => {
+              alert("수정가능");
+            }}
+          >
+            출석관리
+          </button>
+        );
+      }
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
       const onWithdrawClick = async () => {
         await handleParticipateCancel(study.id);
@@ -92,7 +105,7 @@ const ReadPage = () => {
         if (!isToday(study.studyDate)) {
           return (
             <button
-              className="btnLargeBlack"
+              className="btnLargeGrey"
               onClick={() => {
                 alert("스터디당일에만 출석이 가능합니다.");
               }}
@@ -101,13 +114,13 @@ const ReadPage = () => {
             </button>
           );
         } else {
+          const onArriveClick = async () => {
+            await handleArrive(study.id);
+            reRender();
+          };
+
           return (
-            <button
-              className="btnLargePoint"
-              onClick={() => {
-                alert("해당위치는 스터디장소가 아닙니다.");
-              }}
-            >
+            <button className="btnLargePoint" onClick={() => onArriveClick()}>
               출석체크
             </button>
           );
@@ -205,6 +218,14 @@ const ReadPage = () => {
     }
     return null;
   };
+
+  // 카카오 공유하기
+  useEffect(() => {
+    // Kakao SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init("a485d66609c6ba8d3f85dd817c4e295d");
+    }
+  }, []);
 
   // 공유하기 버튼
   const handleShareClick = () => {
