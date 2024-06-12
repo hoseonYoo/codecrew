@@ -18,6 +18,7 @@ const useStudyData = (id, refresh) => {
     maxPeople: 2,
     category: "", // 빈 배열로 초기화
     disabled: "",
+    isConfirmed: "",
     studyMemberList: [],
   };
   const refresh1 = refresh;

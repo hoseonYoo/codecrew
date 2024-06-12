@@ -45,8 +45,10 @@ div.ReadTitle{
 }
 div.ReadBtn{
   width:80px;
+  text-align: right;
   button{
     margin-top: 0px;
+    margin-right: 16px;
   }
   button:last-child{
     margin-top: 8px;

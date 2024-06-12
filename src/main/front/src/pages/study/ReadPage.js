@@ -18,8 +18,10 @@ const ReadPage = () => {
   };
   const { id } = useParams();
   console.log(id);
+
   // 스터디 정보 가져오기
   const { study, imgStudySrc } = useStudyData(id, refresh);
+  console.log(study);
 
   // 현재 로그인 된 회원의 이메일 가져오기
   const userEmail = useSelector((state) => state.loginSlice.email);
@@ -40,10 +42,17 @@ const ReadPage = () => {
   const { handleParticipate, handleParticipateCancel } = useHandleStudyMember();
   const { handleStart, handleDelete } = useHandleStudy();
 
+  // 날짜 체크관련
+  const isToday = (date) => {
+    const today = new Date();
+    const studyDate = new Date(date);
+    return studyDate.toDateString() === today.toDateString();
+  };
+
   // 참가하기, 참가취소 버튼
   const participateButtonCheck = () => {
     // 모임 생성자일경우
-    if (userEmail === studyUserEmail) {
+    if (userEmail === studyUserEmail && !study.confirmed) {
       const onStudyStartClick = async () => {
         await handleStart(study);
         reRender();
@@ -52,6 +61,17 @@ const ReadPage = () => {
       return (
         <button className="btnLargePoint" onClick={() => onStudyStartClick()}>
           스터디시작
+        </button>
+      );
+    } else if (userEmail === studyUserEmail && study.confirmed) {
+      return (
+        <button
+          className="btnLargeBlack"
+          onClick={() => {
+            alert("스터디당일에만 수정가능합니다.");
+          }}
+        >
+          출석관리
         </button>
       );
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
@@ -66,9 +86,35 @@ const ReadPage = () => {
         </button>
       );
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
-      return <button className="btnLargeBlack">참가 확정</button>;
+      if (!study.confirmed) {
+        return <button className="btnLargeBlack">참가확정</button>;
+      } else {
+        if (!isToday(study.studyDate)) {
+          return (
+            <button
+              className="btnLargeBlack"
+              onClick={() => {
+                alert("스터디당일에만 출석이 가능합니다.");
+              }}
+            >
+              출석체크
+            </button>
+          );
+        } else {
+          return (
+            <button
+              className="btnLargePoint"
+              onClick={() => {
+                alert("해당위치는 스터디장소가 아닙니다.");
+              }}
+            >
+              출석체크
+            </button>
+          );
+        }
+      }
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && (member.status === "WITHDRAW" || member.status === "DECLINE"))) {
-      return <button className="btnLargeBlack">참가 불가</button>;
+      return <button className="btnLargeBlack">참가불가</button>;
     } else {
       // 스터디 참가 버튼 클릭 핸들러
       const onParticipateClick = async () => {
@@ -86,7 +132,17 @@ const ReadPage = () => {
 
   // 연락하기, 공유하기 버튼
   const renderContactAndShareButtons = () => {
-    if (!userEmail || userEmail !== studyUserEmail) {
+    if (!userEmail) {
+      // 비로그인시
+      return (
+        <>
+          <button className="btnMediumBlack" onClick={handleShareClick}>
+            공유하기
+          </button>
+        </>
+      );
+    } else if (userEmail !== studyUserEmail && !study.confirmed) {
+      // 로그인시(생성자 X)
       return (
         <>
           <button
@@ -106,13 +162,36 @@ const ReadPage = () => {
           </button>
         </>
       );
+    } else if (userEmail !== studyUserEmail && study.confirmed) {
+      // 로그인시(생성자 X)
+      return (
+        <>
+          <button
+            className="btnSmallPoint"
+            onClick={() => {
+              if (study.memberPhone) {
+                window.location.href = `tel:${study.memberPhone}`;
+              } else {
+                alert("크루가 연락처를 공개하지 않았습니다.");
+              }
+            }}
+          >
+            연락하기
+          </button>
+          <button className="btnSmallBlack" onClick={openKakaoMap}>
+            찾아오기
+          </button>
+        </>
+      );
     }
     return null;
   };
 
   // 수정, 삭제 버튼
   const renderEditAndDeleteButtons = () => {
-    if (userEmail && userEmail === studyUserEmail) {
+    if (userEmail && userEmail === studyUserEmail && study.confirmed) {
+      return <></>;
+    } else if (userEmail && userEmail === studyUserEmail && !study.confirmed) {
       return (
         <>
           <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
