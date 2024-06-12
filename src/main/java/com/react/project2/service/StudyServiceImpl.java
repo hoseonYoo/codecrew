@@ -189,6 +189,7 @@ public class StudyServiceImpl implements StudyService {
                 .locationY((Double) study.getLocationY())
                 .studyDate(study.getStudyDate())
                 .maxPeople(study.getMaxPeople())
+                .isConfirmed(study.getIsConfirmed())
                 .category(study.getCategory())
                 .studyMemberList(study.getStudyMemberList())
                 .build();

@@ -12,6 +12,7 @@ import { getNoticeCount } from "../api/noticeAPI";
 const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
+
   // 페이지 이동을 위한 함수들
   const { moveToLogin, moveToMypage, moveToAddPage } = useCustomMove();
   const [refresh, setRefresh] = useState(false);
@@ -86,12 +87,7 @@ const MainPage = () => {
 
   return (
     <BasicLayout className="MainPageSet">
-      <KakaoMap
-        overlayState={overlayState}
-        changeOverlayState={changeOverlayState}
-        changePopup={changePopup}
-        refresh={refresh}
-      />
+      <KakaoMap overlayState={overlayState} changeOverlayState={changeOverlayState} changePopup={changePopup} refresh={refresh} />
 
       <div className="bottomMainBtnWrap">
         <div className="mainBtnWrap">
@@ -116,25 +112,9 @@ const MainPage = () => {
         <CoMarkPopup />
 
         {/* 스터디 상세 정보 토스트팝업 */}
-        {popup ? (
-          <StudyDetailPopup
-            study={study}
-            popup={popup}
-            setPopup={setPopup}
-            reRender={reRender}
-          />
-        ) : (
-          <></>
-        )}
+        {popup ? <StudyDetailPopup study={study} popup={popup} setPopup={setPopup} reRender={reRender} /> : <></>}
         {/* 지도 클릭 해서 스터디 추가 토스트팝업 */}
-        {overlayState.overlayState ? (
-          <NewStudyPopup
-            overlayState={overlayState}
-            changeOverlayState={changeOverlayState}
-          />
-        ) : (
-          <></>
-        )}
+        {overlayState.overlayState ? <NewStudyPopup overlayState={overlayState} changeOverlayState={changeOverlayState} /> : <></>}
         <div className="stPopupWrap"></div>
       </div>
     </BasicLayout>
