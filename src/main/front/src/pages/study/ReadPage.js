@@ -29,13 +29,10 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } =
-    useMemberProfile(studyUserEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
   // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList.some(
-    (member) => member.email === userEmail,
-  );
+  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
 
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage } = useCustomMove();
@@ -57,12 +54,7 @@ const ReadPage = () => {
           스터디시작
         </button>
       );
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "HOLD",
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
       const onWithdrawClick = async () => {
         await handleParticipateCancel(study.id);
         reRender();
@@ -73,21 +65,9 @@ const ReadPage = () => {
           스터디탈퇴
         </button>
       );
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "ACCEPT",
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
       return <button className="btnLargeBlack">참가 확정</button>;
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) =>
-          member.email === userEmail &&
-          (member.status === "WITHDRAW" || member.status === "DECLINE"),
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && (member.status === "WITHDRAW" || member.status === "DECLINE"))) {
       return <button className="btnLargeBlack">참가 불가</button>;
     } else {
       // 스터디 참가 버튼 클릭 핸들러
@@ -135,16 +115,10 @@ const ReadPage = () => {
     if (userEmail && userEmail === studyUserEmail) {
       return (
         <>
-          <button
-            className="btnSmallPoint"
-            onClick={() => moveToModifyPage(id)}
-          >
+          <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
             수정하기
           </button>
-          <button
-            className="btnSmallBlack"
-            onClick={() => handleDelete(study.id, study.memberEmail)}
-          >
+          <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
             삭제하기
           </button>
         </>
@@ -181,10 +155,7 @@ const ReadPage = () => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList
-      ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
-          .length
-      : 0;
+    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -201,10 +172,7 @@ const ReadPage = () => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList
-          ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
-              .length
-          : 0) + 1}
+        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0) + 1}
         <span>/</span>
         {study.maxPeople + 1}
       </p>
@@ -226,32 +194,19 @@ const ReadPage = () => {
     }
     // 모임 참가자인 경우
     else if (isCurrentUserAMember) {
-      newStudyMemberList = newStudyMemberList.filter(
-        (member) => member.status === "ACCEPT" && member.email !== userEmail,
-      );
+      newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT" && member.email !== userEmail);
       console.log("본인 제외 확정 인원 : ", newStudyMemberList);
-      const member = study.studyMemberList.filter(
-        (member) => member.email === userEmail,
-      );
+      const member = study.studyMemberList.filter((member) => member.email === userEmail);
       console.log("본인 추가 : ", member);
       newStudyMemberList.unshift(member[0]);
       console.log("본인 추가 확정 인원 : ", newStudyMemberList);
     }
     // 그외
     else {
-      newStudyMemberList = newStudyMemberList.filter(
-        (member) => member.status === "ACCEPT",
-      );
+      newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT");
     }
     return newStudyMemberList.map((member, index) => (
-      <StudyMemberBlock
-        key={index}
-        memberData={member}
-        currentUserEmail={userEmail}
-        studyCreatorEmail={studyUserEmail}
-        studyId={study.id}
-        reRender={reRender}
-      />
+      <StudyMemberBlock key={index} memberData={member} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} reRender={reRender} />
     ));
   };
 
@@ -260,14 +215,7 @@ const ReadPage = () => {
       <div>
         {/*스터디 이미지*/}
         <div className="ReadContent">
-          <div
-            className="ReadImg"
-            style={
-              imgStudySrc !== ""
-                ? { backgroundImage: `url(${imgStudySrc})` }
-                : null
-            }
-          ></div>
+          <div className="ReadImg" style={imgStudySrc !== "" ? { backgroundImage: `url(${imgStudySrc})` } : null}></div>
 
           {/*스터디 제목, 위치*/}
           <div className="ReadTitle">
@@ -289,18 +237,10 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>작성자 : </h3>
             <div>
-              <p
-                onClick={() => moveToProfilePage(study.memberEmail)}
-                style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}
-              >
+              <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}>
                 {study.memberNickname}
               </p>
-              <p
-                onClick={() =>
-                  (window.location.href = `mailto:${study.memberEmail}`)
-                }
-                style={{ cursor: "pointer" }}
-              >
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)} style={{ cursor: "pointer" }}>
                 {study.memberEmail}
               </p>
             </div>
@@ -334,26 +274,10 @@ const ReadPage = () => {
 
           {/* 모임 주최자 프로필 */}
           <div className="studyMemberBlockWrap">
-            <div
-              className="studyMemberBlockImg"
-              style={
-                studyMemberImgSrc
-                  ? { backgroundImage: `url(${studyMemberImgSrc})` }
-                  : null
-              }
-              onClick={() => moveToProfilePage(study.memberEmail)}
-            ></div>
+            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null} onClick={() => moveToProfilePage(study.memberEmail)}></div>
             <div className="studyMemberBlockTitle">
-              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>
-                {study.memberNickname}
-              </h3>
-              <p
-                onClick={() =>
-                  (window.location.href = `mailto:${study.memberEmail}`)
-                }
-              >
-                {study.memberEmail}
-              </p>
+              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
             </div>
             <div className="studyMemberBlockBtn"></div>
           </div>
