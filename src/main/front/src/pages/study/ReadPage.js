@@ -98,6 +98,8 @@ const ReadPage = () => {
           스터디탈퇴
         </button>
       );
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ARRIVE")) {
+      return <button className="btnLargeGrey">출석완료</button>;
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
       if (!study.confirmed) {
         return <button className="btnLargeBlack">참가확정</button>;
@@ -301,7 +303,7 @@ const ReadPage = () => {
     }
     // 모임 참가자인 경우
     else if (isCurrentUserAMember) {
-      newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT" && member.email !== userEmail);
+      newStudyMemberList = newStudyMemberList.filter((member) => (member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE") && member.email !== userEmail);
       console.log("본인 제외 확정 인원 : ", newStudyMemberList);
       const member = study.studyMemberList.filter((member) => member.email === userEmail);
       console.log("본인 추가 : ", member);
@@ -313,7 +315,7 @@ const ReadPage = () => {
       newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT");
     }
     return newStudyMemberList.map((member, index) => (
-      <StudyMemberBlock key={index} memberData={member} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} reRender={reRender} />
+      <StudyMemberBlock key={index} memberData={member} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} reRender={reRender} studyConfirmed={study.confirmed} />
     ));
   };
 
@@ -386,7 +388,11 @@ const ReadPage = () => {
               <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
               <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
             </div>
-            <div className="studyMemberBlockBtn"></div>
+            <div className="studyMemberBlockBtn">
+              <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
+                스터디장
+              </button>
+            </div>
           </div>
 
           {/* 생성자 디폴트 */}
