@@ -23,7 +23,7 @@ div.ReadImg{
   background-size: cover;
 }
 div.ReadTitle{
-  width: calc(100% - 174px);
+  width: calc(100% - 198px);
   text-align: left;
   margin-top: 8px;
   h3{
@@ -45,8 +45,10 @@ div.ReadTitle{
 }
 div.ReadBtn{
   width:80px;
+  text-align: right;
   button{
     margin-top: 0px;
+    margin-right: 16px;
   }
   button:last-child{
     margin-top: 8px;
