@@ -204,6 +204,8 @@ const AddPage = () => {
       moveToMain();
     });
   };
+
+  // 타이핑 체크
   const [titleLength, setTitleLength] = useState(0);
   const [contentLength, setContentLength] = useState(0);
 

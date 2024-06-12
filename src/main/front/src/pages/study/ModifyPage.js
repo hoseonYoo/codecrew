@@ -161,6 +161,26 @@ const ModifyPage = () => {
     });
   };
 
+  // 타이핑 체크
+  const [titleLength, setTitleLength] = useState(0);
+  const [contentLength, setContentLength] = useState(0);
+
+  const handleTitleChange = (e) => {
+    const inputLenght = e.target.value.length;
+    if (inputLenght <= 24) {
+      handleChangeStudy(e);
+      setTitleLength(inputLenght);
+    }
+  };
+
+  const handleContentChange = (e) => {
+    const inputLenght = e.target.value.length;
+    if (inputLenght <= 200) {
+      handleChangeStudy(e);
+      setContentLength(inputLenght);
+    }
+  };
+
   return (
     <>
       {/* 모달창입니다. */}
@@ -203,12 +223,23 @@ const ModifyPage = () => {
               <input
                 name="title"
                 value={study.title}
+                maxLength={24}
                 type="text"
                 placeholder="스터디명을 입력해주세요."
                 onKeyUp={checkSpecialCharacters}
                 onKeyDown={checkSpecialCharacters}
-                onChange={handleChangeStudy}
+                onChange={handleTitleChange}
               />
+              <span
+                style={{
+                  color: "#dcdcdc",
+                  fontSize: "12px",
+                  textAlign: "right",
+                  display: "block",
+                }}
+              >
+                {titleLength} / 24
+              </span>
             </div>
             <div onClick={handleAddressSearchClick}>
               <h3>주소</h3>
@@ -259,10 +290,20 @@ const ModifyPage = () => {
                 name="content"
                 value={study.content}
                 placeholder="스터디소개를 입력해주세요."
-                onChange={handleChangeStudy}
+                onChange={handleContentChange}
                 onKeyUp={checkSpecialCharacters}
                 onKeyDown={checkSpecialCharacters}
               ></textarea>
+              <span
+                style={{
+                  color: "#dcdcdc",
+                  fontSize: "12px",
+                  textAlign: "right",
+                  display: "block",
+                }}
+              >
+                {contentLength} / 200
+              </span>
             </div>
           </div>
           <div className="bottomBtnWrap">
