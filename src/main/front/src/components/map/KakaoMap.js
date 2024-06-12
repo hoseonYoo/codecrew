@@ -114,9 +114,6 @@ const KakaoMap = ({
       // 로그인 시에만
       if (loginState.email) {
         // 지도 더블 클릭 이벤트 등록
-        /*kakao.maps.event.addListener(map, "dblclick", function (mouseEvent) {
-            mapClickedFunc(mouseEvent);
-          });*/
         kakao.maps.event.addListener(map, "dblclick", mapClickedFunc);
       }
 

@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notice {
+
+    private Long noticeId; // 공지 ID
     private boolean isCreator; // 생성자 여부
     @Builder.Default
     private LocalDateTime createdDate = LocalDateTime.now(); // 생성 날짜

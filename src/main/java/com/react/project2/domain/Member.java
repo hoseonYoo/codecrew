@@ -120,6 +120,7 @@ public class Member {
     // 알림 리스트 변경
     public void addNotice(Study study, boolean isCreator, NoticeType noticeType) {
         this.noticeList.add(Notice.builder()
+                        .noticeId(this.noticeList.size() + 1L)
                 .study(study)
                 .noticeType(noticeType)
                 .isCreator(isCreator)
@@ -131,4 +132,5 @@ public class Member {
         // ***** 알림 갯수 조회 *****
         return this.noticeList.size();
     }
+
 }

@@ -1,8 +1,7 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.Member;
-import com.react.project2.dto.DataMemberDTO;
-import com.react.project2.dto.MemberDTO;
+import com.react.project2.dto.*;
 import com.react.project2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

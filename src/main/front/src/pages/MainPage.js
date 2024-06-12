@@ -48,14 +48,25 @@ const MainPage = () => {
   const [noticeCount, setNoticeCount] = useState(0);
 
   useEffect(() => {
-    // 서버에서 알림 갯수 가져오기
+    // 로그인 상태가 변경될 때마다 새로운 인터벌을 시작합니다.
     if (loginState.email) {
-      getNoticeCount(loginState.email).then((data) => {
-        console.log("알림 갯수", data);
-        setNoticeCount(data);
-      });
+      const intervalId = setInterval(
+        () => {
+          getNoticeCount(loginState.email).then((data) => {
+            setNoticeCount(data);
+          });
+          // TODO: 알림 갯수를 가져오는 API 호출 시간 조절
+          // }, 1000);
+        },
+        1000 * 60 * 5,
+      );
+
+      // useEffect가 다시 실행되기 전에 이전 인터벌을 정리합니다.
+      return () => {
+        clearInterval(intervalId);
+      };
     }
-  }, [noticeCount, loginState]);
+  }, [loginState]); // noticeCount를 종속성 배열에서 제거합니다.
 
   const renderNoticeCount = () => {
     if (noticeCount > 0) {
