@@ -138,31 +138,42 @@ const AddPage = () => {
     // 확인 처리
     if (imgSrc === null) {
       alert("이미지가 등록되지 않았습니다.");
+      const imageDiv = document.querySelector(".StudyAddImg");
+      // tabindex 속성을 추가하여 div가 포커스를 받을 수 있게 합니다.
+      imageDiv.setAttribute("tabindex", "0");
+      // 포커스를 해당 div로 이동합니다.
+      imageDiv.focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.title === "") {
       alert("제목이 입력되지 않았습니다.");
+      document.getElementsByName("title")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.location === "") {
       alert("위치정보가 입력되지 않았습니다.");
+      document.getElementsByName("location")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.studyDate === "") {
       alert("참여날짜가 입력되지 않았습니다.");
+      document.getElementsByName("studyDate")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     // 참여 날짜가 현재시간으로 부터 24시간이후 보다 전이면 중단
     if (new Date(study.studyDate).getTime() < new Date().getTime() + 86400000) {
       alert("참여날짜는 현재시간으로부터 24시간 이후로 설정해주세요.");
+      document.getElementsByName("studyDate")[0].focus();
       return;
     }
     if (study.category === "카테고리 선택" || study.category === "") {
       alert("카테고리가 입력되지 않았습니다.");
+      document.getElementsByName("category")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.content === "") {
       alert("소개글이 입력되지 않았습니다.");
+      document.getElementsByName("content")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
 
@@ -213,6 +224,13 @@ const AddPage = () => {
       setContentLength(inputLenght);
     }
   };
+  // const dateInputRef = useRef();
+  // const maxPeopleSelectRef = useRef();
+  // const categorySelectRef = useRef();
+  // // 각 img 태그의 onClick 이벤트 핸들러
+  // const handleDateIconClick = () => dateInputRef.current.click();
+  // const handleMaxPeopleIconClick = () => maxPeopleSelectRef.current.click();
+  // const handleCategoryIconClick = () => categorySelectRef.current.click();
 
   return (
     <>
