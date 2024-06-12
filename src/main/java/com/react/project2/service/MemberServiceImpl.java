@@ -97,6 +97,12 @@ public class MemberServiceImpl implements MemberService {
         return null;
     }
 
+    @Override
+    public int getNoticeCount(String email) {
+        Member findMember = memberRepository.getMemberWithNoticeList(email);
+        return findMember.getNoticeCount();
+    }
+
     // 소셜회원 정보로 Member Entity 생성
     private Member makeSocialMember(String email, String accessToken) {
         // 임시비번 만들어서 Member 엔티티 생성해 리턴

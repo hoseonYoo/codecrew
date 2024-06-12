@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BasicLayout from "../layouts/BasicLayoutMain";
 import "../scss/pages/mainPage.scss";
 import KakaoMap from "../components/map/KakaoMap";
@@ -7,6 +7,7 @@ import useCustomMove from "../hooks/useCustomMove";
 import NewStudyPopup from "../components/mainPage/NewStudyPopup";
 import StudyDetailPopup from "../components/mainPage/StudyDetailPopup";
 import CoMarkPopup from "../components/mainPage/CoMarkPopup";
+import { getNoticeCount } from "../api/noticeAPI";
 
 const MainPage = () => {
   // 현재 로그인 된 회원의 이메일 가져오기
@@ -23,6 +24,7 @@ const MainPage = () => {
     lat: 0,
     lng: 0,
   });
+
   const changeOverlayState = (lat, lng, check) => {
     setOverlayState({
       overlayState: check,
@@ -42,6 +44,28 @@ const MainPage = () => {
 
   const [popup, setPopup] = useState(false);
   const [study, setStudy] = useState();
+
+  const [noticeCount, setNoticeCount] = useState(0);
+
+  useEffect(() => {
+    // 서버에서 알림 갯수 가져오기
+    if (loginState.email) {
+      getNoticeCount(loginState.email).then((data) => {
+        console.log("알림 갯수", data);
+        setNoticeCount(data);
+      });
+    }
+  }, [noticeCount, loginState]);
+
+  const renderNoticeCount = () => {
+    if (noticeCount > 0) {
+      return (
+        <div className="MyNoticeCount">
+          <span>{noticeCount}</span>
+        </div>
+      );
+    }
+  };
 
   //popupData -> study로 명칭 변경
   const changePopup = (data) => {
@@ -74,9 +98,7 @@ const MainPage = () => {
             }}
           >
             MY
-            <div className="MyNoticeCount">
-              <span>1</span>
-            </div>
+            {renderNoticeCount()}
           </button>
         </div>
         {/* 코치마크 팝업 */}

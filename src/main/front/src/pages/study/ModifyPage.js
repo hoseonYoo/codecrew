@@ -254,10 +254,7 @@ const ModifyPage = () => {
                 name="studyDate"
                 value={study.studyDate}
                 type="datetime-local"
-                placeholder="참여일을 입력해주세요."
-                onChange={handleChangeStudy}
-                min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
+                readOnly
               />
             </div>
             <div>

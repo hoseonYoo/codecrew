@@ -2,6 +2,7 @@ package com.react.project2.service;
 
 
 import com.react.project2.domain.MemberStatus;
+import com.react.project2.domain.NoticeType;
 import com.react.project2.domain.Study;
 import com.react.project2.dto.PageRequestDTO;
 import com.react.project2.dto.PageResponseDTO;
@@ -43,6 +44,9 @@ public interface StudyService {
 
     // 사용자 이메일로 참가한 스터디 개수 조회
     int countJoinStudy(String email);
+
+    // 알람 생성 기능
+    void createNotice(Long id, String userEmail, boolean creator,NoticeType type);
 
 
     // 마커용 스터디 카테고리별 전체 조회
