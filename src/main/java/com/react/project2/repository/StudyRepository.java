@@ -34,6 +34,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("SELECT COUNT(s) FROM Study s WHERE s.member.email = :email and s.disabled = false")
     int countStudy(@Param("email") String email);
 
+
     // disabled가 false인 스터디 studyMemberList에 status가 HOLD 또는 ACCEPT인 스터디 갯수 조회
     @Query("SELECT COUNT(s) FROM Study s JOIN s.studyMemberList members WHERE members.email = :email and members.status in ('HOLD', 'ACCEPT') and s.disabled = false")
     int countJoinStudy(@Param("email") String email);

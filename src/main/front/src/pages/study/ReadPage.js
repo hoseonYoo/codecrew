@@ -142,6 +142,13 @@ const ReadPage = () => {
       );
     }
   };
+  // 카카오 공유하기
+  useEffect(() => {
+    // Kakao SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init("a485d66609c6ba8d3f85dd817c4e295d");
+    }
+  }, []);
 
   // 연락하기, 공유하기 버튼
   const renderContactAndShareButtons = () => {

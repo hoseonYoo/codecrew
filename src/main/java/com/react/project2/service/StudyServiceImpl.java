@@ -153,8 +153,8 @@ public class StudyServiceImpl implements StudyService {
     }
 
     @Override
-    public void createNotice(Long id, String userEmail, boolean creator,  NoticeType type){
-        Study study = studyRepository.findById(id).orElseThrow();
+    public void createNotice(Long studtyId, String userEmail, boolean creator,  NoticeType type){
+        Study study = studyRepository.findById(studtyId).orElseThrow();
         if (creator) {
             userEmail = study.getMember().getEmail();
         }
@@ -162,6 +162,7 @@ public class StudyServiceImpl implements StudyService {
             List<StudyMember> studyMemberList = study.getStudyMemberList();
             for (StudyMember studyMember : studyMemberList) {
                 Member member = memberRepository.findByEmail(studyMember.getEmail()).orElseThrow();
+                // noticeId 추가
                 member.addNotice(study, creator, type);
                 memberRepository.save(member);
             }

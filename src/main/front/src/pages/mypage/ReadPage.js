@@ -8,7 +8,8 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import { API_SERVER_HOST } from "../../api/memberAPI";
 import useCategories from "../../hooks/useCategories";
 import React, { useEffect, useState } from "react";
-import jwtAxios from "../../util/jwtUtil";
+import { fetchMyStudyCount, fetchMyStudyJoinCount } from "../../api/studyAPI";
+import { getNoticeCount } from "../../api/noticeAPI";
 
 const host = API_SERVER_HOST;
 
@@ -28,40 +29,19 @@ const ReadPage = () => {
   // 유저 카운팅 가져오기
   const [myStudyCount, setMyStudyCount] = useState(0);
   const [myStudyJoinCount, setMyStudyJoinCount] = useState(0);
+  const [myNoticeCount, setMyNoticeCount] = useState(0);
 
   useEffect(() => {
-    const fetchMyStudyCount = async () => {
-      try {
-        const response = await jwtAxios.get(`${host}/api/study/countmy`, {
-          params: { email: userEmail },
-        });
-        setMyStudyCount(response.data.count);
-      } catch (error) {
-        console.error("스터디 개수를 가져오는데 실패했습니다.", error);
-        setMyStudyCount(0);
-      }
-    };
-
     if (userEmail) {
-      fetchMyStudyCount();
-    }
-  }, [userEmail, host]);
-
-  useEffect(() => {
-    const fetchMyStudyJoinCount = async () => {
-      try {
-        const response = await jwtAxios.get(`${host}/api/study/countmyJoin`, {
-          params: { email: userEmail },
-        });
-        setMyStudyJoinCount(response.data.count);
-      } catch (error) {
-        console.error("스터디 개수를 가져오는데 실패했습니다.", error);
-        setMyStudyJoinCount(0);
-      }
-    };
-
-    if (userEmail) {
-      fetchMyStudyJoinCount();
+      const fetchDatas = async () => {
+        const count = await fetchMyStudyCount(userEmail);
+        setMyStudyCount(count);
+        const joinCount = await fetchMyStudyJoinCount(userEmail);
+        setMyStudyJoinCount(joinCount);
+        const noticeCount = await getNoticeCount(userEmail);
+        setMyNoticeCount(noticeCount);
+      };
+      fetchDatas();
     }
   }, [userEmail, host]);
 
@@ -135,7 +115,7 @@ const ReadPage = () => {
         <div className="MenuWrap">
           <Link to="/mypage/alarm">
             <h3>📡 나의 알림</h3>
-            <span>0 건</span>
+            <span>{myNoticeCount} 건</span>
           </Link>
         </div>
         <div className="MenuWrap">
