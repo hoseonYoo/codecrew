@@ -138,31 +138,40 @@ const AddPage = () => {
     // 확인 처리
     if (imgSrc === null) {
       alert("이미지가 등록되지 않았습니다.");
+      const imageDiv = document.querySelector(".StudyAddImg");
+      imageDiv.setAttribute("tabindex", "0");
+      imageDiv.focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.title === "") {
       alert("제목이 입력되지 않았습니다.");
+      document.getElementsByName("title")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.location === "") {
       alert("위치정보가 입력되지 않았습니다.");
+      document.getElementsByName("location")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.studyDate === "") {
       alert("참여날짜가 입력되지 않았습니다.");
+      document.getElementsByName("studyDate")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     // 참여 날짜가 현재시간으로 부터 24시간이후 보다 전이면 중단
     if (new Date(study.studyDate).getTime() < new Date().getTime() + 86400000) {
       alert("참여날짜는 현재시간으로부터 24시간 이후로 설정해주세요.");
+      document.getElementsByName("studyDate")[0].focus();
       return;
     }
     if (study.category === "카테고리 선택" || study.category === "") {
       alert("카테고리가 입력되지 않았습니다.");
+      document.getElementsByName("category")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
     if (study.content === "") {
       alert("소개글이 입력되지 않았습니다.");
+      document.getElementsByName("content")[0].focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
 
@@ -195,6 +204,8 @@ const AddPage = () => {
       moveToMain();
     });
   };
+
+  // 타이핑 체크
   const [titleLength, setTitleLength] = useState(0);
   const [contentLength, setContentLength] = useState(0);
 
@@ -274,18 +285,16 @@ const AddPage = () => {
                 {titleLength} / 24
               </span>
             </div>
-            <div
-              // onClick={handleAddressSearchClick}
-              onClick={lat ? () => {} : handleAddressSearchClick}
-            >
+            <div onClick={lat ? () => {} : handleAddressSearchClick}>
               <h3>주소</h3>
               <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
 
               <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
             </div>
-            <div>
+            <div className="reWrap">
               <h3>참여날짜</h3>
               <input
+                id="studyDate"
                 name="studyDate"
                 value={study.studyDate}
                 type="datetime-local"
@@ -294,22 +303,20 @@ const AddPage = () => {
                 min={new Date().toISOString().substring(0, 16)}
                 max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
               />
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_de_gr.svg"} alt="deIcon" onClick={() => document.getElementsByName("studyDate")[0].click()} /> */}
             </div>
             <div>
               <h3>참여인원</h3>
-              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}>
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
                   </option>
                 ))}
               </select>
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_ar_gr.svg"} alt="deIcon" onClick={() => document.getElementById("maxPeople")[0].click()} /> */}
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select id="category" name="category" value={study.category} onChange={handleChangeStudy}>
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (
@@ -320,7 +327,6 @@ const AddPage = () => {
                     </React.Fragment>
                   ))}
               </select>
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_ar_gr.svg"} alt="deIcon" onClick={() => document.getElementsByName("category")[0].click()} /> */}
             </div>
             <div>
               <h3>스터디 소개</h3>
