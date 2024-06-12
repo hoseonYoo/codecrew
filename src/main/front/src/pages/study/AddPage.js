@@ -139,9 +139,7 @@ const AddPage = () => {
     if (imgSrc === null) {
       alert("이미지가 등록되지 않았습니다.");
       const imageDiv = document.querySelector(".StudyAddImg");
-      // tabindex 속성을 추가하여 div가 포커스를 받을 수 있게 합니다.
       imageDiv.setAttribute("tabindex", "0");
-      // 포커스를 해당 div로 이동합니다.
       imageDiv.focus();
       return; // 함수 실행을 여기서 중단합니다.
     }
@@ -224,13 +222,6 @@ const AddPage = () => {
       setContentLength(inputLenght);
     }
   };
-  // const dateInputRef = useRef();
-  // const maxPeopleSelectRef = useRef();
-  // const categorySelectRef = useRef();
-  // // 각 img 태그의 onClick 이벤트 핸들러
-  // const handleDateIconClick = () => dateInputRef.current.click();
-  // const handleMaxPeopleIconClick = () => maxPeopleSelectRef.current.click();
-  // const handleCategoryIconClick = () => categorySelectRef.current.click();
 
   return (
     <>
@@ -292,18 +283,16 @@ const AddPage = () => {
                 {titleLength} / 24
               </span>
             </div>
-            <div
-              // onClick={handleAddressSearchClick}
-              onClick={lat ? () => {} : handleAddressSearchClick}
-            >
+            <div onClick={lat ? () => {} : handleAddressSearchClick}>
               <h3>주소</h3>
               <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
 
               <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
             </div>
-            <div>
+            <div className="reWrap">
               <h3>참여날짜</h3>
               <input
+                id="studyDate"
                 name="studyDate"
                 value={study.studyDate}
                 type="datetime-local"
@@ -312,22 +301,20 @@ const AddPage = () => {
                 min={new Date().toISOString().substring(0, 16)}
                 max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
               />
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_de_gr.svg"} alt="deIcon" onClick={() => document.getElementsByName("studyDate")[0].click()} /> */}
             </div>
             <div>
               <h3>참여인원</h3>
-              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}>
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
                   </option>
                 ))}
               </select>
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_ar_gr.svg"} alt="deIcon" onClick={() => document.getElementById("maxPeople")[0].click()} /> */}
             </div>
             <div>
               <h3>카테고리</h3>
-              <select name="category" value={study.category} onChange={handleChangeStudy}>
+              <select id="category" name="category" value={study.category} onChange={handleChangeStudy}>
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (
@@ -338,7 +325,6 @@ const AddPage = () => {
                     </React.Fragment>
                   ))}
               </select>
-              {/* <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_ar_gr.svg"} alt="deIcon" onClick={() => document.getElementsByName("category")[0].click()} /> */}
             </div>
             <div>
               <h3>스터디 소개</h3>
