@@ -45,10 +45,6 @@ const UseNoticeText = (notice) => {
     else if (notice.noticeType === "PARTICIPATION_DATE") {
       return renderParticipationDateNoticeText(notice);
     }
-    // 장소 도착 알람
-    else if (notice.noticeType === "LOCATION_ARRIVAL") {
-      return renderLocationArrivalNoticeText(notice);
-    }
     // 출석 완료 알람
     else if (notice.noticeType === "ATTENDANCE_COMPLETE") {
       return renderAttendanceCompleteNoticeText(notice);
@@ -119,11 +115,6 @@ const UseNoticeText = (notice) => {
   // 참가일 당일 알람 텍스트
   const renderParticipationDateNoticeText = (notice) => {
     return <h3>{notice.studyTitle} 참가일이 오늘 입니다.</h3>;
-  };
-
-  // 장소 도착 알람 텍스트
-  const renderLocationArrivalNoticeText = (notice) => {
-    return <h3>{notice.studyTitle} 장소에 도착 하였습니다.</h3>;
   };
 
   // 출석 완료 알람 텍스트
