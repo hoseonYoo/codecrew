@@ -28,7 +28,6 @@ public class DataMemberDTO {
     private String introduction;
     private boolean disabled;
     private List<Category> favoriteList;
-    private List<Notice> noticeList;
     private int penalty;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime blockedDate;

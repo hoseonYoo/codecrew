@@ -21,11 +21,11 @@ const ReadPage = () => {
 
   // 수정이 필요없는 조회용 회원 정보 가져오기
   const { member, imgSrc } = useMemberProfile(userEmail);
+  console.log("member", member);
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
 
   // 유저 카운팅 가져오기
-
   const [myStudyCount, setMyStudyCount] = useState(0);
   const [myStudyJoinCount, setMyStudyJoinCount] = useState(0);
 
