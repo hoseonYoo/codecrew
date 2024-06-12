@@ -1,11 +1,8 @@
 package com.react.project2.controller;
 
-import com.react.project2.domain.Member;
 import com.react.project2.domain.MemberStatus;
 import com.react.project2.domain.NoticeType;
-import com.react.project2.domain.Study;
 import com.react.project2.dto.StudyDTO;
-import com.react.project2.service.MemberService;
 import com.react.project2.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StudyController {
     private final StudyService studyService;
-    private final MemberService memberService;
 
     // 스터디 등록
     @PostMapping("/")
@@ -67,12 +63,8 @@ public class StudyController {
             // 스터디 참가 로직 구현
             boolean result = studyService.participate(id, userEmail);
 
-            String creatorEmail = studyService.get(id).getMemberEmail();
-            // 스터디 생성자
-            Member memberEntity = memberService.getMemberEntity(creatorEmail);
-            Study study = studyService.getEntity(id);
-            memberEntity.addNotice(study, true, NoticeType.STUDY_PARTICIPATION);
-            memberService.save(memberEntity);
+            // 알람 생성
+            studyService.createNotice(id,"",true, NoticeType.STUDY_PARTICIPATION);
 
             return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 완료되었습니다."));
     }
@@ -81,7 +73,10 @@ public class StudyController {
     @PostMapping("/{id}/cancelParticipation")
     public ResponseEntity<?> participationCancel(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
         String userEmail = payload.get("email");
+        // 스터디 참가 취소 로직 구현
         studyService.changeMemberStatus(id, userEmail, MemberStatus.WITHDRAW);
+        // 알람 생성
+        studyService.createNotice(id,"",true, NoticeType.STUDY_WITHDRAWAL);
         return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 취소되었습니다."));
     }
 
@@ -89,7 +84,10 @@ public class StudyController {
     @PostMapping("/{id}/acceptJoin")
     public ResponseEntity<?> acceptJoin(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
         String userEmail = payload.get("email");
+        // 스터디 참가 수락 로직 구현
         studyService.changeMemberStatus(id, userEmail, MemberStatus.ACCEPT);
+        // 알람 생성
+        studyService.createNotice(id,userEmail,false, NoticeType.STUDY_APPROVAL);
         return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 수락되었습니다."));
     }
 
@@ -97,15 +95,20 @@ public class StudyController {
     @PostMapping("/{id}/declineJoin")
     public ResponseEntity<?> declineJoin(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
         String userEmail = payload.get("email");
+        // 스터디 참가 거절 로직 구현
         studyService.changeMemberStatus(id, userEmail, MemberStatus.DECLINE);
+        // 알람 생성
+        studyService.createNotice(id,userEmail,false, NoticeType.STUDY_REJECTION);
         return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 거절되었습니다."));
     }
+
 
     // 스터디 시작
     @PutMapping("/{id}/start")
     public ResponseEntity<?> startStudy(@PathVariable("id") Long id) {
         boolean result = studyService.startStudy(id);
         if (result){
+            studyService.createNotice(id,"ALL",false, NoticeType.STUDY_START);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 시작 처리 중 오류가 발생했습니다."));

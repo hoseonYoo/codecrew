@@ -74,7 +74,10 @@ const ReadPage = () => {
     <BasicLayoutPage headerTitle="마이페이지">
       <div>
         <div className="MyBlockWrap">
-          <div className="MyReadImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}></div>
+          <div
+            className="MyReadImg"
+            style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}
+          ></div>
           <div className="MyReadTitle">
             <h3>{member.nickname}</h3>
             <p>{member.email}</p>
@@ -91,7 +94,12 @@ const ReadPage = () => {
             {Object.entries(categories).length > 0 &&
               Object.entries(categories).map(([key, value], index) => (
                 <React.Fragment key={index}>
-                  <div id={key} className={member.favoriteList.includes(key) ? "checkCate" : ""}>
+                  <div
+                    id={key}
+                    className={
+                      member.favoriteList.includes(key) ? "checkCate" : ""
+                    }
+                  >
                     {value}
                   </div>
                 </React.Fragment>
@@ -100,12 +108,21 @@ const ReadPage = () => {
         </div>
         <div className="MyReadUserText">
           <h2>사용자 소개</h2>
-          {member.introduction ? <p>{member.introduction}</p> : <p>사용자 소개가 없습니다.</p>}
+          {member.introduction ? (
+            <p>{member.introduction}</p>
+          ) : (
+            <p>사용자 소개가 없습니다.</p>
+          )}
         </div>
         <div className="MyReadUserText">
           <h2>사용자 링크</h2>
           {member.memberLink ? (
-            <p style={{ color: "#555", cursor: "pointer" }} onClick={() => window.open(`https://${member.memberLink}`, "_blank")}>
+            <p
+              style={{ color: "#555", cursor: "pointer" }}
+              onClick={() =>
+                window.open(`https://${member.memberLink}`, "_blank")
+              }
+            >
               {member.memberLink}
             </p>
           ) : (

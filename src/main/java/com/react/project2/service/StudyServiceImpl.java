@@ -152,6 +152,26 @@ public class StudyServiceImpl implements StudyService {
        return studyRepository.countJoinStudy(email);
     }
 
+    @Override
+    public void createNotice(Long id, String userEmail, boolean creator,  NoticeType type){
+        Study study = studyRepository.findById(id).orElseThrow();
+        if (creator) {
+            userEmail = study.getMember().getEmail();
+        }
+        if (userEmail.equals("ALL")) {
+            List<StudyMember> studyMemberList = study.getStudyMemberList();
+            for (StudyMember studyMember : studyMemberList) {
+                Member member = memberRepository.findByEmail(studyMember.getEmail()).orElseThrow();
+                member.addNotice(study, creator, type);
+                memberRepository.save(member);
+            }
+            return;
+        }
+        Member member = memberRepository.findByEmail(userEmail).orElseThrow();
+        member.addNotice(study, creator, type);
+        memberRepository.save(member);
+    }
+
     private StudyDTO entityToDTO(Study study){
 
         StudyDTO studyDTO = StudyDTO.builder()

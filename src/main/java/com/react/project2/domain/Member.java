@@ -127,4 +127,8 @@ public class Member {
     }
 
 
+    public int getNoticeCount() {
+        // ***** 알림 갯수 조회 *****
+        return this.noticeList.size();
+    }
 }

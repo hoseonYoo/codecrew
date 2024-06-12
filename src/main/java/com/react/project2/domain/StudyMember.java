@@ -21,7 +21,8 @@ public class StudyMember {
 
     private String email;
 
-    private LocalDateTime createdDate; // 생성 날짜
+    @Builder.Default
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     // 대기, 수락, 거절, 탈퇴, 출석, 미출석
     @Enumerated(EnumType.STRING)

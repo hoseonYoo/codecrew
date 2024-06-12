@@ -42,4 +42,7 @@ Member getMemberEntity(String email);
 
     DataMemberDTO findMemberByPhone(String phone);
 
+    // 회원 알림 갯수 조회
+    int getNoticeCount(String email);
+
 }
