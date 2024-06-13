@@ -48,6 +48,20 @@ const ReadPage = () => {
     const studyDate = new Date(date);
     return studyDate.toDateString() === today.toDateString();
   };
+  console.log(study);
+
+  // 위치 값 구하기
+  const calculateDistance = (location1, location2) => {
+    const R = 6371; // 지구의 반지름 (km)
+    const dLat = ((location2.locationY - location1.lat) * Math.PI) / 180;
+    const dLng = ((location2.locationX - location1.lng) * Math.PI) / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((location1.lat * Math.PI) / 180) * Math.cos((location2.locationY * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    return distance;
+  };
 
   // 참가하기, 참가취소 버튼
   const participateButtonCheck = () => {
@@ -117,8 +131,44 @@ const ReadPage = () => {
           );
         } else {
           const onArriveClick = async () => {
-            await handleArrive(study.id);
-            reRender();
+            // 사용자의 현재 위치를 가져옵니다.
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                  const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                  };
+
+                  // 스터디 위치를 가져옵니다.
+                  const studyLocation = {
+                    lat: study.locationY,
+                    lng: study.locationX,
+                  }; // 스터디의 위도와 경도
+
+                  console.log(userLocation);
+                  console.log(studyLocation);
+                  // 사용자 위치와 스터디 위치 사이의 거리를 계산합니다.
+                  const distance = calculateDistance(userLocation, studyLocation);
+
+                  // 거리가 200m 이내인지 확인합니다.
+                  if (distance <= 0.2) {
+                    // 출석체크 로직을 실행합니다.
+                    await handleArrive(study.id);
+                    reRender();
+                  } else {
+                    // 사용자에게 경고 메시지를 표시합니다.
+                    alert("스터디 위치가 아닙니다.");
+                  }
+                },
+                (error) => {
+                  // 위치 정보를 가져오는데 실패한 경우
+                  alert("위치 정보를 가져올 수 없습니다.");
+                }
+              );
+            } else {
+              alert("Geolocation is not supported by this browser.");
+            }
           };
 
           return (
