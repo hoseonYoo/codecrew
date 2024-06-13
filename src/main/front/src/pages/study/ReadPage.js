@@ -37,7 +37,7 @@ const ReadPage = () => {
   const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
 
   // 클릭 이동관련
-  const { moveToProfilePage, moveToModifyPage } = useCustomMove();
+  const { moveToProfilePage, moveToModifyPage, moveToMain } = useCustomMove();
 
   const { handleParticipate, handleParticipateCancel, handleArrive } = useHandleStudyMember();
   const { handleStart, handleDelete, handleFinish } = useHandleStudy();
@@ -84,8 +84,12 @@ const ReadPage = () => {
           스터디시작
         </button>
       );
-    } else if (userEmail === studyUserEmail && study.confirmed && study.finished) {
-      return <button className="btnLargeGrey">종료된 스터디</button>;
+    } else if (study.finished) {
+      return (
+        <button className="btnLargeGrey" onClick={() => moveToMain()}>
+          종료된 스터디
+        </button>
+      );
     } else if (userEmail === studyUserEmail && study.confirmed) {
       if (!isToday(study.studyDate)) {
         return (
@@ -234,6 +238,8 @@ const ReadPage = () => {
           </button>
         </>
       );
+    } else if (study.finished) {
+      <></>;
     } else if (userEmail !== studyUserEmail && !study.confirmed) {
       // 로그인시(생성자 X)
       return (
@@ -335,7 +341,7 @@ const ReadPage = () => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0;
+    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -352,7 +358,8 @@ const ReadPage = () => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0) + 1}
+        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0) + 1}
+
         <span>/</span>
         {study.maxPeople + 1}
       </p>
@@ -474,6 +481,7 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">{participateButtonCheck()}</div>
       </div>
+      {/* <div className="endPageWrap"></div> */}
     </BasicLayoutPage>
   );
 };
