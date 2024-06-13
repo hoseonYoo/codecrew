@@ -57,6 +57,7 @@ public class StudyController {
         });
 
         return Map.of("result", "SUCCESS");
+
     }
 
     // 스터디 삭제
