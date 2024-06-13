@@ -50,6 +50,13 @@ const ReadPage = () => {
   };
   console.log(study);
 
+  const isFinishHour = (studyDate) => {
+    const finishTime = new Date(studyDate);
+    finishTime.setHours(finishTime.getHours() + 2); // 스터디 종료 시간 2시간 후로 설정
+    const currentTime = new Date();
+    return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
+  };
+
   // 위치 값 구하기
   const calculateDistance = (userLocation, studyLocation) => {
     const R = 6371; // 지구의 반지름 (km)
@@ -80,14 +87,6 @@ const ReadPage = () => {
     } else if (userEmail === studyUserEmail && study.confirmed && study.finished) {
       return <button className="btnLargeGrey">종료된 스터디</button>;
     } else if (userEmail === studyUserEmail && study.confirmed) {
-      const isClickable = (studyDate) => {
-        const finishTime = new Date(studyDate);
-        finishTime.setHours(finishTime.getHours() + 2); // 스터디 종료 시간 2시간 후로 설정
-
-        const currentTime = new Date();
-        return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
-      };
-
       if (!isToday(study.studyDate)) {
         return (
           <button
@@ -101,23 +100,27 @@ const ReadPage = () => {
         );
       } else {
         const onStudyFinishClick = async () => {
-          if (isClickable(study.studyDate)) {
-            await handleFinish(study);
-            reRender();
-          } else {
-            alert("스터디 종료는 스터디 시작 시간으로부터 2시간 후부터 가능합니다.");
-          }
+          await handleFinish(study);
+          reRender();
         };
-
-        return (
-          <button
-            className="btnLargePoint"
-            onClick={() => onStudyFinishClick()}
-            disabled={!isClickable(study.studyDate)} // isClickable 함수를 사용하여 버튼 활성화/비활성화
-          >
-            스터디종료
-          </button>
-        );
+        if (!isFinishHour(study.studyDate)) {
+          return (
+            <button
+              className="btnLargePoint"
+              onClick={() => {
+                alert("스터디시작 2시간 이후부터 종료가 가능합니다.");
+              }}
+            >
+              스터디종료
+            </button>
+          );
+        } else {
+          return (
+            <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
+              스터디종료
+            </button>
+          );
+        }
       }
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
       const onWithdrawClick = async () => {
