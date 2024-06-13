@@ -34,6 +34,9 @@ public interface StudyService {
     // 마커용 스터디 카테고리별 전체 조회
     List<StudyDTO> getStudyMarkerByCategory(String category);
 
+    // 스터디 완료
+    boolean finishedStudy(Long id);
+
     // 사용자 이메일로 생성한 스터디 개수 조회
     int countStudy(String email);
 

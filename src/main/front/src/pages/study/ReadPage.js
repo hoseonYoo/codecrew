@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import StudyMemberBlock from "../../components/study/StudyMemberBlock";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
+// import PopUp from "../../components/PopUp.js/PopUp";
 
 const ReadPage = () => {
   const [refresh, setRefresh] = useState(false);
@@ -31,20 +32,16 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } =
-    useMemberProfile(studyUserEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
   // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList.some(
-    (member) => member.email === userEmail,
-  );
+  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
 
   // 클릭 이동관련
-  const { moveToProfilePage, moveToModifyPage } = useCustomMove();
+  const { moveToProfilePage, moveToModifyPage, moveToMain } = useCustomMove();
 
-  const { handleParticipate, handleParticipateCancel, handleArrive } =
-    useHandleStudyMember();
-  const { handleStart, handleDelete } = useHandleStudy();
+  const { handleParticipate, handleParticipateCancel, handleArrive } = useHandleStudyMember();
+  const { handleStart, handleDelete, handleFinish } = useHandleStudy();
 
   // 날짜 체크관련
   const isToday = (date) => {
@@ -54,21 +51,23 @@ const ReadPage = () => {
   };
   console.log(study);
 
-  // 위치 값 구하기
-  const calculateDistance = (location1, location2) => {
-    const R = 6371; // 지구의 반지름 (km)
-    const dLat = ((location2.locationY - location1.lat) * Math.PI) / 180;
-    const dLng = ((location2.locationX - location1.lng) * Math.PI) / 180;
+  const isFinishHour = (studyDate) => {
+    const finishTime = new Date(studyDate);
+    finishTime.setHours(finishTime.getHours() + 2); // 스터디 종료 시간 2시간 후로 설정
+    const currentTime = new Date();
+    return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
+  };
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((location1.lat * Math.PI) / 180) *
-        Math.cos((location2.locationY * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+  // 위치 값 구하기
+  const calculateDistance = (userLocation, studyLocation) => {
+    const R = 6371; // 지구의 반지름 (km)
+    const dLat = ((studyLocation.lat - userLocation.lat) * Math.PI) / 180;
+    const dLng = ((studyLocation.lng - userLocation.lng) * Math.PI) / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((userLocation.lat * Math.PI) / 180) * Math.cos((studyLocation.lat * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
-
+    console.log(distance);
     return distance;
   };
 
@@ -91,29 +90,47 @@ const ReadPage = () => {
           스터디시작
         </button>
       );
+    } else if (study.finished) {
+      return (
+        <button className="btnLargeGrey" onClick={() => moveToMain()}>
+          스터디종료
+        </button>
+      );
     } else if (userEmail === studyUserEmail && study.confirmed) {
       if (!isToday(study.studyDate)) {
         return (
           <button
             className="btnLargeGrey"
             onClick={() => {
-              alert("스터디당일에만 수정가능합니다.");
+              alert("스터디당일에만 종료가 가능합니다.");
             }}
           >
-            출석관리
+            스터디종료
           </button>
         );
       } else {
-        return (
-          <button
-            className="btnLargePoint"
-            onClick={() => {
-              alert("수정가능");
-            }}
-          >
-            출석관리
-          </button>
-        );
+        const onStudyFinishClick = async () => {
+          await handleFinish(study);
+          reRender();
+        };
+        if (!isFinishHour(study.studyDate)) {
+          return (
+            <button
+              className="btnLargePoint"
+              onClick={() => {
+                alert("스터디시작 2시간 이후부터 종료가 가능합니다.");
+              }}
+            >
+              스터디종료
+            </button>
+          );
+        } else {
+          return (
+            <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
+              스터디종료
+            </button>
+          );
+        }
       }
     } else if (
       isCurrentUserAMember &&
@@ -190,7 +207,7 @@ const ReadPage = () => {
                     reRender();
                   } else {
                     // 사용자에게 경고 메시지를 표시합니다.
-                    alert("스터디 위치가 아닙니다.");
+                    alert("스터디 장소에서 출석체크 버튼을 눌러주세요.");
                   }
                 },
                 (error) => {
@@ -254,6 +271,8 @@ const ReadPage = () => {
           </button>
         </>
       );
+    } else if (study.finished) {
+      <></>;
     } else if (userEmail !== studyUserEmail && !study.confirmed) {
       // 로그인시(생성자 X)
       return (
@@ -361,10 +380,7 @@ const ReadPage = () => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList
-      ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
-          .length
-      : 0;
+    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -381,10 +397,8 @@ const ReadPage = () => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList
-          ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
-              .length
-          : 0) + 1}
+        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0) + 1}
+
         <span>/</span>
         {study.maxPeople + 1}
       </p>
@@ -464,7 +478,7 @@ const ReadPage = () => {
   };
 
   return (
-    <BasicLayoutPage headerTitle="스터디">
+    <BasicLayoutPage headerTitle={study.finished ? "종료된 스터디" : "스터디"}>
       <div>
         {/*스터디 이미지*/}
         <div className="ReadContent">
@@ -581,6 +595,8 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">{participateButtonCheck()}</div>
       </div>
+      {study.finished && <div className="endPageWrap"></div>}
+      {/* <PopUp /> */}
     </BasicLayoutPage>
   );
 };
