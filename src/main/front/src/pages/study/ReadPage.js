@@ -40,7 +40,7 @@ const ReadPage = () => {
   const { moveToProfilePage, moveToModifyPage } = useCustomMove();
 
   const { handleParticipate, handleParticipateCancel, handleArrive } = useHandleStudyMember();
-  const { handleStart, handleDelete } = useHandleStudy();
+  const { handleStart, handleDelete, handleFinish } = useHandleStudy();
 
   // 날짜 체크관련
   const isToday = (date) => {
@@ -51,15 +51,15 @@ const ReadPage = () => {
   console.log(study);
 
   // 위치 값 구하기
-  const calculateDistance = (location1, location2) => {
+  const calculateDistance = (userLocation, studyLocation) => {
     const R = 6371; // 지구의 반지름 (km)
-    const dLat = ((location2.locationY - location1.lat) * Math.PI) / 180;
-    const dLng = ((location2.locationX - location1.lng) * Math.PI) / 180;
+    const dLat = ((studyLocation.lat - userLocation.lat) * Math.PI) / 180;
+    const dLng = ((studyLocation.lng - userLocation.lng) * Math.PI) / 180;
 
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((location1.lat * Math.PI) / 180) * Math.cos((location2.locationY * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((userLocation.lat * Math.PI) / 180) * Math.cos((studyLocation.lat * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
-
+    console.log(distance);
     return distance;
   };
 
@@ -77,6 +77,8 @@ const ReadPage = () => {
           스터디시작
         </button>
       );
+    } else if (userEmail === studyUserEmail && study.confirmed && study.finished) {
+      return <button className="btnLargeGrey">종료된 스터디</button>;
     } else if (userEmail === studyUserEmail && study.confirmed) {
       if (!isToday(study.studyDate)) {
         return (
@@ -90,14 +92,14 @@ const ReadPage = () => {
           </button>
         );
       } else {
+        const onStudyFinishClick = async () => {
+          await handleFinish(study);
+          reRender();
+        };
+
         return (
-          <button
-            className="btnLargePoint"
-            onClick={() => {
-              alert("수정가능");
-            }}
-          >
-            출석관리
+          <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
+            스터디종료
           </button>
         );
       }
@@ -158,7 +160,7 @@ const ReadPage = () => {
                     reRender();
                   } else {
                     // 사용자에게 경고 메시지를 표시합니다.
-                    alert("스터디 위치가 아닙니다.");
+                    alert("스터디 장소에서 출석체크 버튼을 눌러주세요.");
                   }
                 },
                 (error) => {

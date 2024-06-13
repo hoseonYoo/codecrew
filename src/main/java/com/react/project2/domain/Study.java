@@ -64,6 +64,9 @@ public class Study {
     // 확정 여부
     private boolean isConfirmed;
 
+    // 완료 여부
+    private boolean isFinished;
+
     // 카테고리
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -92,7 +95,7 @@ public class Study {
     public void changeLocationY(double locationY) {
         this.locationY = locationY;
     }
-public void changeStudyDate(LocalDateTime studyDate) {
+    public void changeStudyDate(LocalDateTime studyDate) {
         this.studyDate = studyDate;
     }
     public void changeStudyDeadlineDate(LocalDateTime studyDeadlineDate) {
@@ -107,9 +110,9 @@ public void changeStudyDate(LocalDateTime studyDate) {
     public void changeDisabled(boolean disabled) {
         this.disabled = disabled;
     }
-
-    public void changeIsConfirmed(boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
+    public void changeIsConfirmed(boolean isConfirmed) {this.isConfirmed = isConfirmed;}
+    public void changeIsFinished(boolean isFinished) {
+        this.isFinished = isFinished;
     }
 
     // 스터디 참가자를 추가하는 메소드
@@ -131,5 +134,9 @@ public void changeStudyDate(LocalDateTime studyDate) {
     // 스터디 시작하는 메소드
     public boolean getIsConfirmed() {
         return isConfirmed;
+    }
+    // 스터디 완료
+    public boolean getIsFinished() {
+        return isFinished;
     }
 }
