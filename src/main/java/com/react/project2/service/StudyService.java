@@ -36,6 +36,12 @@ public interface StudyService {
     // 스터디 멤버 상태 변경
     void changeMemberStatus(Long id, String userEmail, MemberStatus status);
 
+    // 스터디 멤버 전체 상태 변경
+    void changeAllMemberStatus(Long id, MemberStatus status);
+
+    // 특정 상태를 제외한 스터디 멤버 전체 상태 변경
+    void changeAllMemberStatusExcept(Long id, MemberStatus status, MemberStatus exceptStatus);
+
     // 스터디 시작
     boolean startStudy(Long id);
 

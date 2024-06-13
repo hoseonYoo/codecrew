@@ -55,6 +55,7 @@ public class StudyServiceImpl implements StudyService {
     // 스터디 수정
     @Override
     public void modifyStudy(StudyDTO studyDTO) {
+        log.info("modifyStudy, studyDTO : " + studyDTO);
         // ID를 사용하여 기존 스터디 엔티티를 조회합니다.
         Study study = studyRepository.findById(studyDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
@@ -81,9 +82,9 @@ public class StudyServiceImpl implements StudyService {
     public boolean delete(Long id) {
         Study study = studyRepository.findById(id).orElseThrow();
 
-            study.changeDisabled(true);
-            studyRepository.save(study);
-            return true;
+        study.changeDisabled(true);
+        studyRepository.save(study);
+        return true;
 
     }
 
@@ -116,6 +117,7 @@ public class StudyServiceImpl implements StudyService {
         return true;
     }
 
+    // 특정 스터디 멤버 상태 변경
     @Override
     public void changeMemberStatus(Long id, String userEmail, MemberStatus status) {
         // 스터디 엔티티 조회
@@ -125,6 +127,29 @@ public class StudyServiceImpl implements StudyService {
         // 참가자 목록에서 사용자 status를 변경
         study.changeStudyMemberStatus(userEmail, status);
 
+        // 변경사항 저장
+        studyRepository.save(study);
+    }
+
+    // 스터디 멤버 전체 상태 변경
+    @Override
+    public void changeAllMemberStatus(Long id, MemberStatus status) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        study.changeAllStudyMemberStatus(status);
+        // 변경사항 저장
+        studyRepository.save(study);
+
+    }
+
+    // 특정 상태를 제외한 스터디 멤버 전체 상태 변경
+    @Override
+    public void changeAllMemberStatusExcept(Long id, MemberStatus status, MemberStatus exceptStatus) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        study.changeAllStudyMemberStatusExcept(status, exceptStatus);
         // 변경사항 저장
         studyRepository.save(study);
     }
@@ -144,16 +169,16 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public int countStudy(String email) {
-         return studyRepository.countStudy(email);
+        return studyRepository.countStudy(email);
     }
 
     @Override
     public int countJoinStudy(String email) {
-       return studyRepository.countJoinStudy(email);
+        return studyRepository.countJoinStudy(email);
     }
 
     @Override
-    public void createNotice(Long studtyId, String userEmail, boolean creator,  NoticeType type){
+    public void createNotice(Long studtyId, String userEmail, boolean creator, NoticeType type) {
         Study study = studyRepository.findById(studtyId).orElseThrow();
         if (creator) {
             userEmail = study.getMember().getEmail();
@@ -173,7 +198,7 @@ public class StudyServiceImpl implements StudyService {
         memberRepository.save(member);
     }
 
-    private StudyDTO entityToDTO(Study study){
+    private StudyDTO entityToDTO(Study study) {
 
         StudyDTO studyDTO = StudyDTO.builder()
                 .id(study.getId())
@@ -225,6 +250,9 @@ public class StudyServiceImpl implements StudyService {
 
         // Study 엔티티를 생성하고 Member 엔티티를 설정합니다.
         studyDTO.changeStudyDate(studyDTO.getStrStudyDate());
+        //strStudyDeadlineDate를 Long으로 변경해야함
+        studyDTO.changeStudyDeadlineDate(Long.parseLong(studyDTO.getStrStudyDeadlineDate()));
+        log.info("studyDTO.getStrStudyDeadlineDate() : " + studyDTO.getStrStudyDeadlineDate());
 
         Study study = Study.builder()
                 .thImg(studyDTO.getThImg())
@@ -232,7 +260,7 @@ public class StudyServiceImpl implements StudyService {
                 .content(studyDTO.getContent())
                 .member(member) // 조회된 Member 엔티티를 사용합니다.
                 .location(studyDTO.getLocation())
-                .studyDeadlineDate(studyDTO.getStudyDate())
+                .studyDeadlineDate(studyDTO.getStudyDeadlineDate())
                 .locationX((Double) studyDTO.getLocationX())
                 .locationY((Double) studyDTO.getLocationY())
                 .studyDate(studyDTO.getStudyDate())

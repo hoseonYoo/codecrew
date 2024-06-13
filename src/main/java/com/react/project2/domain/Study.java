@@ -77,33 +77,43 @@ public class Study {
     public void changeTitle(String title) {
         this.title = title;
     }
+
     public void changeThImg(String thImg) {
         this.thImg = thImg;
     }
+
     public void changeContent(String content) {
         this.content = content;
     }
+
     public void changeLocation(String location) {
         this.location = location;
     }
+
     public void changeLocationX(double locationX) {
         this.locationX = locationX;
     }
+
     public void changeLocationY(double locationY) {
         this.locationY = locationY;
     }
-public void changeStudyDate(LocalDateTime studyDate) {
+
+    public void changeStudyDate(LocalDateTime studyDate) {
         this.studyDate = studyDate;
     }
+
     public void changeStudyDeadlineDate(LocalDateTime studyDeadlineDate) {
         this.studyDeadlineDate = studyDeadlineDate;
     }
+
     public void changeMaxPeople(int maxPeople) {
         this.maxPeople = maxPeople;
     }
+
     public void changeCategory(Category category) {
         this.category = category;
     }
+
     public void changeDisabled(boolean disabled) {
         this.disabled = disabled;
     }
@@ -117,7 +127,7 @@ public void changeStudyDate(LocalDateTime studyDate) {
         this.studyMemberList.add(member);
     }
 
-       // 스터디 참가자 상태를 변경하는 메소드
+    // 스터디 참가자 상태를 변경하는 메소드
     public boolean changeStudyMemberStatus(String memberEmail, MemberStatus status) {
         StudyMember memberToChange = this.studyMemberList.stream()
                 .filter(member -> member.getEmail().equals(memberEmail))
@@ -126,6 +136,18 @@ public void changeStudyDate(LocalDateTime studyDate) {
 
         memberToChange.setStatus(status);
         return true;
+    }
+
+    // 스터디 참가자 전체 상태를 변경하는 메소드
+    public void changeAllStudyMemberStatus(MemberStatus status) {
+        this.studyMemberList.forEach(member -> member.setStatus(status));
+    }
+
+    // 스터디 참가자 중 특정 상태를 제외한 전체 상태를 변경하는 메소드
+    public void changeAllStudyMemberStatusExcept(MemberStatus status, MemberStatus exceptStatus) {
+        this.studyMemberList.stream()
+                .filter(member -> member.getStatus() != exceptStatus)
+                .forEach(member -> member.setStatus(status));
     }
 
     // 스터디 시작하는 메소드

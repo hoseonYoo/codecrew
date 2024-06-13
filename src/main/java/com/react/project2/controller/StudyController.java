@@ -119,7 +119,11 @@ public class StudyController {
     @PutMapping("/{id}/start")
     public ResponseEntity<?> startStudy(@PathVariable("id") Long id) {
         boolean result = studyService.startStudy(id);
+        // 스터디 시작 로직 구현
         if (result){
+            // 현재까지 대기중인 참가자들의 상태를 거절로 변경
+            studyService.changeAllMemberStatusExcept(id, MemberStatus.DECLINE, MemberStatus.ACCEPT);
+            // 알람 생성
             studyService.createNotice(id,"ALL",false, NoticeType.STUDY_START);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 시작되었습니다."));
         } else {
