@@ -14,7 +14,7 @@ const MainPage = () => {
   const loginState = useSelector((state) => state.loginSlice);
 
   // 페이지 이동을 위한 함수들
-  const { moveToLogin, moveToMypage, moveToAddPage } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToAlarmPage } = useCustomMove();
   const [refresh, setRefresh] = useState(false);
   const reRender = () => {
     setRefresh(!refresh);
@@ -51,16 +51,13 @@ const MainPage = () => {
   useEffect(() => {
     // 로그인 상태가 변경될 때마다 새로운 인터벌을 시작합니다.
     if (loginState.email) {
-      const intervalId = setInterval(
-        () => {
-          getNoticeCount(loginState.email).then((data) => {
-            setNoticeCount(data);
-          });
-          // TODO: 알림 갯수를 가져오는 API 호출 시간 조절
-          // }, 1000);
-        },
-        1000 * 60 * 5,
-      );
+      const intervalId = setInterval(() => {
+        getNoticeCount(loginState.email).then((data) => {
+          setNoticeCount(data);
+        });
+        // TODO: 알림 갯수를 가져오는 API 호출 시간 조절
+        // }, 1000);
+      }, 1000 * 60 * 5);
 
       // useEffect가 다시 실행되기 전에 이전 인터벌을 정리합니다.
       return () => {
@@ -72,7 +69,12 @@ const MainPage = () => {
   const renderNoticeCount = () => {
     if (noticeCount > 0) {
       return (
-        <div className="MyNoticeCount">
+        <div
+          className="MyNoticeCount"
+          onClick={() => {
+            moveToAlarmPage();
+          }}
+        >
           <span>{noticeCount}</span>
         </div>
       );
