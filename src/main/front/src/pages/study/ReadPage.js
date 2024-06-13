@@ -80,25 +80,41 @@ const ReadPage = () => {
     } else if (userEmail === studyUserEmail && study.confirmed && study.finished) {
       return <button className="btnLargeGrey">종료된 스터디</button>;
     } else if (userEmail === studyUserEmail && study.confirmed) {
+      const isClickable = (studyDate) => {
+        const finishTime = new Date(studyDate);
+        finishTime.setHours(finishTime.getHours() + 2); // 스터디 종료 시간 2시간 후로 설정
+
+        const currentTime = new Date();
+        return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
+      };
+
       if (!isToday(study.studyDate)) {
         return (
           <button
             className="btnLargeGrey"
             onClick={() => {
-              alert("스터디당일에만 수정가능합니다.");
+              alert("스터디당일에만 종료가 가능합니다.");
             }}
           >
-            출석관리
+            스터디종료
           </button>
         );
       } else {
         const onStudyFinishClick = async () => {
-          await handleFinish(study);
-          reRender();
+          if (isClickable(study.studyDate)) {
+            await handleFinish(study);
+            reRender();
+          } else {
+            alert("스터디 종료는 스터디 시작 시간으로부터 2시간 후부터 가능합니다.");
+          }
         };
 
         return (
-          <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
+          <button
+            className="btnLargePoint"
+            onClick={() => onStudyFinishClick()}
+            disabled={!isClickable(study.studyDate)} // isClickable 함수를 사용하여 버튼 활성화/비활성화
+          >
             스터디종료
           </button>
         );
