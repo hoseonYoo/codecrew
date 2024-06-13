@@ -12,6 +12,7 @@ const useCustomMap = () => {
     get: false,
     isLoaded: false,
   });
+
   // 셀렉터로 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
   const studyLocationList = useSelector(
