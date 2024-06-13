@@ -59,9 +59,6 @@ public class StudyServiceImpl implements StudyService {
         study.changeLocation(studyDTO.getLocation());
         study.changeLocationX(studyDTO.getLocationX());
         study.changeLocationY(studyDTO.getLocationY());
-        studyDTO.changeStudyDateWithOutT(studyDTO.getStrStudyDate());
-        //TODO 데드라인 날짜 추가
-        study.changeStudyDate(studyDTO.getStudyDate());
         study.changeMaxPeople(studyDTO.getMaxPeople());
         study.changeCategory(studyDTO.getCategory());
 

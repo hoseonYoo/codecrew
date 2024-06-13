@@ -151,7 +151,7 @@ const ModifyPage = () => {
     formData.append("thImg", study.thImg);
     formData.append("title", study.title);
     formData.append("content", study.content);
-    formData.append("memberEmail", study.userEmail);
+    formData.append("memberEmail", study.memberEmail);
     formData.append("location", study.location);
     formData.append("maxPeople", parseInt(study.maxPeople));
     formData.append("category", study.category);
