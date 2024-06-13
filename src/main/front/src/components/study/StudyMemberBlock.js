@@ -54,10 +54,10 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
     return (
       <>
         <button className="btnSmallPoint" onClick={onAcceptClick}>
-          수락
+          수락하기
         </button>
         <button className="btnSmallBlack" onClick={onDeclineClick}>
-          거절
+          거절하기
         </button>
       </>
     );
