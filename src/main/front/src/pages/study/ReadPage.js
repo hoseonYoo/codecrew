@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import StudyMemberBlock from "../../components/study/StudyMemberBlock";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
+// import PopUp from "../../components/PopUp.js/PopUp";
 
 const ReadPage = () => {
   const [refresh, setRefresh] = useState(false);
@@ -482,6 +483,7 @@ const ReadPage = () => {
         <div className="StudyJoinBtn">{participateButtonCheck()}</div>
       </div>
       {study.finished && <div className="endPageWrap"></div>}
+      {/* <PopUp /> */}
     </BasicLayoutPage>
   );
 };

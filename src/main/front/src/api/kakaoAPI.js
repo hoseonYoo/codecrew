@@ -4,9 +4,9 @@ import { API_SERVER_HOST } from "./memberAPI";
 // ToDo 카카오에서 발급 받은 내 REST API 키
 const rest_api_key = `dcb40de2e6ff14c5d5862f9b01cc3b84`;
 // RedirectURI
-// const redirect_uri = `http://192.168.0.244:3000/member/kakao`;
-// const redirect_uri = `http://192.168.219.177:3000/member/kakao`;
+// const redirect_uri = `http://192.168.0.48:3000/member/kakao`;
 const redirect_uri = `http://localhost:3000/member/kakao`;
+
 // 카카오 인가코드 요청 경로
 const auth_code_path = `https://kauth.kakao.com/oauth/authorize`;
 // 카카오 Access Token 요청 경로

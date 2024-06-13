@@ -115,7 +115,7 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
   const renderHoldButton = () => {
     return (
       <button className="btnSmallPoint" style={{ marginTop: "16px", cursor: "default" }}>
-        대기중
+        참가대기
       </button>
     );
   };
