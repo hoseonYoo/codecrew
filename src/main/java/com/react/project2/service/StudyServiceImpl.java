@@ -77,18 +77,7 @@ public class StudyServiceImpl implements StudyService {
 
     }
 
-    // 스터디 완료
-    @Override
-    public boolean finishedStudy(Long id) {
-        Optional<Study> studyOptional = studyRepository.findById(id);
-        if (studyOptional.isPresent()) {
-            Study study = studyOptional.get();
-            study.changeIsFinished(true);
-            studyRepository.save(study);
-            return true;
-        }
-        return false;
-    }
+
 
     // *************** 스터디 조건으로 조회 ***************
 
@@ -175,6 +164,11 @@ public class StudyServiceImpl implements StudyService {
             // 생성자에게 벌점 부여
             study.getMember().addPenalty(4);
             noticeService.createNotice(study.getId(), "", true, NoticeType.PENALTY);
+            // 생성자의 벌점 확인
+            if(study.getMember().getPenalty() >= 5){
+                study.getMember().changeBlockedDate(true);
+            }
+
             log.info("study.getMember().getPenalty() : " + study.getMember().getPenalty());
             // 스터디 삭제
             delete(study.getId());
@@ -257,6 +251,19 @@ public class StudyServiceImpl implements StudyService {
         if (studyOptional.isPresent()) {
             Study study = studyOptional.get();
             study.changeIsConfirmed(true);
+            studyRepository.save(study);
+            return true;
+        }
+        return false;
+    }
+
+    // 스터디 완료
+    @Override
+    public boolean finishedStudy(Long id) {
+        Optional<Study> studyOptional = studyRepository.findById(id);
+        if (studyOptional.isPresent()) {
+            Study study = studyOptional.get();
+            study.changeIsFinished(true);
             studyRepository.save(study);
             return true;
         }
