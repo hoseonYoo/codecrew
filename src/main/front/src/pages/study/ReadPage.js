@@ -87,7 +87,7 @@ const ReadPage = () => {
     } else if (study.finished) {
       return (
         <button className="btnLargeGrey" onClick={() => moveToMain()}>
-          종료된 스터디
+          스터디종료
         </button>
       );
     } else if (userEmail === studyUserEmail && study.confirmed) {
@@ -398,7 +398,7 @@ const ReadPage = () => {
   };
 
   return (
-    <BasicLayoutPage headerTitle="스터디">
+    <BasicLayoutPage headerTitle={study.finished ? "종료된 스터디" : "스터디"}>
       <div>
         {/*스터디 이미지*/}
         <div className="ReadContent">
@@ -481,7 +481,7 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">{participateButtonCheck()}</div>
       </div>
-      {/* <div className="endPageWrap"></div> */}
+      {study.finished && <div className="endPageWrap"></div>}
     </BasicLayoutPage>
   );
 };
