@@ -39,6 +39,9 @@ public interface StudyService {
     // 스터디 시작
     boolean startStudy(Long id);
 
+    // 스터디 완료
+    boolean finishedStudy(Long id);
+
     // 사용자 이메일로 생성한 스터디 개수 조회
     int countStudy(String email);
 

@@ -41,6 +41,7 @@ public class StudyDTO {
     private int maxPeople;
     private boolean disabled;
     private boolean isConfirmed;
+    private boolean isFinished;
     private Category category;
     // 스터디 참여자 목록
     private List<StudyMember> studyMemberList;

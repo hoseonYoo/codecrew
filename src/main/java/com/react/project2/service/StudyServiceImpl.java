@@ -1,24 +1,17 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.*;
-import com.react.project2.dto.PageRequestDTO;
-import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -142,6 +135,19 @@ public class StudyServiceImpl implements StudyService {
         return false;
     }
 
+    // 스터디 완료
+    @Override
+    public boolean finishedStudy(Long id) {
+        Optional<Study> studyOptional = studyRepository.findById(id);
+        if (studyOptional.isPresent()) {
+            Study study = studyOptional.get();
+            study.changeIsFinished(true);
+            studyRepository.save(study);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public int countStudy(String email) {
          return studyRepository.countStudy(email);
@@ -190,6 +196,7 @@ public class StudyServiceImpl implements StudyService {
                 .studyDate(study.getStudyDate())
                 .maxPeople(study.getMaxPeople())
                 .isConfirmed(study.getIsConfirmed())
+                .isFinished(study.getIsFinished())
                 .category(study.getCategory())
                 .studyMemberList(study.getStudyMemberList())
                 .build();
