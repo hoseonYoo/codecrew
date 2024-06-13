@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -73,7 +74,7 @@ public class Study {
     @Builder.Default
     private List<StudyMember> studyMemberList = new ArrayList<>();
 
-    // 개별필드에서 사용하기 위한 용도
+    // *************** 스터디 정보 변경 메소드 ***************
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -122,20 +123,21 @@ public class Study {
         this.isConfirmed = isConfirmed;
     }
 
+    // *************** 스터디 참가자 상태 변경 및 수정 메소드 ***************
+
     // 스터디 참가자를 추가하는 메소드
     public void addStudyMember(StudyMember member) {
         this.studyMemberList.add(member);
     }
 
     // 스터디 참가자 상태를 변경하는 메소드
-    public boolean changeStudyMemberStatus(String memberEmail, MemberStatus status) {
+    public void changeStudyMemberStatus(String memberEmail, MemberStatus status) {
         StudyMember memberToChange = this.studyMemberList.stream()
                 .filter(member -> member.getEmail().equals(memberEmail))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자가 참가자 목록에 없습니다."));
 
         memberToChange.setStatus(status);
-        return true;
     }
 
     // 스터디 참가자 전체 상태를 변경하는 메소드
@@ -149,6 +151,38 @@ public class Study {
                 .filter(member -> member.getStatus() != exceptStatus)
                 .forEach(member -> member.setStatus(status));
     }
+
+    // 전체 스터디 참가자중 특정 상테를 가진 참가자 전원을 다른 상태로 변경하는 메소드
+    public void changeAllStudyMemberStatusDifferent(MemberStatus status, MemberStatus statusToChange) {
+        this.studyMemberList.stream()
+                .filter(member -> member.getStatus() == status)
+                .forEach(member -> member.setStatus(statusToChange));
+    }
+
+    // DECLINE 상태인 참가자 삭제
+    public void deleteDeclineMember() {
+        this.studyMemberList.removeIf(member -> member.getStatus() == MemberStatus.DECLINE);
+    }
+
+    // *************** 스터디 참가자 조회 메소드 ***************
+
+    // 특정 상태인 스터디 멤버 조회
+    public List<String> getStudyMemberByStatus(MemberStatus status) {
+        return this.studyMemberList.stream()
+                .filter(member -> member.getStatus() == status)
+                .map(StudyMember::getEmail)
+                .collect(Collectors.toList());
+    }
+
+    // 특정 상태를 제외한 스터디 멤버 조회
+    public List<String> getStudyMemberExceptStatus(MemberStatus exceptStatus) {
+        return this.studyMemberList.stream()
+                .filter(member -> member.getStatus() != exceptStatus)
+                .map(StudyMember::getEmail)
+                .collect(Collectors.toList());
+    }
+
+    // *************** 스터디 시작 메소드 ***************
 
     // 스터디 시작하는 메소드
     public boolean getIsConfirmed() {

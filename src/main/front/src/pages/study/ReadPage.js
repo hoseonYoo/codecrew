@@ -74,6 +74,11 @@ const ReadPage = () => {
 
   // 참가하기, 참가취소 버튼
   const participateButtonCheck = () => {
+    // studyDeadlineDate이 현재날짜보다 이전인지 체크
+    const isStudyDeadlineDatePassed =
+      new Date(study.studyDeadlineDate) < new Date();
+    console.log(isStudyDeadlineDatePassed);
+
     // 모임 생성자일경우
     if (userEmail === studyUserEmail && !study.confirmed) {
       const onStudyStartClick = async () => {
@@ -212,7 +217,8 @@ const ReadPage = () => {
             member.email === userEmail &&
             (member.status === "WITHDRAW" || member.status === "DECLINE"),
         )) ||
-      study.studyMemberList.length >= study.maxPeople
+      study.studyMemberList.length >= study.maxPeople ||
+      isStudyDeadlineDatePassed
     ) {
       return <button className="btnLargeBlack">참가불가</button>;
     } else {

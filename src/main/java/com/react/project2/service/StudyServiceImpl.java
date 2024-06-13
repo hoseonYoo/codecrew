@@ -28,6 +28,10 @@ public class StudyServiceImpl implements StudyService {
 
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
+    private final MemberStatusService memberStatusService;
+    private final NoticeService noticeService;
+
+    // *************** 스터디 등록, 조회, 수정, 삭제 ***************
 
     // 스터디 등록
     @Override
@@ -37,7 +41,7 @@ public class StudyServiceImpl implements StudyService {
         Study saved = studyRepository.save(study);
     }
 
-    // 스터디 조회
+    // 스터디 조회(1개)
     @Override
     public StudyDTO get(Long id) {
         Study study = studyRepository.findById(id).orElseThrow();
@@ -45,11 +49,6 @@ public class StudyServiceImpl implements StudyService {
         log.info("Study-serviceImpl-----");
         log.info(StudyDTO.getTitle());
         return StudyDTO;
-    }
-
-    @Override
-    public Study getEntity(Long id) {
-        return studyRepository.findById(id).orElseThrow();
     }
 
     // 스터디 수정
@@ -88,7 +87,138 @@ public class StudyServiceImpl implements StudyService {
 
     }
 
-    // 스터디 참가
+    // *************** 스터디 조건으로 조회 ***************
+
+    // 마커용 스터디 카테고리별 전체 조회
+    @Override
+    public List<StudyDTO> getStudyMarkerByCategory(String category) {
+
+        Category categoryEnum;
+        //List<Study> -> List<StudyDTO>
+        List<Study> studyList = new ArrayList<>();
+        if (category.equals("ALL")) {
+            studyList = studyRepository.findAllCategory();
+        } else {
+            categoryEnum = Category.valueOf(category);
+            studyList = studyRepository.findAllByCategory(categoryEnum);
+        }
+        List<StudyDTO> studyDTOList = new ArrayList<>();
+        for (Study study : studyList) {
+            StudyDTO studyDTO = entityToDTO(study);
+            studyDTOList.add(studyDTO);
+        }
+        return studyDTOList;
+
+    }
+
+    // 사용자 이메일로 생성한 스터디 개수 조회
+    @Override
+    public int countStudy(String email) {
+        return studyRepository.countStudy(email);
+    }
+
+    // 사용자 이메일로 참가한 스터디 개수 조회
+    @Override
+    public int countJoinStudy(String email) {
+        return studyRepository.countJoinStudy(email);
+    }
+
+    // 현재 시간을 기준으로 마감기한이 지난 스터디를 찾는다.
+    @Override
+    public void checkStudyDeadline() {
+        log.info("checkStudyDeadline");
+        // 현재 시간을 기준으로 마감기한이 지난 isConfirmed가 false인 스터디 전체 조회
+        List<Study> studyList = studyRepository.findAllByAfterDeadline();
+        log.info("studyList.size() : " + studyList.size());
+        for (Study study : studyList) {
+            // 상태가 HOLD인 참가자 알람 생성
+            log.info("study.getId() : " + study.getId());
+            memberStatusService.getMemberStatusByStatus(study.getId(), MemberStatus.HOLD).forEach(email -> {
+                log.info("email : " + email);
+                noticeService.createNotice(study.getId(), email, false, NoticeType.STUDY_REJECTION);
+                // 상태를 DECLINE으로 변경
+                memberStatusService.changeMemberStatus(study.getId(), email, MemberStatus.DECLINE);
+            });
+            // 상태가 WITHDRAW인 참가자 DECINE으로 변경
+            memberStatusService.changeAllMemberStatusByStatus(study.getId(), MemberStatus.WITHDRAW, MemberStatus.DECLINE);
+            // 상태가 DECLINE인 참가자 삭제
+            deleteDeclineMember(study.getId());
+        }
+    }
+
+    // 현재 시간을 기준으로 isConfirmed가 false인 studyDate가 지난 스터디를 찾는다.
+    @Override
+    public void checkStudyDateAfterNow() {
+        log.info("checkStudyDateAfterNow");
+        List<Study> studyList = studyRepository.findAllByAfterStudyDate();
+        log.info("studyList.size() : " + studyList.size());
+        for (Study study : studyList) {
+
+            // 상태가 ACCEPT인 참가자 알람 생성
+            log.info("study.getId() : " + study.getId());
+            memberStatusService.getMemberStatusByStatus(study.getId(), MemberStatus.ACCEPT).forEach(email -> {
+                log.info("email : " + email);
+                noticeService.createNotice(study.getId(), email, false, NoticeType.STUDY_DEAD);
+                // 상태를 DECLINE으로 변경
+                memberStatusService.changeMemberStatus(study.getId(), email, MemberStatus.DECLINE);
+            });
+
+            // 상태가 DECLINE인 참가자 삭제
+            deleteDeclineMember(study.getId());
+
+            log.info("study.getId() : " + study.getId());
+            // 생성자에게 알람 생성
+            noticeService.createNotice(study.getId(), study.getMember().getEmail(), true, NoticeType.STUDY_DEAD);
+            // 생성자에게 벌점 부여
+            study.getMember().addPenalty(4);
+            noticeService.createNotice(study.getId(), "", true, NoticeType.PENALTY);
+            log.info("study.getMember().getPenalty() : " + study.getMember().getPenalty());
+            // 스터디 삭제
+            delete(study.getId());
+
+        }
+    }
+
+    // 현재 시간을 기준으로 하루 뒤의 studyDate를 가지고 있는 isConfirmed가 true고 disabled가 false인 스터디를 찾는다.
+    @Override
+    public void checkTomorrowStudyDate() {
+        log.info("checkTomorrowStudyDate");
+        List<Study> studyList = studyRepository.findAllByTomorrowStudyDate();
+        log.info("studyList.size() : " + studyList.size());
+        for (Study study : studyList) {
+            // 상태가 ACCEPT인 참가자 알람 생성
+            log.info("study.getId() : " + study.getId());
+            memberStatusService.getMemberStatusByStatus(study.getId(), MemberStatus.ACCEPT).forEach(email -> {
+                log.info("email : " + email);
+                noticeService.createNotice(study.getId(), email, false, NoticeType.PRE_PARTICIPATION_DATE);
+            });
+            // 생성자 알람 생성
+            noticeService.createNotice(study.getId(),"",true,NoticeType.PRE_PARTICIPATION_DATE);
+        }
+    }
+
+    // 현재 날짜의 studyDate를 가지고 있는 isConfirmed가 true이고 disabled가 false인 스터디를 찾는다.
+    @Override
+    public void checkTodayStudyDate() {
+        log.info("checkTodayStudyDate");
+        List<Study> studyList = studyRepository.findAllByTodayStudyDate();
+        log.info("studyList.size() : " + studyList.size());
+        for (Study study : studyList) {
+            // 상태가 ACCEPT인 참가자 알람 생성
+            log.info("study.getId() : " + study.getId());
+            memberStatusService.getMemberStatusByStatus(study.getId(), MemberStatus.ACCEPT).forEach(email -> {
+                log.info("email : " + email);
+                noticeService.createNotice(study.getId(), email, false, NoticeType.PARTICIPATION_DATE);
+            });
+            // 생성자 알람 생성
+            noticeService.createNotice(study.getId(),"",true,NoticeType.PARTICIPATION_DATE);
+        }
+    }
+
+    // *************** 스터디 참가, 시작, 참가자 삭제 ***************
+
+
+    // 스터디 참가신청
     @Override
     public boolean participate(Long id, String userEmail) {
         // 스터디 엔티티 조회
@@ -117,43 +247,6 @@ public class StudyServiceImpl implements StudyService {
         return true;
     }
 
-    // 특정 스터디 멤버 상태 변경
-    @Override
-    public void changeMemberStatus(Long id, String userEmail, MemberStatus status) {
-        // 스터디 엔티티 조회
-        Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
-
-        // 참가자 목록에서 사용자 status를 변경
-        study.changeStudyMemberStatus(userEmail, status);
-
-        // 변경사항 저장
-        studyRepository.save(study);
-    }
-
-    // 스터디 멤버 전체 상태 변경
-    @Override
-    public void changeAllMemberStatus(Long id, MemberStatus status) {
-        Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
-
-        study.changeAllStudyMemberStatus(status);
-        // 변경사항 저장
-        studyRepository.save(study);
-
-    }
-
-    // 특정 상태를 제외한 스터디 멤버 전체 상태 변경
-    @Override
-    public void changeAllMemberStatusExcept(Long id, MemberStatus status, MemberStatus exceptStatus) {
-        Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
-
-        study.changeAllStudyMemberStatusExcept(status, exceptStatus);
-        // 변경사항 저장
-        studyRepository.save(study);
-    }
-
     // 스터디 시작
     @Override
     public boolean startStudy(Long id) {
@@ -167,37 +260,16 @@ public class StudyServiceImpl implements StudyService {
         return false;
     }
 
+    // DECLINE 상태인 참가자 삭제
     @Override
-    public int countStudy(String email) {
-        return studyRepository.countStudy(email);
+    public void deleteDeclineMember(Long id) {
+        Study study = studyRepository.findById(id).orElseThrow();
+        study.deleteDeclineMember();
+        studyRepository.save(study);
     }
 
-    @Override
-    public int countJoinStudy(String email) {
-        return studyRepository.countJoinStudy(email);
-    }
 
-    @Override
-    public void createNotice(Long studtyId, String userEmail, boolean creator, NoticeType type) {
-        Study study = studyRepository.findById(studtyId).orElseThrow();
-        if (creator) {
-            userEmail = study.getMember().getEmail();
-        }
-        if (userEmail.equals("ALL")) {
-            List<StudyMember> studyMemberList = study.getStudyMemberList();
-            for (StudyMember studyMember : studyMemberList) {
-                Member member = memberRepository.findByEmail(studyMember.getEmail()).orElseThrow();
-                // noticeId 추가
-                member.addNotice(study, creator, type);
-                memberRepository.save(member);
-            }
-            return;
-        }
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow();
-        member.addNotice(study, creator, type);
-        memberRepository.save(member);
-    }
-
+    // *************** DTO 변환 메소드 ***************
     private StudyDTO entityToDTO(Study study) {
 
         StudyDTO studyDTO = StudyDTO.builder()
@@ -219,27 +291,6 @@ public class StudyServiceImpl implements StudyService {
                 .studyMemberList(study.getStudyMemberList())
                 .build();
         return studyDTO;
-    }
-
-    @Override
-    public List<StudyDTO> getStudyMarkerByCategory(String category) {
-
-        Category categoryEnum;
-        //List<Study> -> List<StudyDTO>
-        List<Study> studyList = new ArrayList<>();
-        if (category.equals("ALL")) {
-            studyList = studyRepository.findAllCategory();
-        } else {
-            categoryEnum = Category.valueOf(category);
-            studyList = studyRepository.findAllByCategory(categoryEnum);
-        }
-        List<StudyDTO> studyDTOList = new ArrayList<>();
-        for (Study study : studyList) {
-            StudyDTO studyDTO = entityToDTO(study);
-            studyDTOList.add(studyDTO);
-        }
-        return studyDTOList;
-
     }
 
 
