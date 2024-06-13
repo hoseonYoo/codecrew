@@ -167,6 +167,11 @@ public class StudyServiceImpl implements StudyService {
             // 생성자에게 벌점 부여
             study.getMember().addPenalty(4);
             noticeService.createNotice(study.getId(), "", true, NoticeType.PENALTY);
+            // 생성자의 벌점 확인
+            if(study.getMember().getPenalty() >= 5){
+                study.getMember().changeBlockedDate(true);
+            }
+
             log.info("study.getMember().getPenalty() : " + study.getMember().getPenalty());
             // 스터디 삭제
             delete(study.getId());
