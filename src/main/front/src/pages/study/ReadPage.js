@@ -48,6 +48,20 @@ const ReadPage = () => {
     const studyDate = new Date(date);
     return studyDate.toDateString() === today.toDateString();
   };
+  console.log(study);
+
+  // 위치 값 구하기
+  const calculateDistance = (location1, location2) => {
+    const R = 6371; // 지구의 반지름 (km)
+    const dLat = ((location2.locationY - location1.lat) * Math.PI) / 180;
+    const dLng = ((location2.locationX - location1.lng) * Math.PI) / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((location1.lat * Math.PI) / 180) * Math.cos((location2.locationY * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    return distance;
+  };
 
   // 참가하기, 참가취소 버튼
   const participateButtonCheck = () => {
@@ -98,6 +112,8 @@ const ReadPage = () => {
           스터디탈퇴
         </button>
       );
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ARRIVE")) {
+      return <button className="btnLargeGrey">출석완료</button>;
     } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
       if (!study.confirmed) {
         return <button className="btnLargeBlack">참가확정</button>;
@@ -115,8 +131,44 @@ const ReadPage = () => {
           );
         } else {
           const onArriveClick = async () => {
-            await handleArrive(study.id);
-            reRender();
+            // 사용자의 현재 위치를 가져옵니다.
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                  const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                  };
+
+                  // 스터디 위치를 가져옵니다.
+                  const studyLocation = {
+                    lat: study.locationY,
+                    lng: study.locationX,
+                  }; // 스터디의 위도와 경도
+
+                  console.log(userLocation);
+                  console.log(studyLocation);
+                  // 사용자 위치와 스터디 위치 사이의 거리를 계산합니다.
+                  const distance = calculateDistance(userLocation, studyLocation);
+
+                  // 거리가 200m 이내인지 확인합니다.
+                  if (distance <= 0.2) {
+                    // 출석체크 로직을 실행합니다.
+                    await handleArrive(study.id);
+                    reRender();
+                  } else {
+                    // 사용자에게 경고 메시지를 표시합니다.
+                    alert("스터디 위치가 아닙니다.");
+                  }
+                },
+                (error) => {
+                  // 위치 정보를 가져오는데 실패한 경우
+                  alert("위치 정보를 가져올 수 없습니다.");
+                }
+              );
+            } else {
+              alert("Geolocation is not supported by this browser.");
+            }
           };
 
           return (
@@ -301,7 +353,7 @@ const ReadPage = () => {
     }
     // 모임 참가자인 경우
     else if (isCurrentUserAMember) {
-      newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT" && member.email !== userEmail);
+      newStudyMemberList = newStudyMemberList.filter((member) => (member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE") && member.email !== userEmail);
       console.log("본인 제외 확정 인원 : ", newStudyMemberList);
       const member = study.studyMemberList.filter((member) => member.email === userEmail);
       console.log("본인 추가 : ", member);
@@ -313,7 +365,7 @@ const ReadPage = () => {
       newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT");
     }
     return newStudyMemberList.map((member, index) => (
-      <StudyMemberBlock key={index} memberData={member} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} reRender={reRender} />
+      <StudyMemberBlock key={index} memberData={member} currentUserEmail={userEmail} studyCreatorEmail={studyUserEmail} studyId={study.id} reRender={reRender} studyConfirmed={study.confirmed} />
     ));
   };
 
@@ -386,7 +438,11 @@ const ReadPage = () => {
               <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
               <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
             </div>
-            <div className="studyMemberBlockBtn"></div>
+            <div className="studyMemberBlockBtn">
+              <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
+                스터디장
+              </button>
+            </div>
           </div>
 
           {/* 생성자 디폴트 */}

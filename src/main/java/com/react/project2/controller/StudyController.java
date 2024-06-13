@@ -69,6 +69,18 @@ public class StudyController {
             return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 완료되었습니다."));
     }
 
+    // 스터디 출석체크
+    @PostMapping("/{id}/arrive")
+    public ResponseEntity<?> Arrive(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        String userEmail = payload.get("email");
+
+        // 스터디 참가 로직 구현
+        studyService.changeMemberStatus(id, userEmail, MemberStatus.ARRIVE);
+        // 알람 생성
+        studyService.createNotice(id,"",true, NoticeType.ATTENDANCE_COMPLETE);
+        return ResponseEntity.ok().body(Map.of("message", "스터디 출석체크가 완료되었습니다."));
+    }
+
     // 스터디 참가 취소
     @PostMapping("/{id}/cancelParticipation")
     public ResponseEntity<?> participationCancel(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
