@@ -177,7 +177,7 @@ public class StudyController {
     public ResponseEntity<?> finishedStudy(@PathVariable("id") Long id) {
         boolean result = studyService.finishedStudy(id);
         if (result){
-            studyService.createNotice(id,"ALL",false, NoticeType.STUDY_END);
+            noticeService.createNotice(id,"ALL",false, NoticeType.STUDY_END);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 종료으로 시작되었습니다."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 종료 처리 중 오류가 발생했습니다."));
