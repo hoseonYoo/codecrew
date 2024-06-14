@@ -20,11 +20,7 @@ const MyJoinStudyPage = () => {
   // 페이지 로딩 시 참가한 스터디 목록을 불러옴
   useEffect(() => {
     const loadInitialData = async () => {
-      const data = await getJoinStudyList(
-        studyType,
-        { page: 1, size: 10 },
-        userEmail,
-      );
+      const data = await getJoinStudyList(studyType, { page: 1, size: 10 }, userEmail);
       if (data.list.length > 0) {
         setStudyList(data.list);
         setPage(2); // 다음 페이지 요청을 위해 2로 설정
@@ -38,16 +34,14 @@ const MyJoinStudyPage = () => {
   }, [userEmail, studyType]);
 
   const fetchData = () => {
-    getJoinStudyList(studyType, { page: page, size: 10 }, userEmail).then(
-      (data) => {
-        if (data.list.length > 0) {
-          setStudyList((prevList) => [...prevList, ...data.list]);
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false); // 더 이상 불러올 데이터가 없음
-        }
-      },
-    );
+    getJoinStudyList(studyType, { page: page, size: 10 }, userEmail).then((data) => {
+      if (data.list.length > 0) {
+        setStudyList((prevList) => [...prevList, ...data.list]);
+        setPage((prevPage) => prevPage + 1);
+      } else {
+        setHasMore(false); // 더 이상 불러올 데이터가 없음
+      }
+    });
   };
 
   const changeStudyType = (type) => {
@@ -58,7 +52,7 @@ const MyJoinStudyPage = () => {
     return (
       <div className="nonePage">
         <img src="../assets/imgs/icon/ic_none.png" />
-        <h2>아직 참가한 스터디가 없어요</h2>
+        <h2>스터디가 없습니다...</h2>
         <p onClick={moveToMain}>새로운 스터디에 참가해보세요</p>
       </div>
     );
@@ -75,12 +69,7 @@ const MyJoinStudyPage = () => {
         listEmpty()
       ) : (
         <div className="listContentWrap">
-          <InfiniteScroll
-            dataLength={studyList.length}
-            next={fetchData}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-          >
+          <InfiniteScroll dataLength={studyList.length} next={fetchData} hasMore={hasMore} loader={<h4>Loading...</h4>}>
             {/* 스터디 목록을 출력 */}
             {studyList.map((study, index) => (
               <StudyBlockMy key={index} study={study} />
@@ -88,7 +77,6 @@ const MyJoinStudyPage = () => {
           </InfiniteScroll>
         </div>
       )}
-      ;
     </BasicLayoutPage>
   );
 };

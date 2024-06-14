@@ -33,16 +33,11 @@ const AlarmPage = () => {
       {noticeList === null || noticeList.length === 0 ? (
         <div className="nonePage">
           <img src="../assets/imgs/icon/ic_none.png" />
-          <h2>아직 도착한 알림이 없어요</h2>
+          <h2>도착한 알림이 없어요...</h2>
           <p>새로운 소식이 도착하면 알려드릴께요.</p>
         </div>
       ) : (
-        <InfiniteScroll
-          dataLength={items.length}
-          next={() => {}}
-          hasMore={false}
-          loader={<h4>Loading...</h4>}
-        >
+        <InfiniteScroll dataLength={items.length} next={() => {}} hasMore={false} loader={<h4>Loading...</h4>}>
           {noticeList.map((notice, index) => (
             <AlarmBlock key={index} notice={notice} refresh={reRender} />
           ))}

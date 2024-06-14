@@ -45,23 +45,15 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } =
-    useMemberProfile(studyUserEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
   // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList.some(
-    (member) => member.email === userEmail,
-  );
+  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
 
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage, moveToMain } = useCustomMove();
 
-  const {
-    handleParticipate,
-    handleParticipateCancel,
-    handleArrive,
-    handleArriveLate,
-  } = useHandleStudyMember();
+  const { handleParticipate, handleParticipateCancel, handleArrive, handleArriveLate } = useHandleStudyMember();
   const { handleStart, handleDelete, handleFinish } = useHandleStudy();
 
   const bloackAlert = () => {
@@ -100,12 +92,7 @@ const ReadPage = () => {
     const dLat = ((studyLocation.lat - userLocation.lat) * Math.PI) / 180;
     const dLng = ((studyLocation.lng - userLocation.lng) * Math.PI) / 180;
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((userLocation.lat * Math.PI) / 180) *
-        Math.cos((studyLocation.lat * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((userLocation.lat * Math.PI) / 180) * Math.cos((studyLocation.lat * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     console.log(distance);
@@ -115,8 +102,7 @@ const ReadPage = () => {
   // 참가하기, 참가취소 버튼
   const participateButtonCheck = () => {
     // studyDeadlineDate이 현재날짜보다 이전인지 체크
-    const isStudyDeadlineDatePassed =
-      new Date(study.studyDeadlineDate) < new Date();
+    const isStudyDeadlineDatePassed = new Date(study.studyDeadlineDate) < new Date();
     console.log(isStudyDeadlineDatePassed);
 
     // 모임 생성자일경우
@@ -143,10 +129,10 @@ const ReadPage = () => {
           <button
             className="btnLargeGrey"
             onClick={() => {
-              alert("스터디당일에만 종료가 가능합니다.");
+              alert("스터디당일에만 완료가 가능합니다.");
             }}
           >
-            스터디예정
+            스터디완료
           </button>
         );
       } else {
@@ -159,29 +145,21 @@ const ReadPage = () => {
             <button
               className="btnLargePoint"
               onClick={() => {
-                alert("스터디시작 2시간 이후부터 종료가 가능합니다.");
+                alert("스터디시작 2시간 이후부터 완료가 가능합니다.");
               }}
             >
-              스터디종료
+              스터디완료
             </button>
           );
         } else {
           return (
-            <button
-              className="btnLargePoint"
-              onClick={() => onStudyFinishClick()}
-            >
-              스터디종료
+            <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
+              스터디완료
             </button>
           );
         }
       }
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "HOLD",
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
       const onWithdrawClick = async () => {
         await handleParticipateCancel(study.id);
         reRender();
@@ -192,19 +170,9 @@ const ReadPage = () => {
           스터디탈퇴
         </button>
       );
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "ARRIVE",
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ARRIVE")) {
       return <button className="btnLargeGrey">출석완료</button>;
-    } else if (
-      isCurrentUserAMember &&
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "ACCEPT",
-      )
-    ) {
+    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
       if (!study.confirmed) {
         return <button className="btnLargeBlack">참가확정</button>;
       } else {
@@ -238,12 +206,14 @@ const ReadPage = () => {
               if (distance <= 0.2) {
                 // 출석체크 로직을 실행합니다.
                 if (isLateHour(study.studyDate)) {
+                  console.log("지각임");
                   // 지각인 경우
-                  await handleArrive(study.id);
+                  await handleArriveLate(study.id);
                   reRender();
                 } else {
                   // 지각 아닌 경우
-                  await handleArriveLate(study.id);
+                  console.log("지각아님");
+                  await handleArrive(study.id);
                   reRender();
                 }
               } else {
@@ -264,23 +234,17 @@ const ReadPage = () => {
       }
     } else if (study.finished) {
       return <button className="btnLargeGrey">스터디종료</button>;
-    } else if (
-      study.studyMemberList.some(
-        (member) => member.email === userEmail && member.status === "ABSENCE",
-      )
-    ) {
+    } else if (study.studyMemberList.some((member) => member.email === userEmail && member.status === "ABSENCE")) {
       return <button className="btnLargeBlack">결석</button>;
     } else if (
-      (isCurrentUserAMember &&
-        study.studyMemberList.some(
-          (member) =>
-            member.email === userEmail &&
-            (member.status === "WITHDRAW" || member.status === "DECLINE"),
-        )) ||
+      (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && (member.status === "WITHDRAW" || member.status === "DECLINE"))) ||
       study.studyMemberList.length >= study.maxPeople ||
       isStudyDeadlineDatePassed
     ) {
-      return <button className="btnLargeBlack">참가불가</button>;
+      return <button className="btnLargeGrey">참가불가</button>;
+    } else if (study.confirmed) {
+      // 이미 시작된 경우
+      return <button className="btnLargeGrey">참가불가</button>;
     } else {
       // 스터디 참가 버튼 클릭 핸들러
       const onParticipateClick = async () => {
@@ -289,10 +253,7 @@ const ReadPage = () => {
       };
 
       return (
-        <button
-          className="btnLargePoint"
-          onClick={() => (blockUser ? bloackAlert() : onParticipateClick())}
-        >
+        <button className="btnLargePoint" onClick={() => (blockUser ? bloackAlert() : onParticipateClick())}>
           스터디참가
         </button>
       );
@@ -319,29 +280,8 @@ const ReadPage = () => {
       );
     } else if (study.finished) {
       <></>;
-    } else if (userEmail !== studyUserEmail && !study.confirmed) {
-      // 로그인시(생성자 X)
-      return (
-        <>
-          <button
-            className="btnSmallPoint"
-            onClick={() => {
-              if (study.memberPhone) {
-                window.location.href = `tel:${study.memberPhone}`;
-              } else {
-                alert("크루가 연락처를 공개하지 않았습니다.");
-              }
-            }}
-          >
-            연락하기
-          </button>
-          <button className="btnSmallBlack" onClick={handleShareClick}>
-            공유하기
-          </button>
-        </>
-      );
     } else if (userEmail !== studyUserEmail && study.confirmed) {
-      // 로그인시(생성자 X)
+      // 로그인시(생성자 X) 스터디 시작 후
       return (
         <>
           <button
@@ -361,6 +301,27 @@ const ReadPage = () => {
           </button>
         </>
       );
+    } else if (userEmail !== studyUserEmail && !study.confirmed) {
+      // 로그인시(생성자 X) 스터디 시작 전
+      return (
+        <>
+          <button
+            className="btnSmallPoint"
+            onClick={() => {
+              if (study.memberPhone) {
+                window.location.href = `tel:${study.memberPhone}`;
+              } else {
+                alert("크루가 연락처를 공개하지 않았습니다.");
+              }
+            }}
+          >
+            연락하기
+          </button>
+          <button className="btnSmallBlack" onClick={handleShareClick}>
+            공유하기
+          </button>
+        </>
+      );
     }
     return null;
   };
@@ -372,16 +333,10 @@ const ReadPage = () => {
     } else if (userEmail && userEmail === studyUserEmail && !study.confirmed) {
       return (
         <>
-          <button
-            className="btnSmallPoint"
-            onClick={() => moveToModifyPage(id)}
-          >
+          <button className="btnSmallPoint" onClick={() => moveToModifyPage(id)}>
             수정하기
           </button>
-          <button
-            className="btnSmallBlack"
-            onClick={() => handleDelete(study.id, study.memberEmail)}
-          >
+          <button className="btnSmallBlack" onClick={() => handleDelete(study.id, study.memberEmail)}>
             삭제하기
           </button>
         </>
@@ -426,14 +381,7 @@ const ReadPage = () => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList
-      ? study.studyMemberList.filter(
-          (member) =>
-            member.status === "ACCEPT" ||
-            member.status === "ARRIVE" ||
-            member.status === "ABSENCE",
-        ).length
-      : 0;
+    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -450,14 +398,7 @@ const ReadPage = () => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList
-          ? study.studyMemberList.filter(
-              (member) =>
-                member.status === "ACCEPT" ||
-                member.status === "ARRIVE" ||
-                member.status === "ABSENCE",
-            ).length
-          : 0) + 1}
+        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0) + 1}
 
         <span>/</span>
         {study.maxPeople + 1}
@@ -473,13 +414,7 @@ const ReadPage = () => {
     if (userEmail === studyUserEmail) {
       // 확정된 참가자들만 배열에 남기기
       if (study.confirmed) {
-        newStudyMemberList = newStudyMemberList.filter(
-          (member) =>
-            member.status === "ACCEPT" ||
-            member.status === "ARRIVE" ||
-            member.status === "ABSENCE" ||
-            member.status === "LATE",
-        );
+        newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE" || member.status === "LATE");
         // ACCEPT, ARRIVE, LATE, ABSENCE 순으로 정렬
         newStudyMemberList = newStudyMemberList.sort((a, b) => {
           if (a.status === "ACCEPT") return -1;
@@ -503,26 +438,16 @@ const ReadPage = () => {
     }
     // 모임 참가자인 경우
     else if (isCurrentUserAMember) {
-      newStudyMemberList = newStudyMemberList.filter(
-        (member) =>
-          (member.status === "ACCEPT" ||
-            member.status === "ARRIVE" ||
-            member.status === "ABSENCE") &&
-          member.email !== userEmail,
-      );
+      newStudyMemberList = newStudyMemberList.filter((member) => (member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE") && member.email !== userEmail);
       console.log("본인 제외 확정 인원 : ", newStudyMemberList);
-      const member = study.studyMemberList.filter(
-        (member) => member.email === userEmail,
-      );
+      const member = study.studyMemberList.filter((member) => member.email === userEmail);
       console.log("본인 추가 : ", member);
       newStudyMemberList.unshift(member[0]);
       console.log("본인 추가 확정 인원 : ", newStudyMemberList);
     }
     // 그외
     else {
-      newStudyMemberList = newStudyMemberList.filter(
-        (member) => member.status === "ACCEPT",
-      );
+      newStudyMemberList = newStudyMemberList.filter((member) => member.status === "ACCEPT");
     }
     return newStudyMemberList.map((member, index) => (
       <StudyMemberBlock
@@ -543,14 +468,7 @@ const ReadPage = () => {
       <div>
         {/*스터디 이미지*/}
         <div className="ReadContent">
-          <div
-            className="ReadImg"
-            style={
-              imgStudySrc !== ""
-                ? { backgroundImage: `url(${imgStudySrc})` }
-                : null
-            }
-          ></div>
+          <div className="ReadImg" style={imgStudySrc !== "" ? { backgroundImage: `url(${imgStudySrc})` } : null}></div>
 
           {/*스터디 제목, 위치*/}
           <div className="ReadTitle">
@@ -572,18 +490,10 @@ const ReadPage = () => {
           <div className="ReadText">
             <h3>작성자 : </h3>
             <div>
-              <p
-                onClick={() => moveToProfilePage(study.memberEmail)}
-                style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}
-              >
+              <p onClick={() => moveToProfilePage(study.memberEmail)} style={{ fontSize: "15px", color: "#000", cursor: "pointer" }}>
                 {study.memberNickname}
               </p>
-              <p
-                onClick={() =>
-                  (window.location.href = `mailto:${study.memberEmail}`)
-                }
-                style={{ cursor: "pointer" }}
-              >
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)} style={{ cursor: "pointer" }}>
                 {study.memberEmail}
               </p>
             </div>
@@ -623,32 +533,13 @@ const ReadPage = () => {
 
           {/* 모임 주최자 프로필 */}
           <div className="studyMemberBlockWrap">
-            <div
-              className="studyMemberBlockImg"
-              style={
-                studyMemberImgSrc
-                  ? { backgroundImage: `url(${studyMemberImgSrc})` }
-                  : null
-              }
-              onClick={() => moveToProfilePage(study.memberEmail)}
-            ></div>
+            <div className="studyMemberBlockImg" style={studyMemberImgSrc ? { backgroundImage: `url(${studyMemberImgSrc})` } : null} onClick={() => moveToProfilePage(study.memberEmail)}></div>
             <div className="studyMemberBlockTitle">
-              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>
-                {study.memberNickname}
-              </h3>
-              <p
-                onClick={() =>
-                  (window.location.href = `mailto:${study.memberEmail}`)
-                }
-              >
-                {study.memberEmail}
-              </p>
+              <h3 onClick={() => moveToProfilePage(study.memberEmail)}>{study.memberNickname}</h3>
+              <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
             </div>
             <div className="studyMemberBlockBtn">
-              <button
-                className="btnSmallPoint"
-                style={{ marginTop: "16px", cursor: "default" }}
-              >
+              <button className="btnSmallPoint" style={{ marginTop: "16px", cursor: "default" }}>
                 스터디장
               </button>
             </div>
@@ -662,12 +553,7 @@ const ReadPage = () => {
         {/* 기본 */}
         <div className="StudyJoinBtn">{participateButtonCheck()}</div>
       </div>
-      {(study.finished ||
-        (isCurrentUserAMember &&
-          study.studyMemberList.some(
-            (member) =>
-              member.email === userEmail && member.status === "ABSENCE",
-          ))) && <div className="endPageWrap"></div>}
+      {(study.finished || (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ABSENCE"))) && <div className="endPageWrap"></div>}
 
       {/* <PopUp /> */}
     </BasicLayoutPage>
