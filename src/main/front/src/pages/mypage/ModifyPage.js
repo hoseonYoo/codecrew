@@ -29,7 +29,10 @@ const ModifyPage = () => {
   }, [memberProfile]);
 
   // 사진 수정용 CustomHook 사용하기
-  const { imgSrc, handleFileChange, saveFile } = useProfileImage(memberProfileImg, memberProfile.profileImg);
+  const { imgSrc, handleFileChange, saveFile } = useProfileImage(
+    memberProfileImg,
+    memberProfile.profileImg,
+  );
 
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
@@ -139,7 +142,14 @@ const ModifyPage = () => {
     <BasicLayoutPage headerTitle="정보수정">
       <form>
         <div className="MyModifyWrap">
-          <div className="MyModifyImg" style={member.profileImg !== "" ? { backgroundImage: `url(${imgSrc})` } : null}>
+          <div
+            className="MyModifyImg"
+            style={
+              member.profileImg !== ""
+                ? { backgroundImage: `url(${imgSrc})` }
+                : null
+            }
+          >
             <label htmlFor="fileInput">
               편집
               <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -157,7 +167,16 @@ const ModifyPage = () => {
               onChange={handleNicknameChange}
               placeholder="닉네임을 입력해주세요."
             />
-            <span style={{ color: "#dcdcdc", fontSize: "12px", textAlign: "right", display: "block" }}>{nicknameLength} / 20</span>
+            <span
+              style={{
+                color: "#dcdcdc",
+                fontSize: "12px",
+                textAlign: "right",
+                display: "block",
+              }}
+            >
+              {nicknameLength} / 20
+            </span>
           </div>
           <div>
             <h3>관심스택</h3>
@@ -165,14 +184,18 @@ const ModifyPage = () => {
               {Object.entries(categories).length > 0 &&
                 Object.entries(categories).map(([key, value], index) => (
                   <React.Fragment key={index}>
-                    <input onChange={handleCheckChange} id={key} type="checkbox" checked={member.favoriteList.includes(key)} />
+                    <input
+                      onChange={handleCheckChange}
+                      id={key}
+                      type="checkbox"
+                      checked={member.favoriteList.includes(key)}
+                    />
                     <label htmlFor={key}>{value}</label>
                   </React.Fragment>
                 ))}
             </div>
           </div>
           <div>
-            {/*TODO 연락처 중복 방지 기능 추가*/}
             <h3>연락처</h3>
             <input
               type="text"
@@ -187,7 +210,13 @@ const ModifyPage = () => {
           </div>
           <div>
             <h3>링크</h3>
-            <input type="text" name="memberLink" value={member.memberLink} onChange={handleChange} placeholder="입력예시 : www.example.com" />
+            <input
+              type="text"
+              name="memberLink"
+              value={member.memberLink}
+              onChange={handleChange}
+              placeholder="입력예시 : www.example.com"
+            />
           </div>
           <div>
             <h3>사용자 소개</h3>
@@ -200,7 +229,16 @@ const ModifyPage = () => {
               onKeyUp={checkSpecialCharacters}
               onKeyDown={checkSpecialCharacters}
             ></textarea>
-            <span style={{ color: "#dcdcdc", fontSize: "12px", textAlign: "right", display: "block" }}>{introductionLength} / 200</span>
+            <span
+              style={{
+                color: "#dcdcdc",
+                fontSize: "12px",
+                textAlign: "right",
+                display: "block",
+              }}
+            >
+              {introductionLength} / 200
+            </span>
           </div>
         </div>
       </form>

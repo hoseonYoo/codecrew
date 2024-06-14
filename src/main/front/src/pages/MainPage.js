@@ -14,7 +14,8 @@ const MainPage = () => {
   const loginState = useSelector((state) => state.loginSlice);
 
   // 페이지 이동을 위한 함수들
-  const { moveToLogin, moveToMypage, moveToAddPage, moveToAlarmPage } = useCustomMove();
+  const { moveToLogin, moveToMypage, moveToAddPage, moveToAlarmPage } =
+    useCustomMove();
   const [refresh, setRefresh] = useState(false);
   const reRender = () => {
     setRefresh(!refresh);
@@ -57,7 +58,7 @@ const MainPage = () => {
         });
         // TODO: 알림 갯수를 가져오는 API 호출 시간 조절
         // }, 1000);
-      }, 1000 * 60 * 5);
+      }, 1000 * 5);
 
       // useEffect가 다시 실행되기 전에 이전 인터벌을 정리합니다.
       return () => {
