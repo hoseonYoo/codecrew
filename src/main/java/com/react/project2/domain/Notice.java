@@ -17,6 +17,7 @@ public class Notice {
     private boolean isCreator; // 생성자 여부
     @Builder.Default
     private LocalDateTime createdDate = LocalDateTime.now(); // 생성 날짜
+    private String userEmail; // 사용자 이메일
     @ManyToOne(fetch = FetchType.LAZY)
     private Study study; // 스터디
     @Enumerated(EnumType.STRING)

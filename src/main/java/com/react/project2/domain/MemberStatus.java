@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MemberStatus {
-    // TODO 회원 신청 상태를 여기에 선언하세요. 예: ACTIVE("Active"), INACTIVE("Inactive");
     HOLD("대기"), ACCEPT("수락"),DECLINE("거절"),WITHDRAW("탈퇴"),ARRIVE("출석"),ABSENCE("결석"),LATE("지각");
     private final String value;
 

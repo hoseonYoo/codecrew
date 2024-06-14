@@ -28,7 +28,8 @@ public class NoticeServiceImpl implements NoticeService {
         memberWithNoticeList.getNoticeList().sort((n1, n2) -> n2.getCreatedDate().compareTo(n1.getCreatedDate()));
 
         return memberWithNoticeList.getNoticeList().stream().map(notice -> {
-            return new NoticeDTO().entityToDTO(notice, memberWithNoticeList.getNickname());
+            String nickname = memberRepository.findByEmail(notice.getUserEmail()).orElseThrow().getNickname();
+            return new NoticeDTO().entityToDTO(notice, nickname);
 
         }).toList();
 
@@ -44,21 +45,26 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public void createNotice(Long studtyId, String userEmail, boolean creator, NoticeType type) {
         Study study = studyRepository.findById(studtyId).orElseThrow();
-        if (creator) {
-            userEmail = study.getMember().getEmail();
-        }
+
         if (userEmail.equals("ALL")) {
             List<StudyMember> studyMemberList = study.getStudyMemberList();
             for (StudyMember studyMember : studyMemberList) {
                 Member member = memberRepository.findByEmail(studyMember.getEmail()).orElseThrow();
-                // noticeId 추가
-                member.addNotice(study, creator, type);
+                member.addNotice(study, userEmail,creator, type);
                 memberRepository.save(member);
             }
             return;
         }
+        if (creator) {
+            Member member = memberRepository.findByEmail(study.getMember().getEmail()).orElseThrow();
+            member.addNotice(study, userEmail,creator, type);
+            memberRepository.save(member);
+            return;
+        }
         Member member = memberRepository.findByEmail(userEmail).orElseThrow();
-        member.addNotice(study, creator, type);
+        member.addNotice(study, userEmail,creator, type);
         memberRepository.save(member);
+
     }
+
 }

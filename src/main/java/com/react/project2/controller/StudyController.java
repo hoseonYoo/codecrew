@@ -114,7 +114,7 @@ public class StudyController {
         boolean result = studyService.participate(id, userEmail);
 
         // 알람 생성
-        noticeService.createNotice(id, "", true, NoticeType.STUDY_PARTICIPATION);
+        noticeService.createNotice(id, userEmail, true, NoticeType.STUDY_PARTICIPATION);
 
         return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 완료되었습니다."));
     }
@@ -127,7 +127,7 @@ public class StudyController {
         // 스터디 참가 로직 구현
         memberStatusService.changeMemberStatus(id, userEmail, MemberStatus.ARRIVE);
         // 알람 생성
-        noticeService.createNotice(id, "", true, NoticeType.ATTENDANCE_COMPLETE);
+        noticeService.createNotice(id, userEmail, true, NoticeType.ATTENDANCE_COMPLETE);
         return ResponseEntity.ok().body(Map.of("message", "스터디 출석체크가 완료되었습니다."));
     }
 
@@ -138,7 +138,7 @@ public class StudyController {
         // 스터디 참가 취소 로직 구현
         memberStatusService.changeMemberStatus(id, userEmail, MemberStatus.WITHDRAW);
         // 알람 생성
-        noticeService.createNotice(id, "", true, NoticeType.STUDY_WITHDRAWAL);
+        noticeService.createNotice(id, userEmail, true, NoticeType.STUDY_WITHDRAWAL);
         return ResponseEntity.ok().body(Map.of("message", "스터디 참가신청이 취소되었습니다."));
     }
 
@@ -222,7 +222,6 @@ public class StudyController {
     @PutMapping("/{id}/finish")
     public ResponseEntity<?> finishedStudy(@PathVariable("id") Long id) {
         boolean result = studyService.finishedStudy(id);
-        // TODO: 스터디 완료 Column 추가로 인한 스터디 조회 로직 변경 필요
         if (result) {
             noticeService.createNotice(id, "ALL", false, NoticeType.STUDY_END);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 종료되었습니다."));
@@ -239,7 +238,6 @@ public class StudyController {
         log.info("testCount------");
         try {
             // 사용자 이메일로 생성한 스터디 개수 조회
-            // TODO : 스터디 생성한 스터디 조회 로직 세세하게 변경 필요
             int count = studyService.countStudy(type, email);
             return ResponseEntity.ok().body(Map.of("count", count));
         } catch (Exception e) {

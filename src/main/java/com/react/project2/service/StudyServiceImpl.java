@@ -219,7 +219,7 @@ public class StudyServiceImpl implements StudyService {
         }
     }
 
-    // 현재 시간을 기준으로 마감기한이 지난 스터디를 찾는다.
+    // 현재 시간을 기준으로 삭제 되거나 확정 되지 않은 마감 날짜 지난 스터디를 찾는다.
     @Override
     public void checkStudyDeadline() {
         log.info("checkStudyDeadline");
@@ -230,7 +230,7 @@ public class StudyServiceImpl implements StudyService {
             // 상태가 HOLD인 참가자 알람 생성
             log.info("study.getId() : " + study.getId());
             memberStatusService.getMemberStatusByStatus(study.getId(), MemberStatus.HOLD).forEach(email -> {
-                log.info("email : " + email);
+                // 거절 알람 생성
                 noticeService.createNotice(study.getId(), email, false, NoticeType.STUDY_REJECTION);
                 // 상태를 DECLINE으로 변경
                 memberStatusService.changeMemberStatus(study.getId(), email, MemberStatus.DECLINE);

@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StudyMember {
 
-    // TODO : StudyMember Entity 수정
-
     private String email;
 
     @Builder.Default
