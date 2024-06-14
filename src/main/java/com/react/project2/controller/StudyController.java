@@ -203,13 +203,35 @@ public class StudyController {
         }
     }
 
+    // 스터디 지각 처리
+    @PostMapping("/{id}/arriveLate")
+    public ResponseEntity<?> arriveLate(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        String userEmail = payload.get("email");
+
+        memberStatusService.changeMemberStatus(id, userEmail, MemberStatus.LATE);
+        noticeService.createNotice(id, userEmail, false, NoticeType.TARDINESS);
+        return ResponseEntity.ok().body(Map.of("message", "스터디에 지각 처리되었습니다."));
+
+    }
+
+    // 스터디 결석 처리
+    @PostMapping("/{id}/setAbsence")
+    public ResponseEntity<?> setAbsence(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        String userEmail = payload.get("email");
+
+        memberStatusService.changeMemberStatus(id, userEmail, MemberStatus.ABSENCE);
+        // 알람 생성
+        noticeService.createNotice(id, userEmail, false, NoticeType.ABSENCE);
+        return ResponseEntity.ok().body(Map.of("message", "스터디에 결석 처리되었습니다."));
+    }
+
     // 스터디 완료
     @PutMapping("/{id}/finish")
     public ResponseEntity<?> finishedStudy(@PathVariable("id") Long id) {
         boolean result = studyService.finishedStudy(id);
-        if (result) {
-            noticeService.createNotice(id, "ALL", false, NoticeType.STUDY_END);
-            return ResponseEntity.ok().body(Map.of("message", "스터디가 종료으로 시작되었습니다."));
+        if (result){
+            noticeService.createNotice(id,"ALL",false, NoticeType.STUDY_END);
+            return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 종료되었습니다."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 종료 처리 중 오류가 발생했습니다."));
         }
