@@ -27,6 +27,7 @@ public class MemberController {
         return member;
     }
 
+    //회원 수정
     @PutMapping("/modify")
     public Map<String, String> modify(@RequestBody DataMemberDTO dataMemberDTO) {
         log.info("************ MemberController - modify -dataMemberDTO : {}", dataMemberDTO);

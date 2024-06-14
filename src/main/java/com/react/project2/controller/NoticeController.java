@@ -28,6 +28,7 @@ public class NoticeController {
         return noticeCount;
     }
 
+    // 알람 리스트 조회
     @GetMapping("/list/{email}")
     public List<NoticeDTO> listMember(@PathVariable("email") String memberEmail) {
         log.info("******* StudyController - list/email : {}", memberEmail);
@@ -35,6 +36,7 @@ public class NoticeController {
         return noticeList;
     }
 
+    // 알람 삭제
     @DeleteMapping("/{email}/{noticeId}")
     public void deleteNotice(@PathVariable("email") String email, @PathVariable("noticeId") Long noticeId) {
         log.info("**** NoticeController DELETE /{email}/{noticeId} {} ****", email, noticeId);
