@@ -78,7 +78,7 @@ public class StudyDTO {
                 .memberNickname(study.getMember().getNickname()) // 조회된 Member 엔티티를 사용합니다.
                 .memberPhone(study.getMember().getPhone()) // 조회된 Member 엔티티를 사용합니다.
                 .location(study.getLocation())
-                .studyDeadlineDate(study.getStudyDate())
+                .studyDeadlineDate(study.getStudyDeadlineDate())
                 .locationX((Double) study.getLocationX())
                 .locationY((Double) study.getLocationY())
                 .studyDate(study.getStudyDate())

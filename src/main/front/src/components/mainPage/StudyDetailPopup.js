@@ -3,22 +3,44 @@ import useCustomMove from "../../hooks/useCustomMove";
 import { useSelector } from "react-redux";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
+import useMemberProfile from "../../hooks/useMemberProfile";
 
 const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
-  const { moveToProfilePage, moveToModifyPage, moveToReadPage } = useCustomMove();
+  const { moveToProfilePage, moveToModifyPage, moveToReadPage } =
+    useCustomMove();
 
   const { handleParticipate, handleParticipateCancel } = useHandleStudyMember();
   const { handleStart, handleDelete } = useHandleStudy();
+  const { moveToMain } = useCustomMove();
 
   // 현재 로그인 된 회원의 이메일 가져오기
   const loginState = useSelector((state) => state.loginSlice);
   const userEmail = loginState.email;
+  const { member } = useMemberProfile(userEmail);
+  const [blockUser, setBlockUser] = useState(false);
+  useEffect(() => {
+    // member.blockedDate가 현재 날짜보다 크면 정지된 회원으로 판단
+    console.log("blockedDate", member.blockedDate);
+    let blockedDate = new Date(member.blockedDate);
+    if (blockedDate > new Date().getTime()) {
+      console.log("blocked");
+      setBlockUser(true);
+    }
+  }, [blockUser, member]);
+  const bloackAlert = () => {
+    alert(`${member.blockedDate.substring(0, 10)}까지 정지된 회원입니다.`);
+    moveToMain();
+  };
+
+  console.log(userEmail);
 
   const [isCurrentUserAMember, setIsCurrentUserAMember] = useState(false);
 
   useEffect(() => {
     if (popup && study && study.studyMemberList) {
-      const isMember = study.studyMemberList.some((member) => member.email === userEmail);
+      const isMember = study.studyMemberList.some(
+        (member) => member.email === userEmail,
+      );
       console.log("set!");
       setIsCurrentUserAMember(isMember);
     }
@@ -107,7 +129,10 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
     if (userEmail && userEmail === study.memberEmail) {
       return (
         <>
-          <button className="btnSmallPoint" onClick={() => moveToModifyPage(study.id)}>
+          <button
+            className="btnSmallPoint"
+            onClick={() => moveToModifyPage(study.id)}
+          >
             수정하기
           </button>
           <button
@@ -127,7 +152,10 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0;
+    const currentMembers = study.studyMemberList
+      ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
+          .length
+      : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -144,7 +172,10 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT").length : 0) + 1}
+        {(study.studyMemberList
+          ? study.studyMemberList.filter((member) => member.status === "ACCEPT")
+              .length
+          : 0) + 1}
         <span>/</span>
         {study.maxPeople + 1}
       </p>
@@ -165,7 +196,12 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
           스터디시작
         </button>
       );
-    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "HOLD")) {
+    } else if (
+      isCurrentUserAMember &&
+      study.studyMemberList.some(
+        (member) => member.email === userEmail && member.status === "HOLD",
+      )
+    ) {
       const onWithdrawClick = async () => {
         await handleParticipateCancel(study.id);
         setPopup(false); // 버튼 클릭 시 바로 팝업을 닫습니다.
@@ -177,9 +213,21 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
           스터디탈퇴
         </button>
       );
-    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && member.status === "ACCEPT")) {
+    } else if (
+      isCurrentUserAMember &&
+      study.studyMemberList.some(
+        (member) => member.email === userEmail && member.status === "ACCEPT",
+      )
+    ) {
       return <button className="btnLargeBlack">참가 확정</button>;
-    } else if (isCurrentUserAMember && study.studyMemberList.some((member) => member.email === userEmail && (member.status === "WITHDRAW" || member.status === "DECLINE"))) {
+    } else if (
+      isCurrentUserAMember &&
+      study.studyMemberList.some(
+        (member) =>
+          member.email === userEmail &&
+          (member.status === "WITHDRAW" || member.status === "DECLINE"),
+      )
+    ) {
       return <button className="btnLargeBlack">참가 불가</button>;
     } else {
       // 스터디 참가 버튼 클릭 핸들러
@@ -191,7 +239,10 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
       };
 
       return (
-        <button className="btnLargePoint" onClick={() => onParticipateClick()}>
+        <button
+          className="btnLargePoint"
+          onClick={() => (blockUser ? bloackAlert() : onParticipateClick())}
+        >
           스터디참가
         </button>
       );
@@ -225,7 +276,10 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
         {/*스터디 제목, 주소*/}
         <div className="stPopupTitle">
           {/*스터디 제목*/}
-          <h3 onClick={() => moveToReadPage(study.id)} style={{ cursor: "pointer" }}>
+          <h3
+            onClick={() => moveToReadPage(study.id)}
+            style={{ cursor: "pointer" }}
+          >
             {study.title}
           </h3>
           {/*스터디 주소*/}
@@ -255,7 +309,13 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
             >
               {study.memberNickname}
             </p>
-            <p onClick={() => (window.location.href = `mailto:${study.memberEmail}`)}>{study.memberEmail}</p>
+            <p
+              onClick={() =>
+                (window.location.href = `mailto:${study.memberEmail}`)
+              }
+            >
+              {study.memberEmail}
+            </p>
           </div>
         </div>
         <div>

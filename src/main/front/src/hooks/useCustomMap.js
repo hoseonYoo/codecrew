@@ -41,8 +41,8 @@ const useCustomMap = () => {
           isLoaded: true,
         });
       }
-      //TODO : 1초마다 위치 업데이트
-    }, 1000);
+      //TODO : 10초마다 위치 업데이트
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

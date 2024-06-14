@@ -10,6 +10,7 @@ import useProfileImage from "../../hooks/useProfileImage";
 import useCharacterCheck from "../../hooks/useCharactercheck";
 import useCustomMove from "../../hooks/useCustomMove";
 import { useParams } from "react-router-dom";
+import useMemberProfile from "../../hooks/useMemberProfile";
 
 const { kakao } = window;
 
@@ -69,6 +70,20 @@ const AddPage = () => {
   const categories = useCategories(host);
   // 현재 로그인 된 회원의 이메일 가져오기
   const userEmail = useSelector((state) => state.loginSlice.email);
+  const { member } = useMemberProfile(userEmail);
+  console.log("member", member);
+  const [blockUser, setBlockUser] = useState(false);
+
+  useEffect(() => {
+    // member.blockedDate가 현재 날짜보다 크면 정지된 회원으로 판단
+    console.log("blockedDate", member.blockedDate);
+    let blockedDate = new Date(member.blockedDate);
+    if (blockedDate > new Date().getTime()) {
+      console.log("blocked");
+      setBlockUser(true);
+    }
+  }, [blockUser, member]);
+
   // 사진 수정용 CustomHook 사용하기
   const { imgSrc, handleFileChange, saveFile } = useProfileImage(null, "http:");
 
@@ -232,6 +247,11 @@ const AddPage = () => {
     }
   };
 
+  const bloackAlert = () => {
+    alert(`${member.blockedDate.substring(0, 10)}까지 정지된 회원입니다.`);
+    moveToMain();
+  };
+
   const renderStudyDeadLineDate = () => {
     if (study.studyDate === "") {
       return (
@@ -241,7 +261,13 @@ const AddPage = () => {
       );
     } else {
       return (
-        <select id="studyDeadLineDate" name="studyDeadLineDate" value={study.studyDeadLineDate} onChange={handleChangeStudy} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}>
+        <select
+          id="studyDeadLineDate"
+          name="studyDeadLineDate"
+          value={study.studyDeadLineDate}
+          onChange={handleChangeStudy}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+        >
           {calculateDeadLineDate()}
         </select>
       );
@@ -261,7 +287,7 @@ const AddPage = () => {
         deadLineDate.push(
           <option key={i} value={date.getTime()}>
             {date.toLocaleDateString()}
-          </option>
+          </option>,
         );
       }
     }
@@ -297,113 +323,149 @@ const AddPage = () => {
       )}
       {/* 모달창입니다. */}
       <BasicLayoutPage headerTitle="스터디추가">
-        <form>
-          <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={{ backgroundImage: `url(${imgSrc})` }}>
-              <label htmlFor="fileInput">
-                추가
-                <input id="fileInput" type="file" onChange={handleFileChange} />
-              </label>
-            </div>
-            <div>
-              <h3>스터디명</h3>
-              <input
-                name="title"
-                value={study.title}
-                maxLength={24}
-                type="text"
-                placeholder="스터디명을 입력해주세요."
-                onKeyUp={checkSpecialCharacters}
-                onKeyDown={checkSpecialCharacters}
-                onChange={handleTitleChange}
-              />
-              <span
-                style={{
-                  color: "#dcdcdc",
-                  fontSize: "12px",
-                  textAlign: "right",
-                  display: "block",
-                }}
+        {blockUser ? (
+          bloackAlert()
+        ) : (
+          <form>
+            <div className="StudyAddWrap">
+              <div
+                className="StudyAddImg"
+                style={{ backgroundImage: `url(${imgSrc})` }}
               >
-                {titleLength} / 24
-              </span>
-            </div>
-            <div onClick={lat ? () => {} : handleAddressSearchClick}>
-              <h3>주소</h3>
-              <input name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+                <label htmlFor="fileInput">
+                  추가
+                  <input
+                    id="fileInput"
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                </label>
+              </div>
+              <div>
+                <h3>스터디명</h3>
+                <input
+                  name="title"
+                  value={study.title}
+                  maxLength={24}
+                  type="text"
+                  placeholder="스터디명을 입력해주세요."
+                  onKeyUp={checkSpecialCharacters}
+                  onKeyDown={checkSpecialCharacters}
+                  onChange={handleTitleChange}
+                />
+                <span
+                  style={{
+                    color: "#dcdcdc",
+                    fontSize: "12px",
+                    textAlign: "right",
+                    display: "block",
+                  }}
+                >
+                  {titleLength} / 24
+                </span>
+              </div>
+              <div onClick={lat ? () => {} : handleAddressSearchClick}>
+                <h3>주소</h3>
+                <input
+                  name="location"
+                  type="text"
+                  value={study.location}
+                  placeholder="주소를 입력해주세요."
+                  readOnly
+                />
 
-              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
-            </div>
-            <div className="reWrap">
-              <h3>참여날짜</h3>
-              <input
-                id="studyDate"
-                name="studyDate"
-                value={study.studyDate}
-                type="datetime-local"
-                placeholder="참여일을 입력해주세요."
-                onChange={handleChangeStudy}
-                min={new Date().toISOString().substring(0, 16)}
-                max={new Date(new Date().getTime() + 12096e5).toISOString().substring(0, 16)}
-              />
-            </div>
-            <div>
-              <h3>모집 마감 날짜</h3>
-              {renderStudyDeadLineDate()}
-            </div>
-            <div>
-              <h3>참여인원</h3>
-              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}>
-                {Array.from({ length: 9 }, (_, index) => (
-                  <option key={index} value={index + 2}>
-                    {index + 2}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <h3>카테고리</h3>
-              <select id="category" name="category" value={study.category} onChange={handleChangeStudy}>
-                <option hidden>카테고리 선택</option>
-                {Object.entries(categories).length > 0 &&
-                  Object.entries(categories).map(([key, value], index) => (
-                    <React.Fragment key={index}>
-                      <option id={key} value={key}>
-                        {value}
-                      </option>
-                    </React.Fragment>
+                <img
+                  className="AdressSearch"
+                  src={
+                    process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"
+                  }
+                  alt="searchIcon"
+                />
+              </div>
+              <div className="reWrap">
+                <h3>참여날짜</h3>
+                <input
+                  id="studyDate"
+                  name="studyDate"
+                  value={study.studyDate}
+                  type="datetime-local"
+                  placeholder="참여일을 입력해주세요."
+                  onChange={handleChangeStudy}
+                  min={new Date().toISOString().substring(0, 16)}
+                  max={new Date(new Date().getTime() + 12096e5)
+                    .toISOString()
+                    .substring(0, 16)}
+                />
+              </div>
+              <div>
+                <h3>모집 마감 날짜</h3>
+                {renderStudyDeadLineDate()}
+              </div>
+              <div>
+                <h3>참여인원</h3>
+                <select
+                  id="maxPeople"
+                  name="maxPeople"
+                  value={study.maxPeople}
+                  onChange={handleChangeStudy}
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+                >
+                  {Array.from({ length: 9 }, (_, index) => (
+                    <option key={index} value={index + 2}>
+                      {index + 2}
+                    </option>
                   ))}
-              </select>
+                </select>
+              </div>
+              <div>
+                <h3>카테고리</h3>
+                <select
+                  id="category"
+                  name="category"
+                  value={study.category}
+                  onChange={handleChangeStudy}
+                >
+                  <option hidden>카테고리 선택</option>
+                  {Object.entries(categories).length > 0 &&
+                    Object.entries(categories).map(([key, value], index) => (
+                      <React.Fragment key={index}>
+                        <option id={key} value={key}>
+                          {value}
+                        </option>
+                      </React.Fragment>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <h3>스터디 소개</h3>
+                <textarea
+                  name="content"
+                  value={study.content}
+                  maxLength={200}
+                  placeholder="스터디소개를 입력해주세요."
+                  onChange={handleContentChange}
+                  onKeyUp={checkSpecialCharacters}
+                  onKeyDown={checkSpecialCharacters}
+                ></textarea>
+                <span
+                  style={{
+                    color: "#dcdcdc",
+                    fontSize: "12px",
+                    textAlign: "right",
+                    display: "block",
+                  }}
+                >
+                  {contentLength} / 200
+                </span>
+              </div>
             </div>
-            <div>
-              <h3>스터디 소개</h3>
-              <textarea
-                name="content"
-                value={study.content}
-                maxLength={200}
-                placeholder="스터디소개를 입력해주세요."
-                onChange={handleContentChange}
-                onKeyUp={checkSpecialCharacters}
-                onKeyDown={checkSpecialCharacters}
-              ></textarea>
-              <span
-                style={{
-                  color: "#dcdcdc",
-                  fontSize: "12px",
-                  textAlign: "right",
-                  display: "block",
-                }}
-              >
-                {contentLength} / 200
-              </span>
+            <div className="bottomBtnWrap">
+              <button onClick={handleClickAdd} className="btnLargePoint">
+                스터디추가
+              </button>
             </div>
-          </div>
-          <div className="bottomBtnWrap">
-            <button onClick={handleClickAdd} className="btnLargePoint">
-              스터디추가
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </BasicLayoutPage>
     </>
   );
