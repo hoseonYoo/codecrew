@@ -2,6 +2,9 @@ package com.react.project2.controller;
 
 import com.react.project2.domain.MemberStatus;
 import com.react.project2.domain.NoticeType;
+import com.react.project2.domain.StudyMember;
+import com.react.project2.dto.PageRequestDTO;
+import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
 import com.react.project2.service.MemberStatusService;
 import com.react.project2.service.NoticeService;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,12 +27,37 @@ public class StudyController {
     private final MemberStatusService memberStatusService;
     private final NoticeService noticeService;
 
+    // 주최스터디 목록 조회
+    @GetMapping("/list/{email}")
+    public PageResponseDTO<StudyDTO> listMember(
+            PageRequestDTO pageRequestDTO,
+            @PathVariable("email") String memberEmail) {
+        log.info("******* StudyController - list/email : {}", memberEmail);
+        log.info("******* StudyController - list/email pageRequestDTO : {}", pageRequestDTO);
+        // 리턴 : 목록 데이터, 다음데이터있는지 여부 boolean,
+        return studyService.getListMember(pageRequestDTO, memberEmail);
+    }
+
+    // 참가스터디 목록 조회
+    @GetMapping("/memberList/{email}")
+    public PageResponseDTO<StudyDTO> getJoinStudy(
+            PageRequestDTO pageRequestDTO,
+            @PathVariable("email") String email) {
+        return studyService.getJoinStudy(pageRequestDTO, email);
+    }
+
     // 스터디 등록
     @PostMapping("/")
     public Map<String, String> add(StudyDTO studyDTO) {
         log.info("**** StudyController POST / add {} ****", studyDTO);
         studyService.add(studyDTO);
         return Map.of("RESULT", "SUCCESS");
+    }
+
+    // 스터디 전부 조회
+    @GetMapping("/list")
+    public PageResponseDTO<StudyDTO> list(PageRequestDTO pageRequestDTO){
+        return studyService.getList(pageRequestDTO);
     }
 
     // 스터디 조회
