@@ -81,20 +81,20 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     // *************** 날짜 기준으로 자동을 처리할 스터디 조건으로 조회 ***************
 
-    // 현재 시간보다 Deadline이 더 빠르고 isConfirmed이 false이며 disabled가 false인 스터디 전체 조회
-    @Query("select s from Study s where s.studyDeadlineDate < current_timestamp and s.isConfirmed = false and s.disabled = false")
+    // isFinished가 false이고 현재 시간보다 Deadline이 더 빠르며 isConfirmed이 false이며 disabled가 false인 스터디 전체 조회
+    @Query("select s from Study s where s.isFinished = false and s.studyDeadlineDate < current_timestamp and s.isConfirmed = false and s.disabled = false")
     List<Study> findAllByAfterDeadline();
 
-    // 현재 시간을 기준으로 5시간 이내의 studyDate를 가지고 있는 isConfirmed가 false이고 disabled가 false인 스터디를 찾는다.
-    @Query("select s from Study s where s.studyDate < current_timestamp + 5 and s.isConfirmed = false and s.disabled = false")
+    // isFinished가 false이고 현재 시간을 기준으로 5시간 이내의 studyDate를 가지고 있는 isConfirmed가 false이고 disabled가 false인 스터디를 찾는다.
+    @Query("select s from Study s where s.isFinished = false and s.studyDate < current_timestamp + 5 and s.isConfirmed = false and s.disabled = false")
     List<Study> findAllByAfterStudyDate();
 
-    // 현재 시간을 기준으로 하루 뒤의 studyDate를 가지고 있는 isConfirmed가 true고 disabled가 false인 스터디를 찾는다.
-    @Query("select s from Study s where s.studyDate = current_date + 1 and s.isConfirmed = true and s.disabled = false")
+    // 현재 시간을 기준으로 하루 뒤의 studyDate를 가지고 있는 disabled가 false인 스터디를 찾는다.
+    @Query("select s from Study s where s.studyDate = current_date + 1 and  s.disabled = false")
     List<Study> findAllByTomorrowStudyDate();
 
-    // 현재 날짜의 studyDate를 가지고 있는 isConfirmed가 true이고 disabled가 false인 스터디를 찾는다.
-    @Query("select s from Study s where s.studyDate = current_date and s.isConfirmed = true and s.disabled = false")
+    // isFinished가 false이고 현재 날짜의 studyDate를 가지고 있는 isConfirmed가 true이고 disabled가 false인 스터디를 찾는다.
+    @Query("select s from Study s where s.isFinished = false and s.studyDate = current_date and s.isConfirmed = true and s.disabled = false")
     List<Study> findAllByTodayStudyDate();
 
 

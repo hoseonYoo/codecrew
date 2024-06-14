@@ -32,7 +32,7 @@ public class checkScheduler {
 
     }
 
-    // 현재 시간을 기준으로 마감기한이 지난 스터디를 찾는다.
+    // 현재 시간을 기준으로 삭제 되거나 확정 되지 않은 마감 날짜 지난 스터디를 찾는다.
     public void checkStudyDeadline() {
         studyService.checkStudyDeadline();
     }

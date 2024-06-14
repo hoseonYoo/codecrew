@@ -30,15 +30,14 @@ const studyRouter = () => {
     {
       path: "add/:lat/:lng",
       element: (
-          // Suspense 컴포넌트로 감싸서 로딩 중일 때 보여줄 컴포넌트를 지정
-          <Suspense fallback={<LoadingPage />}>
-            <StudyAdd />
-          </Suspense>
+        // Suspense 컴포넌트로 감싸서 로딩 중일 때 보여줄 컴포넌트를 지정
+        <Suspense fallback={<LoadingPage />}>
+          <StudyAdd />
+        </Suspense>
       ),
     },
     {
       path: ":id",
-      // todo(no) 작성필요
       element: (
         // Suspense 컴포넌트로 감싸서 로딩 중일 때 보여줄 컴포넌트를 지정
         <Suspense fallback={<LoadingPage />}>
@@ -48,7 +47,6 @@ const studyRouter = () => {
     },
     {
       path: "modify/:id",
-      // todo(no) 작성필요
       element: (
         // Suspense 컴포넌트로 감싸서 로딩 중일 때 보여줄 컴포넌트를 지정
         <Suspense fallback={<LoadingPage />}>
@@ -58,7 +56,6 @@ const studyRouter = () => {
     },
     {
       path: "profile/:email",
-      // todo(no) 작성필요
       element: (
         // Suspense 컴포넌트로 감싸서 로딩 중일 때 보여줄 컴포넌트를 지정
         <Suspense fallback={<LoadingPage />}>
