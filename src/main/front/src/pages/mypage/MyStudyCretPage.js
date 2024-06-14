@@ -17,6 +17,15 @@ const MyStudyCretPage = () => {
   const [studyType, setStudyType] = useState("gettering");
   const { moveToMain } = useCustomMove();
 
+  const loadingComponent = () => {
+    return (
+      <img
+        style={{ width: "calc(100vw - 40px)", marginLeft: "20px" }}
+        src="/assets/imgs/scrollloading.gif"
+      />
+    );
+  };
+
   // 페이지 로딩 시 주최한 스터디 모임 목록을 불러옴
   useEffect(() => {
     const loadInitialData = async () => {
@@ -80,7 +89,7 @@ const MyStudyCretPage = () => {
             dataLength={studyList.length}
             next={fetchData}
             hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
+            loader={loadingComponent()}
           >
             {/* 스터디 목록을 출력 */}
             {studyList.map((study, index) => (
