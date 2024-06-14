@@ -28,22 +28,23 @@ public class StudyController {
     private final NoticeService noticeService;
 
     // 주최스터디 목록 조회
-    @GetMapping("/list/{email}")
+    @GetMapping("/list/{type}/{email}")
     public PageResponseDTO<StudyDTO> listMember(
             PageRequestDTO pageRequestDTO,
+            @PathVariable("type") String type,
             @PathVariable("email") String memberEmail) {
-        log.info("******* StudyController - list/email : {}", memberEmail);
-        log.info("******* StudyController - list/email pageRequestDTO : {}", pageRequestDTO);
+
         // 리턴 : 목록 데이터, 다음데이터있는지 여부 boolean,
-        return studyService.getListMember(pageRequestDTO, memberEmail);
+        return studyService.getListMember(type,pageRequestDTO, memberEmail);
     }
 
     // 참가스터디 목록 조회
-    @GetMapping("/memberList/{email}")
+    @GetMapping("/memberList/{type}/{email}")
     public PageResponseDTO<StudyDTO> getJoinStudy(
+            @PathVariable("type") String type,
             PageRequestDTO pageRequestDTO,
             @PathVariable("email") String email) {
-        return studyService.getJoinStudy(pageRequestDTO, email);
+        return studyService.getJoinStudy(type,pageRequestDTO, email);
     }
 
     // 스터디 등록
@@ -56,7 +57,7 @@ public class StudyController {
 
     // 스터디 전부 조회
     @GetMapping("/list")
-    public PageResponseDTO<StudyDTO> list(PageRequestDTO pageRequestDTO){
+    public PageResponseDTO<StudyDTO> list(PageRequestDTO pageRequestDTO) {
         return studyService.getList(pageRequestDTO);
     }
 
@@ -206,8 +207,8 @@ public class StudyController {
     @PutMapping("/{id}/finish")
     public ResponseEntity<?> finishedStudy(@PathVariable("id") Long id) {
         boolean result = studyService.finishedStudy(id);
-        if (result){
-            noticeService.createNotice(id,"ALL",false, NoticeType.STUDY_END);
+        if (result) {
+            noticeService.createNotice(id, "ALL", false, NoticeType.STUDY_END);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 종료으로 시작되었습니다."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 종료 처리 중 오류가 발생했습니다."));

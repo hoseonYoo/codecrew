@@ -25,9 +25,9 @@ public interface StudyService {
     PageResponseDTO<StudyDTO> getList(PageRequestDTO pageRequestDTO);
 
     // 주최스터디 조회(이메일/목록)
-    PageResponseDTO<StudyDTO> getListMember(PageRequestDTO pageRequestDTO, String memberEmail);
+    PageResponseDTO<StudyDTO> getListMember(String type, PageRequestDTO pageRequestDTO, String memberEmail);
     // 참가스터디 조회
-    PageResponseDTO<StudyDTO> getJoinStudy(PageRequestDTO pageRequestDTO, String email);
+    PageResponseDTO<StudyDTO> getJoinStudy(String type,PageRequestDTO pageRequestDTO, String email);
 
     // 스터디 조회(1개)
     StudyDTO get(Long id);

@@ -53,19 +53,21 @@ export const fetchMyStudyJoinCount = async (userEmail) => {
     return 0;
   }
 };
-// API 주최스터디 목록조회 요청
-export const getList = async (pageParam, email) => {
+// 주최스터디 목록조회 요청
+export const getCreatedStudyList = async (type, pageParam, email) => {
+  console.log("getCreatedStudyList", type, pageParam, email);
   const { page, size } = pageParam;
-  const response = await jwtAxios.get(`${host}/list/${email}`, {
+  const response = await jwtAxios.get(`${host}/list/${type}/${email}`, {
     params: { page, size }, // 여기서 page와 size를 동적으로 설정
   });
+  console.log("getCreatedStudyList", response.data);
   return response.data;
 };
 
 // API 참가스터디 목록조회 요청
-export const getJoinStudyList = async (pageParam, email) => {
+export const getJoinStudyList = async (type, pageParam, email) => {
   const { page, size } = pageParam;
-  const response = await jwtAxios.get(`${host}/memberList/${email}`, {
+  const response = await jwtAxios.get(`${host}/memberList/${type}/${email}`, {
     params: { page, size }, // 여기서 page와 size를 동적으로 설정
   });
   return response.data;

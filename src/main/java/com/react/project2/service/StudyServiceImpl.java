@@ -65,15 +65,29 @@ public class StudyServiceImpl implements StudyService {
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
+
     // 주최스터디 조회(이메일/목록)
     @Override
-    public PageResponseDTO<StudyDTO> getListMember(PageRequestDTO pageRequestDTO, String memberEmail) {
+    public PageResponseDTO<StudyDTO> getListMember(String type, PageRequestDTO pageRequestDTO, String memberEmail) {
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1,
                 pageRequestDTO.getSize(),
                 Sort.by("id").descending());
 
-        Page<Study> page = studyRepository.findAllByMemberEmail(memberEmail, pageable);
+        Page<Study> page = null;
+
+        // 모집중인 스터디 조회
+        if (type.equals("gettering")) {
+            page =  studyRepository.findAllGetteringStudyByMemberEmail(memberEmail, pageable);
+        } else if (type.equals("progress")) {
+            // 진행중인 스터디 조회
+            page = studyRepository.findAllConfirmedStudyByMemberEmail(memberEmail, pageable);
+        } else if (type.equals("end")) {
+            // 종료된 스터디 조회
+            page = studyRepository.findAllConfirmedStudyByMemberEmailAndStudyDate(memberEmail, pageable);
+        } else {
+            throw new IllegalArgumentException("type이 잘못되었습니다.");
+        }
 
         List<StudyDTO> dtos = page.getContent().stream()
                 .map(this::entityToDTO)
@@ -89,14 +103,27 @@ public class StudyServiceImpl implements StudyService {
 
     // 참가스터디 조회
     @Override
-    public PageResponseDTO<StudyDTO> getJoinStudy(PageRequestDTO pageRequestDTO, String email) {
+    public PageResponseDTO<StudyDTO> getJoinStudy(String type,PageRequestDTO pageRequestDTO, String email) {
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1,
                 pageRequestDTO.getSize(),
                 Sort.by("id").descending());
 
 
-        Page<Study> page = studyRepository.findAllByMemberEmailAndStatus(email, pageable);
+        Page<Study> page = null;
+
+        // 모집중인 스터디 조회
+        if (type.equals("gettering")) {
+            page =  studyRepository.findAllByMemberEmailAndStatus(email, pageable);
+        } else if (type.equals("progress")) {
+            // 진행중인 스터디 조회
+            page = studyRepository.findAllByMemberEmailAndStatusAndStudyDate(email, pageable);
+        } else if (type.equals("end")) {
+            // 종료된 스터디 조회
+            page = studyRepository.findAllByMemberEmailAndStatusAndStudyDateBefore(email, pageable);
+        } else {
+            throw new IllegalArgumentException("type이 잘못되었습니다.");
+        }
 
         List<StudyDTO> dtos = page.getContent().stream()
                 .map(this::entityToDTO)
