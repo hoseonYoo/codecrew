@@ -8,7 +8,7 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import { API_SERVER_HOST, disableMember } from "../../api/memberAPI";
 import useCategories from "../../hooks/useCategories";
 import React, { useEffect, useState } from "react";
-import { fetchMyStudyCount, fetchMyStudyJoinCount } from "../../api/studyAPI";
+import { fetchMyStudyCount } from "../../api/studyAPI";
 import { getNoticeCount } from "../../api/noticeAPI";
 
 const host = API_SERVER_HOST;
@@ -34,9 +34,9 @@ const ReadPage = () => {
   useEffect(() => {
     if (userEmail) {
       const fetchDatas = async () => {
-        const count = await fetchMyStudyCount(userEmail);
+        const count = await fetchMyStudyCount(userEmail, "create");
         setMyStudyCount(count);
-        const joinCount = await fetchMyStudyJoinCount(userEmail);
+        const joinCount = await fetchMyStudyCount(userEmail, "join");
         setMyStudyJoinCount(joinCount);
         const noticeCount = await getNoticeCount(userEmail);
         setMyNoticeCount(noticeCount);
