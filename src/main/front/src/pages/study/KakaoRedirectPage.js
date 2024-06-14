@@ -22,6 +22,16 @@ const KakaoRedirectPage = () => {
         console.log("getMemberWithAccessToken - memberInfo : ");
         console.log(memberInfo);
         // 로그인 처리
+
+        // 탈퇴한 회원인지 확인
+        if (memberInfo.disabled) {
+          alert(
+            "탈퇴된 회원입니다.\n다시 회원가입을 원하시면 고객 센터로 문의 주세요.",
+          );
+          moveToPath("/");
+          return;
+        }
+
         dispatch(login(memberInfo));
         console.log("memberInfo.isNew : ", memberInfo.isNew);
 
