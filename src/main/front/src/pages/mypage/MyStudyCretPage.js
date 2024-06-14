@@ -18,22 +18,13 @@ const MyStudyCretPage = () => {
   const { moveToMain } = useCustomMove();
 
   const loadingComponent = () => {
-    return (
-      <img
-        style={{ width: "calc(100vw - 40px)", marginLeft: "20px" }}
-        src="/assets/imgs/scrollloading.gif"
-      />
-    );
+    return <img style={{ width: "calc(100vw - 40px)", marginLeft: "20px" }} src="/assets/imgs/scrollloading.gif" />;
   };
 
   // 페이지 로딩 시 주최한 스터디 모임 목록을 불러옴
   useEffect(() => {
     const loadInitialData = async () => {
-      const data = await getCreatedStudyList(
-        studyType,
-        { page: 1, size: 10 },
-        userEmail,
-      );
+      const data = await getCreatedStudyList(studyType, { page: 1, size: 10 }, userEmail);
 
       if (data.list.length > 0) {
         setStudyList(data.list);
@@ -48,16 +39,14 @@ const MyStudyCretPage = () => {
   }, [studyType]);
 
   const fetchData = () => {
-    getCreatedStudyList(studyType, { page: page, size: 10 }, userEmail).then(
-      (data) => {
-        if (data.list.length > 0) {
-          setStudyList((prevList) => [...prevList, ...data.list]);
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false); // 더 이상 불러올 데이터가 없음
-        }
-      },
-    );
+    getCreatedStudyList(studyType, { page: page, size: 10 }, userEmail).then((data) => {
+      if (data.list.length > 0) {
+        setStudyList((prevList) => [...prevList, ...data.list]);
+        setPage((prevPage) => prevPage + 1);
+      } else {
+        setHasMore(false); // 더 이상 불러올 데이터가 없음
+      }
+    });
   };
 
   const changeStudyType = (type) => {
@@ -68,7 +57,7 @@ const MyStudyCretPage = () => {
     return (
       <div className="nonePage">
         <img src="../assets/imgs/icon/ic_none.png" />
-        <h2>아직 생성한 스터디가 없어요</h2>
+        <h2>스터디가 없습니다...</h2>
         <p onClick={moveToMain}>새로운 스터디를 생성해보세요</p>
       </div>
     );
@@ -85,12 +74,7 @@ const MyStudyCretPage = () => {
         listEmpty()
       ) : (
         <div className="listContentWrap">
-          <InfiniteScroll
-            dataLength={studyList.length}
-            next={fetchData}
-            hasMore={hasMore}
-            loader={loadingComponent()}
-          >
+          <InfiniteScroll dataLength={studyList.length} next={fetchData} hasMore={hasMore} loader={loadingComponent()}>
             {/* 스터디 목록을 출력 */}
             {studyList.map((study, index) => (
               <StudyBlockMy key={index} study={study} />

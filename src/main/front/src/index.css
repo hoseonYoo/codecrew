@@ -14,9 +14,19 @@ body{
   -ms-overflow-style: none;
 }
 div#root{
-  background-color: #f8f8f8;
+  background-color: #f1f1f1;
+}
+div.bodyWrap{
+  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar {
   display: none;
 }
+/* 화면 너비가 520px 이하일 때 그림자 제거 */
+@media (max-width: 540px) {
+  div.bodyWrap {
+    box-shadow: none;
+  }
+}
+

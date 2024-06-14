@@ -45,7 +45,7 @@ const useHandleStudyMember = () => {
 
   // 스터디 참가 취소 처리 함수
   const handleParticipateCancel = (studyId) =>
-    confirmAction("스터디 참가를 취소하시겠습니까?", () =>
+    confirmAction("스터디를 탈퇴하시겠습니까? 탈퇴 후에는 참가가 불가능합니다.", () =>
       jwtAxios.post(`${host}/api/study/${studyId}/cancelParticipation`, {
         email: userEmail,
       }),
@@ -59,7 +59,7 @@ const useHandleStudyMember = () => {
       }),
     );
 
-  // 스터디 출석 지각 체크 함수
+  // 스터디 출석 체크 함수(지각)
   const handleArriveLate = (studyId) =>
     confirmAction("스터디 출석체크를 하시겠습니까?", () =>
       jwtAxios.post(`${host}/api/study/${studyId}/arriveLate`, {
