@@ -206,16 +206,17 @@ public class StudyServiceImpl implements StudyService {
 
     }
 
-    // 사용자 이메일로 생성한 스터디 개수 조회
+    // 사용자 이메일로 생성 또는 참가한 스터디 개수 조회
     @Override
-    public int countStudy(String email) {
-        return studyRepository.countStudy(email);
-    }
+    public int countStudy(String type, String email) {
 
-    // 사용자 이메일로 참가한 스터디 개수 조회
-    @Override
-    public int countJoinStudy(String email) {
-        return studyRepository.countJoinStudy(email);
+        if (type.equals("create")) {
+            return studyRepository.countCreateStudy(email);
+        } else if (type.equals("join")) {
+            return studyRepository.countJoinStudy(email);
+        } else {
+            throw new IllegalArgumentException("type이 잘못되었습니다.");
+        }
     }
 
     // 현재 시간을 기준으로 마감기한이 지난 스터디를 찾는다.

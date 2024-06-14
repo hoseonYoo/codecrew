@@ -43,11 +43,8 @@ public interface StudyService {
     // 마커용 스터디 카테고리별 전체 조회
     List<StudyDTO> getStudyMarkerByCategory(String category);
 
-    // 사용자 이메일로 생성한 스터디 개수 조회
-    int countStudy(String email);
-
-    // 사용자 이메일로 참가한 스터디 개수 조회
-    int countJoinStudy(String email);
+    // 사용자 이메일로 생성 또는 참가한 스터디 개수 조회
+    int countStudy(String type, String email);
 
     // 현재 시간을 기준으로 마감기한이 지난 스터디를 찾는다.
     void checkStudyDeadline();

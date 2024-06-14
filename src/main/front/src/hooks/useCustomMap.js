@@ -19,7 +19,7 @@ const useCustomMap = () => {
     (state) => state.categorySlice.studyLocationList,
   );
 
-  // 내 위치 가져오기
+  /* // 내 위치 가져오기
   useEffect(() => {
     const interval = setInterval(() => {
       if (navigator.geolocation) {
@@ -35,12 +35,29 @@ const useCustomMap = () => {
       } else {
         console.log("Geolocation is not supported by this browser.");
         setMyLocation({
-          lat: 37.57163048751097,
-          lng: 126.97591715920376,
+          lat: 37.55498771600092,
+          lng: 126.93601217931102,
+          // TODO 시연 할 경우 위도 경도 받아온것 처럼 처리 위한 코드
           get: false,
           isLoaded: true,
         });
       }
+      //TODO : 1초마다 위치 업데이트
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);*/
+
+  // TODO 시연용 내위치 가져 오기 코드
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMyLocation({
+        lat: 37.55498771600092,
+        lng: 126.93601217931102,
+        // TODO 시연 할 경우 위도 경도 받아온것 처럼 처리 위한 코드
+        get: true,
+        isLoaded: true,
+      });
+
       //TODO : 1초마다 위치 업데이트
     }, 1000);
     return () => clearInterval(interval);

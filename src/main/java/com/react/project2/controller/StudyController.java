@@ -27,24 +27,22 @@ public class StudyController {
     private final MemberStatusService memberStatusService;
     private final NoticeService noticeService;
 
-    // 주최스터디 목록 조회
+    // 생성한 스터디 조건으로 목록 조회
     @GetMapping("/list/{type}/{email}")
     public PageResponseDTO<StudyDTO> listMember(
             PageRequestDTO pageRequestDTO,
             @PathVariable("type") String type,
             @PathVariable("email") String memberEmail) {
-
-        // 리턴 : 목록 데이터, 다음데이터있는지 여부 boolean,
-        return studyService.getListMember(type,pageRequestDTO, memberEmail);
+        return studyService.getListMember(type, pageRequestDTO, memberEmail);
     }
 
-    // 참가스터디 목록 조회
+    // 참가한 스터디 조건으로  목록 조회
     @GetMapping("/memberList/{type}/{email}")
     public PageResponseDTO<StudyDTO> getJoinStudy(
             @PathVariable("type") String type,
             PageRequestDTO pageRequestDTO,
             @PathVariable("email") String email) {
-        return studyService.getJoinStudy(type,pageRequestDTO, email);
+        return studyService.getJoinStudy(type, pageRequestDTO, email);
     }
 
     // 스터디 등록
@@ -55,25 +53,16 @@ public class StudyController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    // 스터디 전부 조회
-    @GetMapping("/list")
-    public PageResponseDTO<StudyDTO> list(PageRequestDTO pageRequestDTO) {
-        return studyService.getList(pageRequestDTO);
-    }
-
-    // 스터디 조회
+    // 스터디 1개 조회
     @GetMapping("/{id}")
     public StudyDTO get(@PathVariable("id") Long id) {
         log.info("스터디 id 값은 : {}", id);
-        StudyDTO studyDTO = studyService.get(id);
-        log.info("----GETSTUDYID----");
-        return studyDTO;
+        return studyService.get(id);
     }
 
     // 스터디 수정
     @PutMapping("/modify")
     public Map<String, String> modify(StudyDTO studyDTO) {
-        log.info("**** StudyController PUT / modify {} ****", studyDTO);
         studyService.modifyStudy(studyDTO);
 
         // 상태가 HOLD인 멤버들 알람 생성
@@ -189,6 +178,9 @@ public class StudyController {
                 memberStatusService.changeMemberStatus(id, email, MemberStatus.DECLINE);
             });
 
+            // 상태가 WITHDRAW인 멤버 상태 변경
+            memberStatusService.changeAllMemberStatusByStatus(id, MemberStatus.WITHDRAW, MemberStatus.DECLINE);
+
             // 상태가 DECLINE인 멤버들 제거
             studyService.deleteDeclineMember(id);
 
@@ -230,8 +222,9 @@ public class StudyController {
     @PutMapping("/{id}/finish")
     public ResponseEntity<?> finishedStudy(@PathVariable("id") Long id) {
         boolean result = studyService.finishedStudy(id);
-        if (result){
-            noticeService.createNotice(id,"ALL",false, NoticeType.STUDY_END);
+        // TODO: 스터디 완료 Column 추가로 인한 스터디 조회 로직 변경 필요
+        if (result) {
+            noticeService.createNotice(id, "ALL", false, NoticeType.STUDY_END);
             return ResponseEntity.ok().body(Map.of("message", "스터디가 성공적으로 종료되었습니다."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 종료 처리 중 오류가 발생했습니다."));
@@ -240,32 +233,18 @@ public class StudyController {
 
     // ----------- //
 
-    // 마이페이지 요청
+    // 마이페이지 스터디 개수 요청
     @GetMapping("/countmy")
-    public ResponseEntity<?> countMyStudies(@RequestParam String email) {
+    public ResponseEntity<?> countMyStudies(@RequestParam String email, @RequestParam String type) {
         log.info("testCount------");
         try {
-            // 사용자 이메일로 스터디 개수 조회
-            int count = studyService.countStudy(email);
+            // 사용자 이메일로 생성한 스터디 개수 조회
+            // TODO : 스터디 생성한 스터디 조회 로직 세세하게 변경 필요
+            int count = studyService.countStudy(type, email);
             return ResponseEntity.ok().body(Map.of("count", count));
         } catch (Exception e) {
             // 예외 발생 시 에러 메시지 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 개수를 조회하는 중 오류가 발생했습니다."));
         }
     }
-
-    @GetMapping("/countmyJoin")
-    public ResponseEntity<?> countMyJoinStudies(@RequestParam String email) {
-        log.info("testCount------");
-        try {
-            // 사용자 이메일로 스터디 개수 조회
-            int count = studyService.countJoinStudy(email);
-            return ResponseEntity.ok().body(Map.of("count", count));
-        } catch (Exception e) {
-            // 예외 발생 시 에러 메시지 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "스터디 개수를 조회하는 중 오류가 발생했습니다."));
-        }
-    }
-
-
 }
