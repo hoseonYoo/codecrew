@@ -28,9 +28,7 @@ const StudyBlock = ({ studyLocation }) => {
 
   // 이미지 URL 생성 함수
   const getImageUrl = () => {
-    return studyLocation.thImg.startsWith("http:")
-      ? studyLocation.thImg
-      : `${host}/api/image/view/${studyLocation.thImg}`;
+    return studyLocation.thImg.startsWith("http:") ? studyLocation.thImg : `${host}/api/image/view/${studyLocation.thImg}`;
   };
 
   // 카카오 맵 URL 생성 함수
@@ -43,19 +41,13 @@ const StudyBlock = ({ studyLocation }) => {
   const renderButton = () => {
     if (!userEmail || userEmail !== studyUserEmail) {
       return (
-        <button
-          className="btnMediumPoint"
-          onClick={() => handleParticipate(studyLocation.id)}
-        >
+        <button className="btnMediumPoint" onClick={() => handleParticipate(studyLocation.id)}>
           스터디참가
         </button>
       );
     } else {
       return (
-        <button
-          className="btnMediumPoint"
-          onClick={() => handleStart(studyLocation.id)}
-        >
+        <button className="btnMediumPoint" onClick={() => handleStart(studyLocation.id)}>
           스터디시작
         </button>
       );
@@ -74,9 +66,7 @@ const StudyBlock = ({ studyLocation }) => {
       ></div>
 
       <div className="studyBlockTitle" style={{ cursor: "pointer" }}>
-        <h3 onClick={() => moveToReadPage(studyLocation.id)}>
-          {studyLocation.title}
-        </h3>
+        <h3 onClick={() => moveToReadPage(studyLocation.id)}>{studyLocation.title}</h3>
         <p
           onClick={() => {
             const confirmOpen = window.confirm("카카오지도를 여시겠습니까?");

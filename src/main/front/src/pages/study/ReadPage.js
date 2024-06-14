@@ -234,7 +234,10 @@ const ReadPage = () => {
       study.studyMemberList.length >= study.maxPeople ||
       isStudyDeadlineDatePassed
     ) {
-      return <button className="btnLargeBlack">참가불가</button>;
+      return <button className="btnLargeGrey">참가불가</button>;
+    } else if (study.confirmed) {
+      // 이미 시작된 경우
+      return <button className="btnLargeGrey">참가불가</button>;
     } else {
       // 스터디 참가 버튼 클릭 핸들러
       const onParticipateClick = async () => {
@@ -270,29 +273,8 @@ const ReadPage = () => {
       );
     } else if (study.finished) {
       <></>;
-    } else if (userEmail !== studyUserEmail && !study.confirmed) {
-      // 로그인시(생성자 X)
-      return (
-        <>
-          <button
-            className="btnSmallPoint"
-            onClick={() => {
-              if (study.memberPhone) {
-                window.location.href = `tel:${study.memberPhone}`;
-              } else {
-                alert("크루가 연락처를 공개하지 않았습니다.");
-              }
-            }}
-          >
-            연락하기
-          </button>
-          <button className="btnSmallBlack" onClick={handleShareClick}>
-            공유하기
-          </button>
-        </>
-      );
     } else if (userEmail !== studyUserEmail && study.confirmed) {
-      // 로그인시(생성자 X)
+      // 로그인시(생성자 X) 스터디 시작 후
       return (
         <>
           <button
@@ -309,6 +291,27 @@ const ReadPage = () => {
           </button>
           <button className="btnSmallBlack" onClick={openKakaoMap}>
             찾아오기
+          </button>
+        </>
+      );
+    } else if (userEmail !== studyUserEmail && !study.confirmed) {
+      // 로그인시(생성자 X) 스터디 시작 전
+      return (
+        <>
+          <button
+            className="btnSmallPoint"
+            onClick={() => {
+              if (study.memberPhone) {
+                window.location.href = `tel:${study.memberPhone}`;
+              } else {
+                alert("크루가 연락처를 공개하지 않았습니다.");
+              }
+            }}
+          >
+            연락하기
+          </button>
+          <button className="btnSmallBlack" onClick={handleShareClick}>
+            공유하기
           </button>
         </>
       );

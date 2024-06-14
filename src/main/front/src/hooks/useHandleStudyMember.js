@@ -45,7 +45,7 @@ const useHandleStudyMember = () => {
 
   // 스터디 참가 취소 처리 함수
   const handleParticipateCancel = (studyId) =>
-    confirmAction("스터디 참가를 취소하시겠습니까?", () =>
+    confirmAction("스터디를 탈퇴하시겠습니까? 탈퇴 후에는 참가가 불가능합니다.", () =>
       jwtAxios.post(`${host}/api/study/${studyId}/cancelParticipation`, {
         email: userEmail,
       })

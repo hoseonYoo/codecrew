@@ -110,7 +110,7 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
   const renderDeclinedButton = () => {
     return (
       <>
-        <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
+        <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
           거절
         </button>
       </>
@@ -141,7 +141,7 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
   const renderLatedButton = () => {
     return (
       <>
-        <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
+        <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
           지각
         </button>
       </>
@@ -151,8 +151,8 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
   const renderWithdrawnButton = () => {
     return (
       <>
-        <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
-          탈퇴하기
+        <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
+          탈퇴
         </button>
       </>
     );
