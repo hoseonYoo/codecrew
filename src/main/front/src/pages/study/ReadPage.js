@@ -43,13 +43,10 @@ const ReadPage = () => {
   const studyUserEmail = study.memberEmail;
 
   // 스터디 생성자의 회원 정보 가져오기
-  const { member: studyMember, imgSrc: studyMemberImgSrc } =
-    useMemberProfile(studyUserEmail);
+  const { member: studyMember, imgSrc: studyMemberImgSrc } = useMemberProfile(studyUserEmail);
 
   // 참가자 리스트 로그인 사용자 확인용
-  const isCurrentUserAMember = study.studyMemberList.some(
-    (member) => member.email === userEmail,
-  );
+  const isCurrentUserAMember = study.studyMemberList.some((member) => member.email === userEmail);
 
   // 클릭 이동관련
   const { moveToProfilePage, moveToModifyPage, moveToMain } = useCustomMove();
@@ -93,12 +90,7 @@ const ReadPage = () => {
     const dLat = ((studyLocation.lat - userLocation.lat) * Math.PI) / 180;
     const dLng = ((studyLocation.lng - userLocation.lng) * Math.PI) / 180;
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((userLocation.lat * Math.PI) / 180) *
-        Math.cos((studyLocation.lat * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((userLocation.lat * Math.PI) / 180) * Math.cos((studyLocation.lat * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     console.log(distance);
@@ -159,10 +151,7 @@ const ReadPage = () => {
           );
         } else {
           return (
-            <button
-              className="btnLargePoint"
-              onClick={() => onStudyFinishClick()}
-            >
+            <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
               스터디종료
             </button>
           );
@@ -223,11 +212,11 @@ const ReadPage = () => {
                     // 출석체크 로직을 실행합니다.
                     if (isLateHour(study.studyDate)) {
                       // 지각인 경우
-                      await handleArrive(study.id);
+                      await handleArriveLate(study.id);
                       reRender();
                     } else {
                       // 지각 아닌 경우
-                      await handleArriveLate(study.id);
+                      await handleArrive(study.id);
                       reRender();
                     }
                   } else {
@@ -273,10 +262,7 @@ const ReadPage = () => {
       };
 
       return (
-        <button
-          className="btnLargePoint"
-          onClick={() => (blockUser ? bloackAlert() : onParticipateClick())}
-        >
+        <button className="btnLargePoint" onClick={() => (blockUser ? bloackAlert() : onParticipateClick())}>
           스터디참가
         </button>
       );
@@ -404,14 +390,7 @@ const ReadPage = () => {
 
   // 참여인원 텍스트 색상
   const getStudyMemberColor = (study) => {
-    const currentMembers = study.studyMemberList
-      ? study.studyMemberList.filter(
-          (member) =>
-            member.status === "ACCEPT" ||
-            member.status === "ARRIVE" ||
-            member.status === "ABSENCE",
-        ).length
-      : 0;
+    const currentMembers = study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0;
 
     if (currentMembers === study.maxPeople) {
       return "#007BFF"; // 정원이 꽉 찼을 때 파란색
@@ -428,14 +407,7 @@ const ReadPage = () => {
           color: getStudyMemberColor(study),
         }}
       >
-        {(study.studyMemberList
-          ? study.studyMemberList.filter(
-              (member) =>
-                member.status === "ACCEPT" ||
-                member.status === "ARRIVE" ||
-                member.status === "ABSENCE",
-            ).length
-          : 0) + 1}
+        {(study.studyMemberList ? study.studyMemberList.filter((member) => member.status === "ACCEPT" || member.status === "ARRIVE" || member.status === "ABSENCE").length : 0) + 1}
 
         <span>/</span>
         {study.maxPeople + 1}

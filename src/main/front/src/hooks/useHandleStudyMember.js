@@ -59,7 +59,7 @@ const useHandleStudyMember = () => {
       })
     );
 
-  // 스터디 출석 체크 함수
+  // 스터디 출석 체크 함수(지각)
   const handleArriveLate = (studyId) =>
     confirmAction("스터디 출석체크를 하시겠습니까?", () =>
       jwtAxios.post(`${host}/api/study/${studyId}/arriveLate`, {
