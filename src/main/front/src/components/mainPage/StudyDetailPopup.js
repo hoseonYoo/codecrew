@@ -135,7 +135,7 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
       return "inherit"; // 기본 색상
     }
   };
-
+  console.log(study);
   // 참여인원 텍스트 렌더링
   const renderStudyMemberCount = (study) => {
     return (
@@ -259,8 +259,8 @@ const StudyDetailPopup = ({ study, setPopup, popup, reRender }) => {
           </div>
         </div>
         <div>
-          <h4>참여일자 : </h4>
-          <p>{study.studyDate}</p>
+          <h4>모집마감 : </h4>
+          <p>{study.studyDeadLineDate}</p>
         </div>
         <div>
           <h4>참여확정 : </h4>
