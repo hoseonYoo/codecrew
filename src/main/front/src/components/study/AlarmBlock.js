@@ -20,7 +20,7 @@ const AlarmBlock = ({ notice, refresh }) => {
   return (
     // 이동 추가
     <div className="AlBlockWrap">
-      <div className="AlBlockImg"></div>
+      {/* <div className="AlBlockImg"></div> */}
       <div className="AlBlockTitle">
         {useNoticeText(notice)}
         <p>{notice.createdDate}</p>
