@@ -1,17 +1,25 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.*;
+import com.react.project2.dto.PageRequestDTO;
+import com.react.project2.dto.PageResponseDTO;
 import com.react.project2.dto.StudyDTO;
 import com.react.project2.repository.MemberRepository;
 import com.react.project2.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,6 +40,101 @@ public class StudyServiceImpl implements StudyService {
         Study study = dtoToEntity(studyDTO);
         // 저장 처리
         Study saved = studyRepository.save(study);
+    }
+
+    @Override
+    public PageResponseDTO<StudyDTO> getList(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Object[]> result = studyRepository.selectList(pageable);
+
+        List<StudyDTO> list = result.getContent().stream().map(objArr -> {
+            Study study = (Study) objArr[0];
+            StudyDTO studyDTO = entityToDTO(study);
+            return studyDTO;
+        }).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDTO.<StudyDTO>withList()
+                .list(list)
+                .totalCount(totalCount)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+    // 주최스터디 조회(이메일/목록)
+    @Override
+    public PageResponseDTO<StudyDTO> getListMember(String type, PageRequestDTO pageRequestDTO, String memberEmail) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+        Page<Study> page = null;
+
+        // 모집중인 스터디 조회
+        if (type.equals("gettering")) {
+            page =  studyRepository.findAllGetteringStudyByMemberEmail(memberEmail, pageable);
+        } else if (type.equals("progress")) {
+            // 진행중인 스터디 조회
+            page = studyRepository.findAllConfirmedStudyByMemberEmail(memberEmail, pageable);
+        } else if (type.equals("end")) {
+            // 종료된 스터디 조회
+            page = studyRepository.findAllConfirmedStudyByMemberEmailAndStudyDate(memberEmail, pageable);
+        } else {
+            throw new IllegalArgumentException("type이 잘못되었습니다.");
+        }
+
+        List<StudyDTO> dtos = page.getContent().stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<StudyDTO>withListHasMore()
+                .list(dtos)
+                .totalCount(page.getTotalElements())
+                .pageRequestDTO(pageRequestDTO)
+                .hasMoreList(page.hasNext())
+                .build();
+    }
+
+    // 참가스터디 조회
+    @Override
+    public PageResponseDTO<StudyDTO> getJoinStudy(String type,PageRequestDTO pageRequestDTO, String email) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").descending());
+
+
+        Page<Study> page = null;
+
+        // 모집중인 스터디 조회
+        if (type.equals("gettering")) {
+            page =  studyRepository.findAllByMemberEmailAndStatus(email, pageable);
+        } else if (type.equals("progress")) {
+            // 진행중인 스터디 조회
+            page = studyRepository.findAllByMemberEmailAndStatusAndStudyDate(email, pageable);
+        } else if (type.equals("end")) {
+            // 종료된 스터디 조회
+            page = studyRepository.findAllByMemberEmailAndStatusAndStudyDateBefore(email, pageable);
+        } else {
+            throw new IllegalArgumentException("type이 잘못되었습니다.");
+        }
+
+        List<StudyDTO> dtos = page.getContent().stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<StudyDTO>withListHasMore()
+                .list(dtos)
+                .totalCount(page.getTotalElements())
+                .pageRequestDTO(pageRequestDTO)
+                .hasMoreList(page.hasNext())
+                .build();
     }
 
     // 스터디 조회(1개)

@@ -11,8 +11,9 @@ const KakaoMap = ({
   changePopup,
   refresh,
 }) => {
-  // 셀렉터로 카테고리 가져오기
+  // 셀렉터로 현재 선택된 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
+  // 셀렉터로 카테고리 필터링된 데이터 가져오기
   const studyLocationList = useSelector(
     (state) => state.categorySlice.studyLocationList,
   );
@@ -66,6 +67,20 @@ const KakaoMap = ({
     }
   };
 
+  // 카테고리 필터링데이터 가져오기
+  useEffect(() => {
+    dispatch(getStudyLocationList(categoryFilter)).then(() => {
+      console.log("studyLocationList 가져오기");
+    });
+  }, [categoryFilter, refresh]);
+
+  // studyLocationList가져오면 지도 렌더링 가능
+  useEffect(() => {
+    if (studyLocationList.length > 0) {
+      setRenderCheck(true);
+    }
+  }, [studyLocationList]);
+
   // 지도 생성
   useEffect(() => {
     if (renderCheck) {
@@ -80,34 +95,32 @@ const KakaoMap = ({
     }
   }, [renderCheck]);
 
-  // 현재 위치 받아 오면 마커 생성
+  // 처음 현위치 받아 오면 마커 생성
   useEffect(() => {
-    if (myLocation.get) {
-      if (nowMarker === null) {
-        console.log("현위치 마커 state에 저장");
-        setNowMarker(myLocationMarker);
-      } else {
-        // 마커 위치 변경
-        nowMarker.setPosition(
-          new kakao.maps.LatLng(myLocation.lat, myLocation.lng),
-        );
-      }
+    if (map != null && myLocation.isLoaded && myLocation.get) {
+      console.log("처음 현위치 받아 오면 마커 생성");
+      setNowMarker(myLocationMarker);
+      map.setCenter(new kakao.maps.LatLng(myLocation.lat, myLocation.lng));
     }
-  }, [myLocation]);
+  }, [map, myLocation.isLoaded]);
 
-  // 카테고리 필터링데이터 가져오기
+  // 현위치 마커가 생성 되면 지도에 마커 추가
   useEffect(() => {
-    dispatch(getStudyLocationList(categoryFilter)).then(() => {
-      console.log("studyLocationList 가져오기");
-    });
-  }, [categoryFilter, refresh]);
-
-  // 현재위치 체크 및 studyLocationList가져오면 지도 렌더링 가능
-  useEffect(() => {
-    if (studyLocationList.length > 0 && myLocation.isLoaded === true) {
-      setRenderCheck(true);
+    if (nowMarker != null) {
+      console.log("현위치 마커가 생성 되면 지도에 마커 추가");
+      nowMarker.setMap(map);
     }
-  }, [studyLocationList, myLocation.isLoaded]);
+  }, [nowMarker]);
+
+  // 현재 위치 변경되면 마커 위치 변경
+  useEffect(() => {
+    if (nowMarker != null) {
+      console.log("현재 위치 변경되면 마커 위치 변경");
+      nowMarker.setPosition(
+        new kakao.maps.LatLng(myLocation.lat, myLocation.lng),
+      );
+    }
+  }, [myLocation.lat, myLocation.lng]);
 
   // 지도 렌더링 후 실행될 함수
   useEffect(() => {
@@ -118,12 +131,6 @@ const KakaoMap = ({
       if (loginState.email) {
         // 지도 더블 클릭 이벤트 등록
         kakao.maps.event.addListener(map, "dblclick", mapClickedFunc);
-      }
-
-      if (nowMarker !== null) {
-        console.log("현위치 마커 지도에 추가");
-        console.log(nowMarker);
-        nowMarker.setMap(map);
       }
     }
   }, [map]);

@@ -46,7 +46,6 @@ const useCustomMove = () => {
     navigate("/mypage/alarm");
   };
 
-  // TODO 함수 작성 후 return 추가
   return {
     moveToLogin,
     moveToMypage,

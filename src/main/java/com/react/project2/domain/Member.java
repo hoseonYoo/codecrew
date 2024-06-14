@@ -127,6 +127,10 @@ public class Member {
         this.favoriteList = favoriteList;
     }
 
+    public void changeDisabledDate(){
+        this.disabledDate=LocalDateTime.now();
+    }
+
     // 알림 리스트 변경
     public void addNotice(Study study, boolean isCreator, NoticeType noticeType) {
         this.noticeList.add(Notice.builder()
