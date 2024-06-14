@@ -36,15 +36,15 @@ const useHandleStudy = () => {
 
   // 스터디 시작 처리 함수
   const handleStart = useCallback(async (study) => {
-    return confirmAction("정말로 시작하시겠습니까?", async () => {
+    return confirmAction("해당 크루로 스터디를 확정하시겠습니까?", async () => {
       const updatedStudy = { ...study, isConfirmed: true };
       const response = await jwtAxios.put(`${API_SERVER_HOST}/api/study/${study.id}/start`, updatedStudy);
       if (response.status === 200) {
-        alert("스터디가 시작되었습니다.");
+        alert("스터디가 크루가 확정되었습니다.");
         return "SUCCESS";
       } else {
-        console.error("스터디 시작에 실패했습니다.");
-        alert("스터디 시작에 실패했습니다.");
+        console.error("스터디 크루 확정에 실패했습니다.");
+        alert("스터디 크루 확정에 실패했습니다.");
         return "FAILURE";
       }
     });

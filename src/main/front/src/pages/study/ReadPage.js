@@ -69,6 +69,7 @@ const ReadPage = () => {
   const isLateHour = (studyDate) => {
     const lateTime = new Date(studyDate);
     lateTime.setHours(lateTime.getHours() + 1); // 스터디 시작 시간 +1시간은 결석처리 가능
+    console.log(lateTime);
     const currentTime = new Date();
     return currentTime >= lateTime;
   };
@@ -127,10 +128,10 @@ const ReadPage = () => {
           <button
             className="btnLargeGrey"
             onClick={() => {
-              alert("스터디당일에만 종료가 가능합니다.");
+              alert("스터디당일에만 완료가 가능합니다.");
             }}
           >
-            스터디예정
+            스터디완료
           </button>
         );
       } else {
@@ -143,16 +144,16 @@ const ReadPage = () => {
             <button
               className="btnLargePoint"
               onClick={() => {
-                alert("스터디시작 2시간 이후부터 종료가 가능합니다.");
+                alert("스터디시작 2시간 이후부터 완료가 가능합니다.");
               }}
             >
-              스터디종료
+              스터디완료
             </button>
           );
         } else {
           return (
             <button className="btnLargePoint" onClick={() => onStudyFinishClick()}>
-              스터디종료
+              스터디완료
             </button>
           );
         }
@@ -211,11 +212,13 @@ const ReadPage = () => {
                   if (distance <= 0.2) {
                     // 출석체크 로직을 실행합니다.
                     if (isLateHour(study.studyDate)) {
+                      console.log("지각임");
                       // 지각인 경우
                       await handleArriveLate(study.id);
                       reRender();
                     } else {
                       // 지각 아닌 경우
+                      console.log("지각아님");
                       await handleArrive(study.id);
                       reRender();
                     }

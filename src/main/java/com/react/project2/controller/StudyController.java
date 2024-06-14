@@ -205,13 +205,14 @@ public class StudyController {
 
     // 스터디 지각 처리
     @PostMapping("/{id}/arriveLate")
-    public ResponseEntity<?> arriveLate(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> setLate(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
         String userEmail = payload.get("email");
+        log.info("지각체크");
 
         memberStatusService.changeMemberStatus(id, userEmail, MemberStatus.LATE);
+        // 알람 생성
         noticeService.createNotice(id, userEmail, false, NoticeType.TARDINESS);
         return ResponseEntity.ok().body(Map.of("message", "스터디에 지각 처리되었습니다."));
-
     }
 
     // 스터디 결석 처리

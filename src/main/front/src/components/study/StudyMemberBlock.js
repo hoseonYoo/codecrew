@@ -34,22 +34,32 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
   const renderButtonCheck = () => {
     console.log(memberData.status);
     if (memberData.status === "HOLD") {
+      // 대기
       if (currentUserEmail === studyCreatorEmail) {
         // 생성자
-        return renderSelectButton();
+        return renderSelectButton(); // 수락하기, 거절하기
       } else {
         // 생성자 아닌 경우
-        return renderHoldButton();
+        return renderHoldButton(); // 참가대기
       }
+      // ---
+    } else if (memberData.status === "ARRIVE") {
+      // 출석
+      return renderArriveButton();
     } else if (memberData.status === "ACCEPT") {
+      // 수락
+      console.log(LateCheck);
+      // 생성자
       if (!studyConfirmed) {
-        return renderAcceptedButton();
-      } else if (studyConfirmed && LateCheck) {
-        return renderAbsenceButton();
+        return renderAcceptedButton(); // 참가완료
+      } else if (currentUserEmail === studyCreatorEmail && studyConfirmed && LateCheck) {
+        return renderAbsenceButton(); //결석처리
       } else {
-        return renderAcceptedStartButton();
+        return renderAcceptedStartButton(); // 도착예정
       }
+      //
     } else if (memberData.status === "ABSENCE") {
+      // 결석
       // 결석
       if (currentUserEmail === studyCreatorEmail) {
         // 생성자
@@ -65,11 +75,11 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
         return renderLatedButton();
       }
     } else if (memberData.status === "DECLINE") {
+      // 거절
       return renderDeclinedButton();
     } else if (memberData.status === "WITHDRAW") {
+      // 탈퇴
       return renderWithdrawnButton();
-    } else if (memberData.status === "ARRIVE") {
-      return renderArriveButton();
     }
   };
 
