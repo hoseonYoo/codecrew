@@ -5,14 +5,14 @@ import useMemberProfile from "../../hooks/useMemberProfile";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 
 // StudyMemberBlock 컴포넌트 정의
-const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, studyId, reRender, studyConfirmed }) => {
+const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, studyId, reRender, studyConfirmed, LateCheck }) => {
   // 멤버 프로필 정보와 이미지 URL을 가져오는 커스텀 훅 사용
   const { member, imgSrc } = useMemberProfile(memberData.email);
   // 페이지 이동 관련 커스텀 훅 사용
   const { moveToProfilePage } = useCustomMove();
 
-  // 스터디 참가 수락,거절 처리를 위한 커스텀 훅 사용
-  const { handleJoinDecline, handleJoinAccept } = useHandleStudyMember();
+  // 스터디 참가 수락,거절,결석 처리를 위한 커스텀 훅 사용
+  const { handleJoinDecline, handleJoinAccept, handleAbsence } = useHandleStudyMember();
 
   // 수락 버튼 클릭 핸들러
   const onAcceptClick = async () => {
@@ -24,21 +24,45 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
     await handleJoinDecline(studyId, member.email);
     reRender();
   };
+  // 결석 버튼 클릭 핸들러
+  const onAbsenceClick = async () => {
+    await handleAbsence(studyId, member.email);
+    reRender();
+  };
 
   // 버튼 렌더링 함수
   const renderButtonCheck = () => {
     console.log(memberData.status);
     if (memberData.status === "HOLD") {
       if (currentUserEmail === studyCreatorEmail) {
+        // 생성자
         return renderSelectButton();
       } else {
+        // 생성자 아닌 경우
         return renderHoldButton();
       }
     } else if (memberData.status === "ACCEPT") {
       if (!studyConfirmed) {
         return renderAcceptedButton();
+      } else if (studyConfirmed && LateCheck) {
+        return renderAbsenceButton();
       } else {
         return renderAcceptedStartButton();
+      }
+    } else if (memberData.status === "ABSENCE") {
+      // 결석
+      if (currentUserEmail === studyCreatorEmail) {
+        // 생성자
+        return renderAbsencedButton();
+      } else {
+        return renderAbsenceButton();
+      }
+    } else if (memberData.status === "LATE") {
+      // 지각
+      if (currentUserEmail === studyCreatorEmail) {
+        return renderLatedButton();
+      } else {
+        return renderLatedButton();
       }
     } else if (memberData.status === "DECLINE") {
       return renderDeclinedButton();
@@ -92,11 +116,43 @@ const StudyMemberBlock = ({ memberData, currentUserEmail, studyCreatorEmail, stu
       </>
     );
   };
+
+  const renderAbsenceButton = () => {
+    console.log(LateCheck);
+    return (
+      <>
+        <button className="btnSmallBlack" style={{ marginTop: "16px" }} onClick={onAbsenceClick}>
+          결석처리
+        </button>
+      </>
+    );
+  };
+
+  const renderAbsencedButton = () => {
+    return (
+      <>
+        <button className="btnSmallGrey" style={{ marginTop: "16px", cursor: "default" }}>
+          결석
+        </button>
+      </>
+    );
+  };
+
+  const renderLatedButton = () => {
+    return (
+      <>
+        <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
+          지각
+        </button>
+      </>
+    );
+  };
+
   const renderWithdrawnButton = () => {
     return (
       <>
         <button className="btnSmallBlack" style={{ marginTop: "16px", cursor: "default" }}>
-          탈퇴
+          탈퇴하기
         </button>
       </>
     );

@@ -59,6 +59,14 @@ const useHandleStudyMember = () => {
       })
     );
 
+  // 스터디 출석 체크 함수
+  const handleArriveLate = (studyId) =>
+    confirmAction("스터디 출석체크를 하시겠습니까?", () =>
+      jwtAxios.post(`${host}/api/study/${studyId}/arriveLate`, {
+        email: userEmail,
+      })
+    );
+
   // 스터디 참가 수락 처리 함수
   const handleJoinAccept = (studyId, memberEmail) =>
     confirmAction(`"${memberEmail}"님의 참가를 수락하시겠습니까?`, () =>
@@ -75,6 +83,14 @@ const useHandleStudyMember = () => {
       })
     );
 
+  // 스터디 결석 처리 함수
+  const handleAbsence = (studyId, memberEmail) =>
+    confirmAction(`"${memberEmail}"님을 결석 처리하시겠습니까?`, () =>
+      jwtAxios.post(`${host}/api/study/${studyId}/setAbsence`, {
+        email: memberEmail,
+      })
+    );
+
   // 각 함수를 반환
   return {
     handleParticipate,
@@ -82,6 +98,8 @@ const useHandleStudyMember = () => {
     handleArrive,
     handleJoinAccept,
     handleJoinDecline,
+    handleAbsence,
+    handleArriveLate,
   };
 };
 
