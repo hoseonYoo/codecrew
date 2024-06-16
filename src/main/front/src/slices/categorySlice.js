@@ -21,7 +21,8 @@ export const getStudyLocationList = createAsyncThunk("category/getStudyLocationL
 
 export const setMyLocation = createAsyncThunk("category/setMyLocation", async (_, thunkAPI) => {
   return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
+    // TODO 시연용 위치 설정
+   /* if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           resolve({
@@ -36,7 +37,12 @@ export const setMyLocation = createAsyncThunk("category/setMyLocation", async (_
       );
     } else {
       reject(new Error("Geolocation is not supported by this browser."));
-    }
+    }*/
+    resolve({
+      lat: 37.55498771600092,
+      lng: 126.93601217931102,
+      get: true,
+    });
   });
 });
 

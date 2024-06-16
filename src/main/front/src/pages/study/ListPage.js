@@ -32,7 +32,7 @@ const ListPage = () => {
   // studyLocationList가 변경되면 거리순 정렬
   useEffect(() => {
     console.log("거리순 정렬");
-    dispatch(sortStudyLocationList());
+    dispatch(sortStudyLocationList(myLocation));
   }, [studyLocationList]);
 
   return (
