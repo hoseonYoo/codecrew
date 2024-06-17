@@ -26,7 +26,7 @@ const useMemberProfile = (userEmail) => {
         if (res.profileImg && res.profileImg.startsWith("http")) {
           setImgSrc(res.profileImg);
         } else if (res.profileImg) {
-          setImgSrc(`${host}/api/image/view/${res.profileImg}`);
+          setImgSrc(`${host}/api/image/view/th_${res.profileImg}`);
         }
         console.log("res", res);
         setMember(res);

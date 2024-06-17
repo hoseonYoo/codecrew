@@ -15,7 +15,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,35 +60,61 @@ class StudyRepositoryTest {
 
     @Test
     public void testInsert() {
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 20; i++) {
 
-            // 37.57163048751097, 126.9768859784546
+            // 37.48449361322888 ~ 37.63316822429767 ~ 사이 랜덤값 생성
+            double locationY = 37.48449361322888 + Math.random() * (37.63316822429767 - 37.48449361322888);
+            // 126.8418569734938 ~ 127.04333829045339 사이 랜덤값 생성
+            double locationX = 126.8418569734938 + Math.random() * (127.04333829045339 - 126.8418569734938);
 
-//            37.300000000 ~ 37.700000000 사이 랜덤값 생성
-            double locationY = 37.300000000 + Math.random() * (37.700000000 - 37.300000000);
-// 126.600000000 ~ 127.200000000 사이 랜덤값 생성
-            double locationX = 126.600000000 + Math.random() * (127.200000000 - 126.600000000);
-
+            // 랜덤 카테고리 생성
             Category category = Category.values()[(int) (Math.random() * Category.values().length)];
 
 
-            // 현재 시간 부터 2주뒤 사이의 랜덤 시간 생성
-            LocalDateTime studyDate = LocalDateTime.now().plusDays((long) (Math.random() * 14));
-            // studyDate 부터 1일 뒤 사이의 랜덤 시간 생성
-            LocalDateTime studyDeadlineDate = studyDate.plusDays((long) (Math.random() * 1));
+            // 현재 시간 3일뒤부터 2주뒤 사이의 랜덤 시간 생성
+            LocalDateTime studyDate = LocalDateTime.now().plusDays(3 + (long) (Math.random() * 14));
+            // 현재시간 1일 뒤부터 studyDate 전날 사이의 랜덤 시간 생성
+            LocalDateTime studyDeadlineDate = LocalDateTime.now().plusDays(1 + (long) (Math.random() * (studyDate.minusDays(1).getDayOfMonth() - 1)));
+
+            // 전체회원 중 랜덤 회원 선택
+            List<Member> members = memberRepository.findAll();
+            Member randomMember = members.get((int) (Math.random() * members.size()));
+
+            // 1~10 사이의 랜덤값 생성
+            int randomPeople = (int) (Math.random() * 10) + 1;
+
+            // 랜덤한 공부 모임 제목을 위한 배열
+            String[] studyTitle = {"공부", "스터디", "모임"};
+
+            // "upload" 폴더에 있는 파일들을 불러옵니다.
+            File folder = new File("upload"); // "upload" 폴더를 나타냅니다.
+            File[] listOfFiles = folder.listFiles();
+            ArrayList<File> files = new ArrayList<>();
+            //새로운 배열을 생성하고 "th_"로 시작하지 않는 파일들만 저장합니다.
+            for (int j = 0; j < listOfFiles.length; j++) {
+                if (listOfFiles[j].isFile()) {
+                    if (!listOfFiles[j].getName().startsWith("th_")) {
+                        files.add(listOfFiles[j]);
+                    }
+                }
+            }
+
+
+            // 랜덤한 이미지를 선택합니다.
+            String randomImage = files.get((int) (Math.random() * files.size())).getName();
 
 
             Study study = Study.builder()
-                    .thImg("http://k.kakaocdn.net/dn/RF8yG/btsHJAyluMZ/6PBluJnX4JhhVOY47cJcx0/img_640x640.jpg")
-                    .title(category + " title" + i)
+                    .thImg(randomImage)
+                    .title(category.getValue() + " 스터디" + i)
                     .content("content" + i)
                     .location(convertCoordinatesToAddress(locationY, locationX))
                     .studyDeadlineDate(studyDeadlineDate)
                     .locationX(locationX)
                     .locationY(locationY)
-                    .member(memberRepository.findByEmail("comejun@naver.com").get())
+                    .member(randomMember)
                     .studyDate(studyDate)
-                    .maxPeople(10)
+                    .maxPeople(randomPeople)
                     .category(category)
                     .build();
 

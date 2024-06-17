@@ -12,7 +12,7 @@ const StudyBlockMy = ({ study }) => {
   const getImageUrl = () => {
     return study.thImg.startsWith("http:")
       ? study.thImg
-      : `${host}/api/image/view/${study.thImg}`;
+      : `${host}/api/image/view/th_${study.thImg}`;
   };
 
   // 카카오 맵 URL 생성 함수
