@@ -2,6 +2,7 @@ import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
 import React, { useEffect, useState } from "react";
 import useCustomMove from "../../hooks/useCustomMove";
+import { API_SERVER_HOST } from "../../api/memberAPI";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
@@ -10,7 +11,10 @@ import StudyMemberBlock from "../../components/study/StudyMemberBlock";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
 import useCustomMap from "../../hooks/useCustomMap";
+import useCategories from "../../hooks/useCategories";
 // import PopUp from "../../components/PopUp.js/PopUp";
+
+const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const [refresh, setRefresh] = useState(false);
@@ -85,6 +89,8 @@ const ReadPage = () => {
     return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
   };
   console.log(isFinishHour());
+
+  const categories = useCategories(host);
 
   // 위치 값 구하기
   const calculateDistance = (userLocation, studyLocation) => {
