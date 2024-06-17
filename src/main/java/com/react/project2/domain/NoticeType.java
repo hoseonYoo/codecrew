@@ -21,7 +21,7 @@ public enum NoticeType {
             if (noticeType.getValue().equals(value)) {
                 return noticeType;
             }
-        };
+        }
         return null;
     }
 }

@@ -14,7 +14,7 @@ public enum MemberStatus {
             if (memberStatus.getValue().equals(value)) {
                 return memberStatus;
             }
-        };
+        }
         return null;
     }
 }

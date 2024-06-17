@@ -1,7 +1,8 @@
 package com.react.project2.service;
 
 import com.react.project2.domain.Member;
-import com.react.project2.dto.*;
+import com.react.project2.dto.DataMemberDTO;
+import com.react.project2.dto.MemberDTO;
 import com.react.project2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -65,10 +65,6 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = memberRepository.getMemberWithFavoriteList(email);
         // Member Entity -> DataMemberDTO
         return modelMapper.map(findMember, DataMemberDTO.class);
-    }
-
-    public Member getMemberEntity(String email) {
-        return memberRepository.getMemberWithFavoriteList(email);
     }
 
     @Override
@@ -135,14 +131,10 @@ public class MemberServiceImpl implements MemberService {
             log.info("****** MemberService - profile : {}", profile);
 
         }
-        boolean needChangeProfile = false;
+        boolean needChangeProfile = nickname.equals("SocialMember") && profile.equals("");
 
 
-        if (nickname.equals("SocialMember")&&profile.equals("")) {
-            needChangeProfile = true;
-        }
-
-//        String nickname = "SocialMember";
+        //        String nickname = "SocialMember";
         return Member.builder()
                 .email(email)
                 .password(passwordEncoder.encode(tmpPassword))
@@ -163,62 +155,30 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    private String getEmailFromKakaoAccessToken(String accessToken) {
-// 카카오 사용자 정보 요청
+    private LinkedHashMap<String, LinkedHashMap> callKakaoAPI(String accessToken) {
         String kakakoGetUserURL = "https://kapi.kakao.com/v2/user/me";
         if (accessToken == null) {
             throw new RuntimeException("Access Token is null");
         }
-        // 카카오서버에 RestTemplate 으로 사용자 정보 HTTP 요청
         RestTemplate restTemplate = new RestTemplate();
-        // 헤더정보 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        // 헤더 정보를 포함함 HttpEntity로 요청 객체 만들기 (request)
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        // 요청 경로 생성해주는 클래스 이용
-        UriComponents uriBuild =
-                UriComponentsBuilder.fromHttpUrl(kakakoGetUserURL).build();
-        // RestTemplate의 exchange() 메서드를 이용해 요청보내기 -> 리턴은 Map
-        ResponseEntity<LinkedHashMap> response =
-                restTemplate.exchange(uriBuild.toString(), HttpMethod.GET, entity,
-                        LinkedHashMap.class);
-        // Body에서 응답 데이터 꺼내기
-        LinkedHashMap<String, LinkedHashMap> body = response.getBody();
-        // 응답 내용 중 카카오 계정 정보 꺼내기
-        LinkedHashMap<String, String> kakaoAccount = body.get("kakao_account");
-        return kakaoAccount.get("email"); // 이메일만 꺼내서 리턴
+        UriComponents uriBuild = UriComponentsBuilder.fromHttpUrl(kakakoGetUserURL).build();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uriBuild.toString(), HttpMethod.GET, entity, LinkedHashMap.class);
+        return response.getBody();
     }
 
-    // 카카오 사용자 닉네임, 프로필 사진 가져오기
-    private Object getDataFromKakaoAccesToken(String accessToken) {
-        // 카카오 사용자 정보 요청
-        String kakakoGetUserURL = "https://kapi.kakao.com/v2/user/me";
-        if (accessToken == null) {
-            throw new RuntimeException("Access Token is null");
-        }
-        // 카카오서버에 RestTemplate 으로 사용자 정보 HTTP 요청
-        RestTemplate restTemplate = new RestTemplate();
-        // 헤더정보 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        // 헤더 정보를 포함함 HttpEntity로 요청 객체 만들기 (request)
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        // 요청 경로 생성해주는 클래스 이용
-        UriComponents uriBuild =
-                UriComponentsBuilder.fromHttpUrl(kakakoGetUserURL).build();
-        // RestTemplate의 exchange() 메서드를 이용해 요청보내기 -> 리턴은 Map
-        ResponseEntity<LinkedHashMap> response =
-                restTemplate.exchange(uriBuild.toString(), HttpMethod.GET, entity,
-                        LinkedHashMap.class);
-        // Body에서 응답 데이터 꺼내기
-        LinkedHashMap<String, LinkedHashMap> body = response.getBody();
-        // 응답 내용 중 카카오 계정 정보 꺼내기
-        Object kakaoAccount = body.get("kakao_account").get("profile");
+    private String getEmailFromKakaoAccessToken(String accessToken) {
+        LinkedHashMap<String, LinkedHashMap> body = callKakaoAPI(accessToken);
+        LinkedHashMap<String, String> kakaoAccount = body.get("kakao_account");
+        return kakaoAccount.get("email");
+    }
 
-        return kakaoAccount;
+    private Object getDataFromKakaoAccesToken(String accessToken) {
+        LinkedHashMap<String, LinkedHashMap> body = callKakaoAPI(accessToken);
+        return body.get("kakao_account").get("profile");
     }
 
     // 회원 탈퇴

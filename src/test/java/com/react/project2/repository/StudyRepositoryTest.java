@@ -60,7 +60,7 @@ class StudyRepositoryTest {
 
     @Test
     public void testInsert() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 200; i++) {
 
             // 37.48449361322888 ~ 37.63316822429767 ~ 사이 랜덤값 생성
             double locationY = 37.48449361322888 + Math.random() * (37.63316822429767 - 37.48449361322888);
@@ -84,7 +84,9 @@ class StudyRepositoryTest {
             int randomPeople = (int) (Math.random() * 10) + 1;
 
             // 랜덤한 공부 모임 제목을 위한 배열
-            String[] studyTitle = {"공부", "스터디", "모임"};
+            String[] studyTitle = {" 공부", " 스터디", " 모임"};
+            // 랜덤한 공부 모임 제목 생성
+            String title = studyTitle[(int) (Math.random() * studyTitle.length)];
 
             // "upload" 폴더에 있는 파일들을 불러옵니다.
             File folder = new File("upload"); // "upload" 폴더를 나타냅니다.
@@ -106,7 +108,7 @@ class StudyRepositoryTest {
 
             Study study = Study.builder()
                     .thImg(randomImage)
-                    .title(category.getValue() + " 스터디" + i)
+                    .title(category.getValue() + title + i)
                     .content("content" + i)
                     .location(convertCoordinatesToAddress(locationY, locationX))
                     .studyDeadlineDate(studyDeadlineDate)

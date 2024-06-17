@@ -31,8 +31,7 @@ public class StudyMember {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StudyMember)) return false;
-        StudyMember that = (StudyMember) o;
+        if (!(o instanceof StudyMember that)) return false;
         return email != null && email.equals(that.email);
     }
 

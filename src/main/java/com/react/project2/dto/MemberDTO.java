@@ -12,22 +12,22 @@ import java.util.Map;
 
 public class MemberDTO extends User {
 
-    private String email;
-    private String password;
-    private String nickname;
-    private String phone;
-    private String profileImg;
-    private String memberLink;
-    private String introduction;
-    private boolean disabled;
-    private List<Category> favoriteList;
+    private final String email;
+    private final String password;
+    private final String nickname;
+    private final String phone;
+    private final String profileImg;
+    private final String memberLink;
+    private final String introduction;
+    private final boolean disabled;
+    private final List<Category> favoriteList;
     private List<Notice> noticeList;
     private int penalty;
     private LocalDateTime blockedDate;
     private LocalDateTime createdDate;
     private LocalDateTime disabledDate;
-    private String role;
-    private boolean isNew;
+    private final String role;
+    private final boolean isNew;
 
     // 생성자
     public MemberDTO(String email, String password, String nickname, String profileImg, String phone, String memberLink, String introduction,
