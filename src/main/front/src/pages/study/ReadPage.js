@@ -499,6 +499,12 @@ const ReadPage = () => {
             </div>
           </div>
 
+          {/*카테고리*/}
+          <div className="ReadText">
+            <h3>카테고리 : </h3>
+            <p style={{ fontSize: "14px", color: "#000" }}>{study.category}</p>
+          </div>
+
           {/*시작일*/}
           <div className="ReadText">
             <h3>모임시작 : </h3>
