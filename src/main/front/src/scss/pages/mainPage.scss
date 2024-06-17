@@ -161,6 +161,9 @@ div.stPopupContentBottom{
       width:calc(100% - 90px);
       display: block;
       font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden; 
+      text-overflow: ellipsis; 
     }
     div{
       width:calc(100% - 90px);
