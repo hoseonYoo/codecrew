@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ class StudyRepositoryTest {
 
     @Test
     public void testInsert() {
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 20; i++) {
 
             // 37.48449361322888 ~ 37.63316822429767 ~ 사이 랜덤값 생성
             double locationY = 37.48449361322888 + Math.random() * (37.63316822429767 - 37.48449361322888);
@@ -88,8 +89,19 @@ class StudyRepositoryTest {
             // "upload" 폴더에 있는 파일들을 불러옵니다.
             File folder = new File("upload"); // "upload" 폴더를 나타냅니다.
             File[] listOfFiles = folder.listFiles();
+            ArrayList<File> files = new ArrayList<>();
+            //새로운 배열을 생성하고 "th_"로 시작하지 않는 파일들만 저장합니다.
+            for (int j = 0; j < listOfFiles.length; j++) {
+                if (listOfFiles[j].isFile()) {
+                    if (!listOfFiles[j].getName().startsWith("th_")) {
+                        files.add(listOfFiles[j]);
+                    }
+                }
+            }
+
+
             // 랜덤한 이미지를 선택합니다.
-            String randomImage = listOfFiles[(int) (Math.random() * listOfFiles.length)].getName();
+            String randomImage = files.get((int) (Math.random() * files.size())).getName();
 
 
             Study study = Study.builder()

@@ -56,7 +56,7 @@ class MemberRepositoryTest {
             randomName += middleName[randomMiddleNameIndex2];
 
             // 랜덤한 자기소개를 생성하기 위한 배열
-            String[] introduce = {"안녕하세요 ", "반가워요 ", "잘부탁드려요 ", "안녕 ", "반가워 "};
+            String[] introduce = {"안녕하세요 ", "반가워요 ", "잘부탁드려요 "};
             int randomIntroduceIndex = random.nextInt(introduce.length);
             String randomIntroduce = introduce[randomIntroduceIndex];
 
@@ -64,6 +64,17 @@ class MemberRepositoryTest {
             // "upload" 폴더에 있는 파일들을 불러옵니다.
             File folder = new File("upload"); // "upload" 폴더를 나타냅니다.
             File[] listOfFiles = folder.listFiles();
+            //새로운 배열을 생성하고 "th_"로 시작하지 않는 파일들만 저장합니다.
+             int count = 0;
+            for (int j = 0; j < listOfFiles.length; j++) {
+                if (listOfFiles[j].isFile()) {
+                    if (!listOfFiles[j].getName().startsWith("th_")) {
+                        count++;
+                    }
+                }
+            }
+
+
 
             // 랜덤한 이미지를 선택합니다.
             String randomImage = listOfFiles[(int) (Math.random() * listOfFiles.length)].getName();
