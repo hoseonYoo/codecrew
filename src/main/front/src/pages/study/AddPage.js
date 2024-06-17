@@ -276,14 +276,18 @@ const AddPage = () => {
   };
 
   const calculateDeadLineDate = () => {
-    // studyDate에서 10일 전까지 날짜중 현재 날짜보다 이후의 날짜에 모집 마감 날짜를 설정할 수 있도록 합니다.
+    // studyDate에서 10일 전까지 날짜중 현재 날짜보다 이후의 날짜에 모집 마감 날짜를 설정할 수 있도록 합니다. 시간은 비교 하지 않습니다.
     const studyDate = new Date(study.studyDate);
+    // 시간이 아닌 날짜 정보만 가져오기 위해 시간을 00:00:00으로 설정
+    studyDate.setHours(0, 0, 0, 0);
     const currentDate = new Date();
+    // 시간이 아닌 날짜 정보만 가져오기 위해 시간을 00:00:00으로 설정
+    currentDate.setHours(0, 0, 0, 0);
 
     const deadLineDate = [];
     for (let i = 1; i <= 10; i++) {
-      const date = new Date(studyDate.getTime() - 86400000 * i);
-      // 현재 날짜보다 24시간 이후의 날짜만 선택할 수 있도록 합니다.
+      const date = new Date(studyDate.getTime() - i * 86400000);
+      // 현재 날짜보다 1일뒤 날짜만 선택 가능
       if (date.getTime() > currentDate.getTime() + 86400000) {
         deadLineDate.push(
           <option key={i} value={date.getTime()}>
@@ -392,8 +396,8 @@ const AddPage = () => {
                   type="datetime-local"
                   placeholder="참여일을 입력해주세요."
                   onChange={handleChangeStudy}
-                  // 현재 시간에서 2일 뒤가 최소값
-                  min={new Date(new Date().getTime() + 172800000)
+                  // 현재 시간에서 3일 뒤가 최소값
+                  min={new Date(new Date().getTime() + 2592e5)
                     .toISOString()
                     .substring(0, 16)}
                   max={new Date(new Date().getTime() + 12096e5)
