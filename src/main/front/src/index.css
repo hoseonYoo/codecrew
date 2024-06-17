@@ -16,7 +16,8 @@ body{
 div#root{
   background-color: #f1f1f1;
 }
-div.bodyWrap{
+div.bodyWrap, 
+div.bodyWrapMain{
   box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
@@ -25,7 +26,8 @@ div.bodyWrap{
 }
 /* 화면 너비가 520px 이하일 때 그림자 제거 */
 @media (max-width: 540px) {
-  div.bodyWrap {
+  div.bodyWrap,
+  div.bodyWrapMain {
     box-shadow: none;
   }
 }
