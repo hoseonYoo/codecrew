@@ -34,7 +34,7 @@ const useStudyData = (id, refresh) => {
       .then((data) => {
         if (data && data.disabled !== "1") {
           // data가 유효한지 확인
-          setStudyImgSrc(`${host}/api/image/view/${data.thImg}`);
+          setStudyImgSrc(`${host}/api/image/view/th_${data.thImg}`);
           setStudy({ ...data, id: id });
         } else {
           // data가 없을 경우
