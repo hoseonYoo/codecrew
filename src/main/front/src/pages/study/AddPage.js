@@ -268,6 +268,7 @@ const AddPage = () => {
           onChange={handleChangeStudy}
           style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
         >
+          <option hidden>모집 마감 날짜 선택</option>
           {calculateDeadLineDate()}
         </select>
       );
@@ -391,7 +392,10 @@ const AddPage = () => {
                   type="datetime-local"
                   placeholder="참여일을 입력해주세요."
                   onChange={handleChangeStudy}
-                  min={new Date().toISOString().substring(0, 16)}
+                  // 현재 시간에서 2일 뒤가 최소값
+                  min={new Date(new Date().getTime() + 172800000)
+                    .toISOString()
+                    .substring(0, 16)}
                   max={new Date(new Date().getTime() + 12096e5)
                     .toISOString()
                     .substring(0, 16)}
