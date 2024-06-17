@@ -38,6 +38,7 @@ const ListPage = () => {
   return (
     <BasicLayoutList>
       <div className="listContentWrap">
+        <div className="mg-t"></div>
         <InfiniteScroll dataLength={items.length} next={() => {}} hasMore={false} loader={<h4>Loading...</h4>}>
           {studyLocationList.map((studyLocation, index) => (
             <StudyBlock key={index} studyLocation={studyLocation} />
