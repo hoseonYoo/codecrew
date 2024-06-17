@@ -12,7 +12,7 @@ import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
 import useCustomMap from "../../hooks/useCustomMap";
 import useCategories from "../../hooks/useCategories";
-// import PopUp from "../../components/PopUp.js/PopUp";
+// import { PopUpCall } from "../../components/PopUp.js/PopUp";
 
 const host = API_SERVER_HOST;
 
@@ -273,6 +273,24 @@ const ReadPage = () => {
     }
   }, []);
 
+  // PopUpCall 모달을 관리하기 위한 상태
+  // const [showCallPopup, setShowCallPopup] = useState(false);
+
+  // // 연락하기 버튼 클릭 핸들러
+  // const handleContactClick = () => {
+  //   if (study.memberPhone) {
+  //     // 연락처가 공개되어 있으면 PopUpCall 모달을 표시합니다.
+  //     setShowCallPopup(true);
+  //   } else {
+  //     alert("크루가 연락처를 공개하지 않았습니다.");
+  //   }
+  // };
+
+  // // PopUpCall 모달에서 '예' 버튼 클릭 시 실행될 함수
+  // const confirmCall = () => {
+  //   window.location.href = `tel:${study.memberPhone}`;
+  // };
+
   // 연락하기, 공유하기 버튼
   const renderContactAndShareButtons = () => {
     if (!userEmail) {
@@ -513,7 +531,7 @@ const ReadPage = () => {
 
           {/*시작일*/}
           <div className="ReadText">
-            <h3>모임시작 : </h3>
+            <h3>스터디일 : </h3>
             <p style={{ fontSize: "14px", color: "#000" }}>{study.studyDate}</p>
           </div>
 

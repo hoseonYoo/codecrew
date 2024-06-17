@@ -23,6 +23,7 @@ const MyStudyCretPage = () => {
 
   // 페이지 로딩 시 주최한 스터디 모임 목록을 불러옴
   useEffect(() => {
+    window.scrollTo(0, 0);
     const loadInitialData = async () => {
       const data = await getCreatedStudyList(studyType, { page: 1, size: 10 }, userEmail);
 
@@ -50,10 +51,12 @@ const MyStudyCretPage = () => {
   };
 
   const changeStudyType = (type) => {
+    window.scrollTo(0, 0);
     setStudyType(type);
   };
 
   const listEmpty = () => {
+    window.scrollTo(0, 0);
     return (
       <div className="nonePage">
         <img src="../assets/imgs/icon/ic_none.png" />

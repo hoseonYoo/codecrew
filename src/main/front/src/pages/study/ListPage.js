@@ -33,6 +33,7 @@ const ListPage = () => {
   useEffect(() => {
     console.log("거리순 정렬");
     dispatch(sortStudyLocationList());
+    // window.scrollTo(0, 0);
   }, [studyLocationList]);
 
   return (
