@@ -1,0 +1,56 @@
+/* Study Block */
+div.bodyWrap{
+  background-color: #FCFCFC;
+  padding-bottom: 120px;
+}
+div.AlBlockWrap{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 세로 중앙 정렬을 위해 추가 */
+  border-bottom: 0.5px solid #dcdcdc;
+}
+
+div.AlBlockImg{
+  width: 48px;
+  height: 48px;
+  margin-left: 16px;
+  margin-right: 0px;
+  background-image: url(../../../public/assets/imgs/icon/ic_al.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+div.AlBlockTitle{
+  width: calc(100% - 60px);
+  text-align: left;
+  margin-top: 16px;
+  margin-left: 16px;
+}
+
+div.AlBlockTitle h3{
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+div.AlBlockTitle p{
+  font-size: 12px;
+  line-height: 12px;
+  color: #828282;
+}
+
+div.AlBlockBtn{
+  width: 34px;
+  margin-right: 16px;
+  line-height: 48px;
+}
+
+div.AlBlockBtn button{
+  cursor: pointer;
+}
+
+div.AlBlockBtn button img{
+  width: 34px;
+}

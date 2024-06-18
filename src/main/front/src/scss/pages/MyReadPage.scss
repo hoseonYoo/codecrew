@@ -1,0 +1,180 @@
+/* My Read Page */ 
+div.bodyWrap{
+  background-color: #FCFCFC;
+  padding-bottom: 120px;
+}
+div.MyBlockWrap{
+  width: 100%;
+  height:96px;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border-bottom: 0.5px solid #dcdcdc;
+  box-shadow: 
+  0px 6px 8px -6px rgba(0,0,0,0.1);
+  div.MyReadImg{
+    width: 64px;
+    height:64px;
+    border-radius: 64px;
+    margin-left: 16px;
+    margin-right: 20px;
+    background-color: #dcdcdc;
+    // 이미지 적용 시 위치값
+    background-image: url(../../../public/assets/imgs/icon/default_profile_img.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  div.MyReadTitle{
+    width: calc(100% - 200px);
+    text-align: left;
+    margin-top: 8px;
+    h3{
+      font-weight: 600;
+      font-size: 18px;
+    }
+    p{
+      font-size: 14px;
+      color:#828282;
+    }
+  }
+  div.MyReadBtn{
+    width:90px;
+    margin-top:8px;
+    text-align: right;
+    margin-right: 16px;
+  }
+}
+div.MyReadTextWrap{
+  background-color: #FCFCFC;
+  padding: 22px 0px;
+}
+div.MyReadText{
+  display: flex;
+  justify-content: space-between;
+  line-height: 14px;
+  margin-bottom: 8px;
+  color:#555;
+  h3{
+    font-size:14px;
+    margin-left: 16px;
+    min-width:70px;
+    margin-right: 10px;
+  }
+  p, div{
+    width:calc(100% - 102px);
+    font-size: 14px;
+    margin-right: 16px;
+  }
+}
+div.MyReadUserStack{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  margin-top: 26px;
+  h2{
+    width: 100%;
+    height:32px;
+    font-size: 16px;
+    line-height: 32px;
+    margin: 0;
+    margin-bottom: 14px;
+  }
+}
+
+div.MyReadUserText{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  margin-top: 32px;
+  h2{
+    width: 100%;
+    height:32px;
+    font-size: 16px;
+    line-height: 32px;
+    margin: 0;
+    border-bottom: 0.5px solid #dcdcdc;
+  }
+  p{
+    margin-top: 14px;
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+div.MyReadUserMenu{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  margin-top: 32px;
+  h2{
+    width: 100%;
+    height:32px;
+    font-size: 16px;
+    line-height: 32px;
+    margin: 0;
+    border-bottom: 0.5px solid #dcdcdc;
+  }
+}
+div.checkboxWrap{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  input{
+    display: none;
+  }
+  div{
+    padding:10px 8px;
+    display: inline-block;
+    overflow: inherit;
+    white-space: nowrap;
+    height: 40px;
+    background-color: #fff;
+    font-size:14px;
+    color: #828282;
+    border-radius: 60px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    border: 0.5px solid #828282;
+    cursor: default;
+    min-width: 54px;
+    text-align: center;
+  }
+  div.checkCate{
+    background-color: #000;
+    border: 0.5px solid #000;
+    color: #fff;
+  }
+}
+
+div.MenuWrap{
+  width: 100%;
+  a{
+    margin-top: 14px;
+    padding-bottom: 8px;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 0.5px solid #dcdcdc;
+    h3{
+      font-size: 14px;
+      color:#000;
+    }
+    span{
+      font-size: 12px;
+      color:#dcdcdc;
+    }
+  }
+}
+
+div.myFooter{
+  width: calc(100% - 32px);
+  margin-left:16px;
+  text-align: center;
+  margin-top: 120px;
+  span{
+    display: block;
+    width: 100%;
+    font-size: 11px;
+    color:#dcdcdc;
+  }
+}
