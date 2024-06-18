@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
@@ -21,13 +22,9 @@ public class JWTUtil {
     public static String generateToken(Map<String, Object> valueMap, int min) {
         // 암호화된 비밀키
         SecretKey secretKey = null;
-        try {
-            // 인코딩된 키를 '암호화된 비밀키'로 변경
-            secretKey = Keys.hmacShaKeyFor(JWTUtil.key.getBytes("UTF-8"));
-            log.info("secretKey : {}", secretKey);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        // 인코딩된 키를 '암호화된 비밀키'로 변경
+        secretKey = Keys.hmacShaKeyFor(JWTUtil.key.getBytes(StandardCharsets.UTF_8));
+        log.info("secretKey : {}", secretKey);
 
         // JWT 토큰 생성
         String jwtStr = Jwts.builder()
@@ -49,7 +46,7 @@ public class JWTUtil {
         SecretKey secretKey = null;
 
         try {
-            secretKey = Keys.hmacShaKeyFor(JWTUtil.key.getBytes("UTF-8"));
+            secretKey = Keys.hmacShaKeyFor(JWTUtil.key.getBytes(StandardCharsets.UTF_8));
             claim = Jwts.parserBuilder()
                     .setSigningKey(secretKey) // 비밀키 세팅
                     .build()

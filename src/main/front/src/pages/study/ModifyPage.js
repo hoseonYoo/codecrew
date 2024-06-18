@@ -29,7 +29,10 @@ const ModifyPage = () => {
   const [deadlineChange, setDeadlineChange] = useState(false);
 
   // 사진 수정용 CustomHook 사용하기
-  const { imgSrc, handleFileChange, saveFile } = useProfileImage(studyDateImg, studyDate.studyDateImg);
+  const { imgSrc, handleFileChange, saveFile } = useProfileImage(
+    studyDateImg,
+    studyDate.studyDateImg,
+  );
 
   // 전체 관심스택 가져오기
   const categories = useCategories(host);
@@ -144,10 +147,11 @@ const ModifyPage = () => {
   const saveModify = async () => {
     await handleChangeLocation();
 
-    study.thImg = await saveFile();
-
     const formData = new FormData();
     formData.append("id", study.id);
+    if (studyDateImg !== imgSrc) {
+      study.thImg = await saveFile();
+    }
     formData.append("thImg", study.thImg);
     formData.append("title", study.title);
     formData.append("content", study.content);
@@ -190,7 +194,13 @@ const ModifyPage = () => {
   const renderStudyDeadLineDate = () => {
     const value = study.strStudyDeadlineDate || "";
     return (
-      <select id="strStudyDeadlineDate" name="strStudyDeadlineDate" value={value} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} disabled>
+      <select
+        id="strStudyDeadlineDate"
+        name="strStudyDeadlineDate"
+        value={value}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+        disabled
+      >
         <option>{study.studyDeadlineDate}</option>
       </select>
     );
@@ -209,7 +219,7 @@ const ModifyPage = () => {
         deadLineDate.push(
           <option key={i} value={date.getTime()}>
             {date.toLocaleDateString()}
-          </option>
+          </option>,
         );
       }
     }
@@ -247,7 +257,12 @@ const ModifyPage = () => {
       <BasicLayoutPage headerTitle="스터디수정">
         <form>
           <div className="StudyAddWrap">
-            <div className="StudyAddImg" style={imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null}>
+            <div
+              className="StudyAddImg"
+              style={
+                imgSrc !== "" ? { backgroundImage: `url(${imgSrc})` } : null
+              }
+            >
               <label htmlFor="fileInput">
                 편집
                 <input id="fileInput" type="file" onChange={handleFileChange} />
@@ -278,13 +293,32 @@ const ModifyPage = () => {
             </div>
             <div onClick={handleAddressSearchClick}>
               <h3>주소</h3>
-              <input id="location" name="location" type="text" value={study.location} placeholder="주소를 입력해주세요." readOnly />
+              <input
+                id="location"
+                name="location"
+                type="text"
+                value={study.location}
+                placeholder="주소를 입력해주세요."
+                readOnly
+              />
 
-              <img className="AdressSearch" src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} alt="searchIcon" />
+              <img
+                className="AdressSearch"
+                src={
+                  process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"
+                }
+                alt="searchIcon"
+              />
             </div>
             <div>
               <h3>참여날짜</h3>
-              <input id="studyDate" name="studyDate" value={study.studyDate} type="datetime-local" readOnly />
+              <input
+                id="studyDate"
+                name="studyDate"
+                value={study.studyDate}
+                type="datetime-local"
+                readOnly
+              />
             </div>
             <div>
               <h3>모집 마감 날짜</h3>
@@ -292,7 +326,12 @@ const ModifyPage = () => {
             </div>
             <div>
               <h3>참여인원</h3>
-              <select id="maxPeople" name="maxPeople" value={study.maxPeople} onChange={handleChangeStudy}>
+              <select
+                id="maxPeople"
+                name="maxPeople"
+                value={study.maxPeople}
+                onChange={handleChangeStudy}
+              >
                 {Array.from({ length: 9 }, (_, index) => (
                   <option key={index} value={index + 2}>
                     {index + 2}
@@ -302,7 +341,12 @@ const ModifyPage = () => {
             </div>
             <div>
               <h3>카테고리</h3>
-              <select id="category" name="category" value={study.category} onChange={handleChangeStudy}>
+              <select
+                id="category"
+                name="category"
+                value={study.category}
+                onChange={handleChangeStudy}
+              >
                 <option hidden>카테고리 선택</option>
                 {Object.entries(categories).length > 0 &&
                   Object.entries(categories).map(([key, value], index) => (

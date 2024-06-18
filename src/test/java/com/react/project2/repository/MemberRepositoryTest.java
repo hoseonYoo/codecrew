@@ -62,7 +62,7 @@ class MemberRepositoryTest {
 
 
             // "upload" 폴더에 있는 파일들을 불러옵니다.
-            File folder = new File("upload"); // "upload" 폴더를 나타냅니다.
+            File folder = new File("upload/profileImg"); // "upload" 폴더를 나타냅니다.
             File[] listOfFiles = folder.listFiles();
             //새로운 배열을 생성하고 "th_"로 시작하지 않는 파일들만 저장합니다.
              int count = 0;
