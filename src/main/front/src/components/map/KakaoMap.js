@@ -43,27 +43,35 @@ const KakaoMap = ({
 
   // 지도 클릭시 실행될 함수
   const mapClickedFunc = (mouseEvent) => {
-    if (!overlayState.overlayState) {
-      console.log(overlayState.overlayState);
-      console.log("mapClickedFunc 실행");
+    if (map.getLevel() < 5) {
+      if (!overlayState.overlayState) {
+        console.log(overlayState.overlayState);
+        console.log("mapClickedFunc 실행");
 
-      let newMapClickMarker = createMapClickMarker(mouseEvent.latLng);
-      console.log("mouseEvent.latLng.getLat() : ", mouseEvent.latLng.getLat());
-      console.log("mouseEvent.latLng.getLng() : ", mouseEvent.latLng.getLng());
-      newMapClickMarker.setMap(map);
-      setMapClickMarker(newMapClickMarker);
-      map.panTo(mouseEvent.latLng);
-      // 현재 화면 height px값 가져오기
-      const height = window.innerHeight;
-      console.log("height : ", height);
-      map.setDraggable(false);
-      map.setZoomable(false);
-      changeOverlayState(
-        mouseEvent.latLng.getLat(),
-        mouseEvent.latLng.getLng(),
-        true,
-      );
-      kakao.maps.event.removeListener(map, "dblclick", mapClickedFunc);
+        let newMapClickMarker = createMapClickMarker(mouseEvent.latLng);
+        console.log(
+          "mouseEvent.latLng.getLat() : ",
+          mouseEvent.latLng.getLat(),
+        );
+        console.log(
+          "mouseEvent.latLng.getLng() : ",
+          mouseEvent.latLng.getLng(),
+        );
+        newMapClickMarker.setMap(map);
+        setMapClickMarker(newMapClickMarker);
+        map.panTo(mouseEvent.latLng);
+        // 현재 화면 height px값 가져오기
+        const height = window.innerHeight;
+        console.log("height : ", height);
+        map.setDraggable(false);
+        map.setZoomable(false);
+        changeOverlayState(
+          mouseEvent.latLng.getLat(),
+          mouseEvent.latLng.getLng(),
+          true,
+        );
+        kakao.maps.event.removeListener(map, "dblclick", mapClickedFunc);
+      }
     }
   };
 
@@ -146,23 +154,18 @@ const KakaoMap = ({
       const newCluster = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
+        minClusterSize: 4,
         minLevel: 7,
-        disableClickZoom: true,
+        disableClickZoom: false,
       });
-
       // clusterMarkers함수에 changePopup함수를 인자로 넘겨주어 마커 클릭시 팝업창을 띄울 수 있도록 함
       const markers = clustererMarkers(changePopup);
-
       // 마커 클러스터에 기존 마커 지우기
       if (cluster != undefined) cluster.clear();
-
       console.log("클러스터에 마커 추가");
-
       // 클러스터에 마커 추가
       newCluster.addMarkers(markers);
-
       setCluster(newCluster);
-
       // 클러스터가 변경된 후에 이전에 저장한 중심 좌표를 다시 지도의 중심으로 설정합니다.
       map.setCenter(currentCenter);
     }

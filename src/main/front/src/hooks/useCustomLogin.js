@@ -24,7 +24,6 @@ const useCustomLogin = () => {
       if (ex.response.data.error === "ERROR_ACCESS_DENIED") {
         alert("해당 메뉴를 사용할 수 있는 권한이 없습니다.");
         navigate({ pathname: "/", search: errorStr });
-        return;
       }
     } else {
       console.error("Invalid error object:", ex);

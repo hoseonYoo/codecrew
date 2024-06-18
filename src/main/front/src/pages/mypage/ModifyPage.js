@@ -81,12 +81,10 @@ const ModifyPage = () => {
     // 11자리가 아닐 때
     else if (member.phone.length < 11) {
       alert("연락처를 11자리로 입력해주세요.");
-      return;
     }
     // 010으로 시작하지 않을 때
     else if (!member.phone.startsWith("01")) {
       alert("올바른 연락처 형식을 입력해주세요.");
-      return;
     } else {
       checkPhone(member.phone)
         .then((res) => {

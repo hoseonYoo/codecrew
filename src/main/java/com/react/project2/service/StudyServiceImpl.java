@@ -396,8 +396,8 @@ public class StudyServiceImpl implements StudyService {
                 .memberPhone(study.getMember().getPhone()) // 조회된 Member 엔티티를 사용합니다.
                 .location(study.getLocation())
                 .studyDeadlineDate(study.getStudyDeadlineDate())
-                .locationX((Double) study.getLocationX())
-                .locationY((Double) study.getLocationY())
+                .locationX(study.getLocationX())
+                .locationY(study.getLocationY())
                 .studyDate(study.getStudyDate())
                 .maxPeople(study.getMaxPeople())
                 .isConfirmed(study.getIsConfirmed())
@@ -427,8 +427,8 @@ public class StudyServiceImpl implements StudyService {
                 .member(member) // 조회된 Member 엔티티를 사용합니다.
                 .location(studyDTO.getLocation())
                 .studyDeadlineDate(studyDTO.getStudyDeadlineDate())
-                .locationX((Double) studyDTO.getLocationX())
-                .locationY((Double) studyDTO.getLocationY())
+                .locationX(studyDTO.getLocationX())
+                .locationY(studyDTO.getLocationY())
                 .studyDate(studyDTO.getStudyDate())
                 .maxPeople(studyDTO.getMaxPeople())
                 .category(studyDTO.getCategory())

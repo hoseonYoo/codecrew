@@ -35,7 +35,11 @@ export default function HeaderList() {
         {/* 검색페이지 헤더 */}
         <div className="headerBackContnent">
           <div onClick={onclickBtn}>
-            <img src="../assets/imgs/icon/ic_map.svg" alt="backBtn" height="36px" />
+            <img
+              src="/assets/imgs/icon/ic_map.svg"
+              alt="backBtn"
+              height="36px"
+            />
           </div>
         </div>
         <div className="headerSearchContent">
@@ -52,7 +56,10 @@ export default function HeaderList() {
             }}
           />
 
-          <img src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"} onClick={searchFromList} />
+          <img
+            src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_serch_gr.svg"}
+            onClick={searchFromList}
+          />
         </div>
       </div>
       <CategoryFilterList />

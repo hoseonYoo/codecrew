@@ -34,7 +34,7 @@ public class APIRefreshController {
         String accessToken = authHeader.substring(7);
 
         // AccessToken 인 만료되지 않은 경우
-        if(checkExpiredToken(accessToken) == false) {
+        if(!checkExpiredToken(accessToken)) {
             return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
         }
 
