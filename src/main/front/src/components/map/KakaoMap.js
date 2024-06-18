@@ -146,6 +146,7 @@ const KakaoMap = ({
       const newCluster = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
+        minClusterSize: 4,
         minLevel: 7,
         disableClickZoom: true,
       });
