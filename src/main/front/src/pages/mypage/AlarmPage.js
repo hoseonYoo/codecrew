@@ -36,7 +36,12 @@ const AlarmPage = () => {
           <p>새로운 소식이 도착하면 알려드릴께요.</p>
         </div>
       ) : (
-        <InfiniteScroll dataLength={noticeList.length} next={() => {}} hasMore={false} loader={<h4>Loading...</h4>}>
+        <InfiniteScroll
+          dataLength={noticeList.length}
+          next={() => {}}
+          hasMore={false}
+          loader={<h4>Loading...</h4>}
+        >
           {noticeList.map((notice, index) => (
             <AlarmBlock key={index} notice={notice} refresh={reRender} />
           ))}

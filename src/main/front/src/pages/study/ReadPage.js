@@ -11,8 +11,6 @@ import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
 import useCustomMap from "../../hooks/useCustomMap";
 
-const host = API_SERVER_HOST;
-
 const ReadPage = () => {
   const [refresh, setRefresh] = useState(false);
 
@@ -94,7 +92,6 @@ const ReadPage = () => {
     return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
   };
   console.log(isFinishHour());
-
 
   // 위치 값 구하기
   const calculateDistance = (userLocation, studyLocation) => {
