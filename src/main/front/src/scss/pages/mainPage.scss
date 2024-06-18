@@ -158,10 +158,15 @@ div.stPopupContentBottom{
       margin-right: 10px;
     }
     p{
-      width: 100%;
+      width:calc(100% - 90px);
       display: block;
       font-size: 14px;
-      width:calc(100% - 80px);
+      white-space: nowrap;
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    div{
+      width:calc(100% - 90px);
     }
   }
 }

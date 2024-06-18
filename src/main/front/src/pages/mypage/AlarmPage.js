@@ -17,7 +17,9 @@ const AlarmPage = () => {
 
   // 페이지 로딩시 알림 목록 가져오기
   useEffect(() => {
+    window.scrollTo(0, 0);
     const loadInitialData = async () => {
+      console.log("동작확인");
       const data = await getNoticeList(userEmail);
       setNoticeList(data);
     };
@@ -28,7 +30,8 @@ const AlarmPage = () => {
     <BasicLayoutPage headerTitle="알림">
       {noticeList === null || noticeList.length === 0 ? (
         <div className="nonePage">
-          <img src="../assets/imgs/icon/ic_none.png" />
+          <img src={process.env.PUBLIC_URL + "/assets/imgs/icon/ic_none.png"} />
+          {/* <img src="../assets/imgs/icon/ic_none.png" /> */}
           <h2>도착한 알림이 없어요...</h2>
           <p>새로운 소식이 도착하면 알려드릴께요.</p>
         </div>

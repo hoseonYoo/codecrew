@@ -19,6 +19,7 @@ const MyJoinStudyPage = () => {
 
   // 페이지 로딩 시 참가한 스터디 목록을 불러옴
   useEffect(() => {
+    window.scrollTo(0, 0);
     const loadInitialData = async () => {
       const data = await getJoinStudyList(studyType, { page: 1, size: 10 }, userEmail);
       if (data.list.length > 0) {
@@ -45,10 +46,12 @@ const MyJoinStudyPage = () => {
   };
 
   const changeStudyType = (type) => {
+    window.scrollTo(0, 0);
     setStudyType(type);
   };
 
   const listEmpty = () => {
+    window.scrollTo(0, 0);
     return (
       <div className="nonePage">
         <img src="../assets/imgs/icon/ic_none.png" />
