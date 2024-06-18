@@ -91,9 +91,11 @@ const useCustomMap = () => {
     const markers = studyLocationList.map((location) => {
       // console.log("location : ", location);
       let popupImg = location.thImg;
+      console.log("popupImg : ", popupImg);
       if (!location.thImg.startsWith("http")) {
-        popupImg = `${host}/api/image/view/${location.thImg}`;
+        popupImg = `${host}/api/image/view/th_${location.thImg}`;
       }
+      console.log("popupImg : ", popupImg);
       const popupData = {
         id: location.id,
         thImg: popupImg,
