@@ -10,6 +10,7 @@ const CoMarkPopup = () => {
 
     if (!hasVisited && hasMemberCookie) {
       // 사용자가 처음 방문했고, 'member' 쿠키가 있을 경우, 팝업을 표시하고 'visited' 상태를 true로 설정
+      window.scrollTo(0, 0);
       setIsPopupVisible(true);
       localStorage.setItem("visited", "true");
     }

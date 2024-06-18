@@ -2,6 +2,7 @@ import BasicLayoutPage from "../../layouts/BasicLayoutPage";
 import "../../scss/pages/StudyReadPage.scss";
 import React, { useEffect, useState } from "react";
 import useCustomMove from "../../hooks/useCustomMove";
+import { API_SERVER_HOST } from "../../api/memberAPI";
 import useStudyData from "../../hooks/useStudyData";
 import useMemberProfile from "../../hooks/useMemberProfile";
 import { useParams } from "react-router-dom";
@@ -10,7 +11,10 @@ import StudyMemberBlock from "../../components/study/StudyMemberBlock";
 import useHandleStudyMember from "../../hooks/useHandleStudyMember";
 import useHandleStudy from "../../hooks/useHandleStudy";
 import useCustomMap from "../../hooks/useCustomMap";
-// import PopUp from "../../components/PopUp.js/PopUp";
+import useCategories from "../../hooks/useCategories";
+// import { PopUpCall } from "../../components/PopUp.js/PopUp";
+
+const host = API_SERVER_HOST;
 
 const ReadPage = () => {
   const [refresh, setRefresh] = useState(false);
@@ -85,6 +89,8 @@ const ReadPage = () => {
     return currentTime >= finishTime; // 현재 시간이 스터디 종료 시간 2시간 후보다 크거나 같은지 반환
   };
   console.log(isFinishHour());
+
+  const categories = useCategories(host);
 
   // 위치 값 구하기
   const calculateDistance = (userLocation, studyLocation) => {
@@ -266,6 +272,24 @@ const ReadPage = () => {
       window.Kakao.init("a485d66609c6ba8d3f85dd817c4e295d");
     }
   }, []);
+
+  // PopUpCall 모달을 관리하기 위한 상태
+  // const [showCallPopup, setShowCallPopup] = useState(false);
+
+  // // 연락하기 버튼 클릭 핸들러
+  // const handleContactClick = () => {
+  //   if (study.memberPhone) {
+  //     // 연락처가 공개되어 있으면 PopUpCall 모달을 표시합니다.
+  //     setShowCallPopup(true);
+  //   } else {
+  //     alert("크루가 연락처를 공개하지 않았습니다.");
+  //   }
+  // };
+
+  // // PopUpCall 모달에서 '예' 버튼 클릭 시 실행될 함수
+  // const confirmCall = () => {
+  //   window.location.href = `tel:${study.memberPhone}`;
+  // };
 
   // 연락하기, 공유하기 버튼
   const renderContactAndShareButtons = () => {
@@ -507,7 +531,7 @@ const ReadPage = () => {
 
           {/*시작일*/}
           <div className="ReadText">
-            <h3>모임시작 : </h3>
+            <h3>스터디일 : </h3>
             <p style={{ fontSize: "14px", color: "#000" }}>{study.studyDate}</p>
           </div>
 
