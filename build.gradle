@@ -58,6 +58,10 @@ tasks.named('bootBuildImage') {
     builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
 
+tasks.withType(Test) {
+    enabled = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

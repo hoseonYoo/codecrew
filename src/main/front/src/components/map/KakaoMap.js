@@ -5,26 +5,14 @@ import useCustomMap from "../../hooks/useCustomMap";
 
 const { kakao } = window;
 
-const KakaoMap = ({
-  overlayState,
-  changeOverlayState,
-  changePopup,
-  refresh,
-}) => {
+const KakaoMap = ({ overlayState, changeOverlayState, changePopup, refresh }) => {
   // 셀렉터로 현재 선택된 카테고리 가져오기
   const categoryFilter = useSelector((state) => state.categorySlice.category);
   // 셀렉터로 카테고리 필터링된 데이터 가져오기
-  const studyLocationList = useSelector(
-    (state) => state.categorySlice.studyLocationList,
-  );
+  const studyLocationList = useSelector((state) => state.categorySlice.studyLocationList);
   const dispatch = useDispatch();
 
-  const {
-    myLocation,
-    myLocationMarker,
-    clustererMarkers,
-    createMapClickMarker,
-  } = useCustomMap();
+  const { myLocation, myLocationMarker, clustererMarkers, createMapClickMarker } = useCustomMap();
 
   const [nowMarker, setNowMarker] = useState(null);
   const [mapClickMarker, setMapClickMarker] = useState(null);
@@ -49,14 +37,8 @@ const KakaoMap = ({
         console.log("mapClickedFunc 실행");
 
         let newMapClickMarker = createMapClickMarker(mouseEvent.latLng);
-        console.log(
-          "mouseEvent.latLng.getLat() : ",
-          mouseEvent.latLng.getLat(),
-        );
-        console.log(
-          "mouseEvent.latLng.getLng() : ",
-          mouseEvent.latLng.getLng(),
-        );
+        console.log("mouseEvent.latLng.getLat() : ", mouseEvent.latLng.getLat());
+        console.log("mouseEvent.latLng.getLng() : ", mouseEvent.latLng.getLng());
         newMapClickMarker.setMap(map);
         setMapClickMarker(newMapClickMarker);
         map.panTo(mouseEvent.latLng);
@@ -65,11 +47,7 @@ const KakaoMap = ({
         console.log("height : ", height);
         map.setDraggable(false);
         map.setZoomable(false);
-        changeOverlayState(
-          mouseEvent.latLng.getLat(),
-          mouseEvent.latLng.getLng(),
-          true,
-        );
+        changeOverlayState(mouseEvent.latLng.getLat(), mouseEvent.latLng.getLng(), true);
         kakao.maps.event.removeListener(map, "dblclick", mapClickedFunc);
       }
     }
@@ -124,9 +102,7 @@ const KakaoMap = ({
   useEffect(() => {
     if (nowMarker != null) {
       console.log("현재 위치 변경되면 마커 위치 변경");
-      nowMarker.setPosition(
-        new kakao.maps.LatLng(myLocation.lat, myLocation.lng),
-      );
+      nowMarker.setPosition(new kakao.maps.LatLng(myLocation.lat, myLocation.lng));
     }
   }, [myLocation.lat, myLocation.lng]);
 

@@ -1,0 +1,47 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: project2
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/project2?useUnicode=true&characterEncoding=UTF8&characterSetResult=UTF-8&useSSL=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+
+  frontend:
+    build:
+      context: ./src/main/front
+      dockerfile: Dockerfile
+    ports:
+#      - "3000:3000"
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - frontend
+      - backend
+
+
+networks:
+  frontend:
+  backend:
