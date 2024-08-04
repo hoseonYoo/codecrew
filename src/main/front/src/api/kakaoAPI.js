@@ -5,7 +5,7 @@ import { API_SERVER_HOST } from "./memberAPI";
 const rest_api_key = `dcb40de2e6ff14c5d5862f9b01cc3b84`;
 // const rest_api_key = `32bb26db068923f19fd3390bbf77862a`;
 // RedirectURI
-const redirect_uri = `http://15.164.183.79:3000/member/kakao`;
+const redirect_uri = `http://52.79.179.187:3000/member/kakao`;
 // const redirect_uri = `http://192.168.0.48:3000/member/kakao`;
 // const redirect_uri = `http://192.168.0.55:3000/member/kakao`;
 
